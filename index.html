@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 Tabs HTML</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+  .tab button:hover {
+    background-color: #ddd;
+  }
+  .tab button.active {
+    background-color: #ccc;
+  }
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+</style>
+</head>
+<body>
+
+<h2>4 Tabs Interface</h2>
+
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'Tab1')" id="defaultOpen">Tab 1</button>
+  <button class="tablinks" onclick="openTab(event, 'Tab2')">Tab 2</button>
+  <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
+  <button class="tablinks" onclick="openTab(event, 'Tab4')">Tab 4</button>
+</div>
+
+<div id="Tab1" class="tabcontent">
+
+NAVATARA LIVE CHAKRA
+
+Janma Nakshatra • Navatara • Current Planetary Nakshatra
+
+  <main>
+    <section class="controls">
+      <div class="form-group">
+        <label for="janmaSelect">जन्म नक्षत्र / Janma Nakshatra</label>
+        <select id="janmaSelect"></select>
+      </div>
+      <div class="form-group">
+        <label for="citySelect">शहर / City</label>
+        <select id="citySelect"></select>
+      </div>
+      <div class="form-group row">
+        <div class="col">
+          <label for="dateInput">Date</label>
+          <input type="date" id="dateInput" />
+        </div>
+        <div class="col">
+          <label for="timeInput">Time</label>
+          <input type="time" id="timeInput" />
+        </div>
+      </div>
+      <div class="form-actions" style="flex-wrap: wrap;">
+        <button id="btnCurrentTime">Use Current Local Time</button>
+        <button id="btnTogglePast">Past Event</button>
+        <button id="btnToggleFuture">Future Event</button>
+        <button id="btnGenerate" class="primary">PROCEED / GENERATE CHAKRA</button>
+        <button id="btnReset">RESET</button>
+      </div>
+
+      <div id="pastPanel" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+        <h3 style="margin-top: 0; color: var(--accent);">Past Event Calculation</h3>
+        <div class="form-group row">
+          <div class="col">
+            <label for="pastYear">Year</label>
+            <select id="pastYear">
+              <option value="">Select Year...</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="pastMonth">Month (Optional)</label>
+            <select id="pastMonth">
+              <option value="">Select Month...</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="pastDay">Day (Optional)</label>
+            <select id="pastDay">
+              <option value="">Select Day...</option>
+            </select>
+          </div>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">If Month or Day are omitted, the calculation will default to January 1st of the selected year.</p>
+      </div>
+
+      <div id="futurePanel" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+        <h3 style="margin-top: 0; color: var(--accent);">Future Event Calculation</h3>
+        <div class="form-group row">
+          <div class="col">
+            <label for="futureYear">Year</label>
+            <select id="futureYear">
+              <option value="">Select Year...</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="futureMonth">Month (Optional)</label>
+            <select id="futureMonth">
+              <option value="">Select Month...</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="futureDay">Day (Optional)</label>
+            <select id="futureDay">
+              <option value="">Select Day...</option>
+            </select>
+          </div>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">If Month or Day are omitted, the calculation will default to January 1st of the selected year.</p>
+      </div>
+    </section>
+
+    <section id="errorPanel" class="error-panel" style="display: none;">
+      <p id="errorMsg">Live planetary data could not be verified. No planetary positions have been displayed.</p>
+    </section>
+
+    <section class="visualization" id="visualizationSection" style="display: none;">
+      <div id="chakraContainer" class="chakra-container">
+        <!-- SVG will be injected here -->
+      </div>
+
+      <div class="download-section">
+        <button id="btnDownload">Download 8K Image / 8K चित्र डाउनलोड करें</button>
+      </div>
+
+      <div class="verification-panel">
+        <h3>Planetary Data Verification</h3>
+        <div class="table-responsive">
+          <table id="planetaryTable">
+            <thead>
+              <tr>
+                <th>Planet</th>
+                <th>Sidereal Longitude</th>
+                <th>Nakshatra</th>
+                <th>Pada</th>
+                <th>Tara</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows generated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="transits-section" id="transitSection" style="display: none; margin-top: 2rem;">
+      <h3 style="color: var(--accent); margin-bottom: 1rem;">Planetary Transit Timeline</h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+        The next 5 Nakshatra transitions for each planet from their current positions.
+        Rahu and Ketu move backwards (retrograde).
+      </p>
+      <div class="table-responsive">
+        <table id="transitTable">
+          <thead>
+            <tr>
+              <th>Planet</th>
+              <th>Transit 1</th>
+              <th>Transit 2</th>
+              <th>Transit 3</th>
+              <th>Transit 4</th>
+              <th>Transit 5</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Transit rows injected here -->
+          </tbody>
+        </table>
+      </div>
+      <div id="transitErrorNote" style="display: none; color: var(--danger); font-size: 0.9rem; margin-top: 1rem; border: 1px solid var(--danger); padding: 10px; background: rgba(255, 76, 76, 0.1); border-radius: 4px;">
+        <strong>Note:</strong> Data fetching encountered a problem. The planetary/transit data shown in the transit section may be unavailable or incomplete.
+      </div>
+    </section>
+
+    <section class="methodology">
+      <details>
+        <summary>Calculation Methodology</summary>
+        <ul>
+          <li><strong>System:</strong> 27 Nakshatra system</li>
+          <li><strong>Navatara:</strong> Navatara cycle of 9 categories</li>
+          <li><strong>Zodiac:</strong> Sidereal</li>
+          <li><strong>Ayanamsha:</strong> Lahiri</li>
+          <li><strong>Ephemeris:</strong> Astronomy Engine (Browser-Native)</li>
+          <li><strong>Nodes:</strong> True Node approximations for Rahu/Ketu</li>
+          <li><strong>Location:</strong> <span id="methodologyCity">N/A</span></li>
+          <li><strong>Timestamp:</strong> <span id="methodologyTime">N/A</span></li>
+        </ul>
+      </details>
+    </section>
+  </main>
+</div>
+
+<script>
+  // ================== CONSTANTS ==================
+  const NAKSHATRAS = [
+    "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra",
+    "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni",
+    "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha",
+    "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishtha", "Shatabhisha",
+    "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+  ];
+
+  const NAKSHATRAS_HINDI = [
+    "अश्विनी", "भरणी", "कृत्तिका", "रोहिणी", "मृगशिरा", "आर्द्रा",
+    "पुनर्वसु", "पुष्य", "आश्लेषा", "मघा", "पूर्वा फाल्गुनी", "उत्तरा फाल्गुनी",
+    "हस्त", "चित्रा", "स्वाती", "विशाखा", "अनुराधा", "ज्येष्ठा",
+    "मूल", "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण", "धनिष्ठा", "शतभिषा",
+    "पूर्व भाद्रपद", "उत्तर भाद्रपद", "रेवती"
+  ];
+
+  const TARA_CATEGORIES = [
+    { name: "Janma", hindi: "जन्म", color: "#FF8C00", meaning: "Birth" },
+    { name: "Sampat", hindi: "संपत", color: "#32CD32", meaning: "Wealth" },
+    { name: "Vipat", hindi: "विपत", color: "#FF0000", meaning: "Danger" },
+    { name: "Kshema", hindi: "क्षेम", color: "#32CD32", meaning: "Prosperity" },
+    { name: "Pratyari", hindi: "प्रत्यरि", color: "#FF0000", meaning: "Obstacles" },
+    { name: "Sadhaka", hindi: "साधक", color: "#32CD32", meaning: "Achievement" },
+    { name: "Naidhana", hindi: "नैधन", color: "#FF0000", meaning: "Destruction" },
+    { name: "Mitra", hindi: "मित्र", color: "#32CD32", meaning: "Friend" },
+    { name: "Param Mitra", hindi: "परम मित्र", color: "#32CD32", meaning: "Best Friend" }
+  ];
+
+  const CITIES = [
+    { name: "Nashik", state: "Maharashtra", lat: 19.9975, lng: 73.7898, tz: "Asia/Kolkata" },
+    { name: "Mumbai", state: "Maharashtra", lat: 19.0760, lng: 72.8777, tz: "Asia/Kolkata" },
+    { name: "Pune", state: "Maharashtra", lat: 18.5204, lng: 73.8567, tz: "Asia/Kolkata" },
+    { name: "Delhi", state: "Delhi", lat: 28.7041, lng: 77.1025, tz: "Asia/Kolkata" },
+    { name: "New Delhi", state: "Delhi", lat: 28.6139, lng: 77.2090, tz: "Asia/Kolkata" },
+    { name: "Bengaluru", state: "Karnataka", lat: 12.9716, lng: 77.5946, tz: "Asia/Kolkata" },
+    { name: "Hyderabad", state: "Telangana", lat: 17.3850, lng: 78.4867, tz: "Asia/Kolkata" },
+    { name: "Chennai", state: "Tamil Nadu", lat: 13.0827, lng: 80.2707, tz: "Asia/Kolkata" },
+    { name: "Kolkata", state: "West Bengal", lat: 22.5726, lng: 88.3639, tz: "Asia/Kolkata" },
+    { name: "Ahmedabad", state: "Gujarat", lat: 23.0225, lng: 72.5714, tz: "Asia/Kolkata" },
+    { name: "Surat", state: "Gujarat", lat: 21.1702, lng: 72.8311, tz: "Asia/Kolkata" },
+    { name: "Jaipur", state: "Rajasthan", lat: 26.9124, lng: 75.7873, tz: "Asia/Kolkata" },
+    { name: "Lucknow", state: "Uttar Pradesh", lat: 26.8467, lng: 80.9462, tz: "Asia/Kolkata" },
+    { name: "Chandigarh", state: "Chandigarh", lat: 30.7333, lng: 76.7794, tz: "Asia/Kolkata" },
+    { name: "Bhopal", state: "Madhya Pradesh", lat: 23.2599, lng: 77.4126, tz: "Asia/Kolkata" },
+    { name: "Indore", state: "Madhya Pradesh", lat: 22.7196, lng: 75.8577, tz: "Asia/Kolkata" },
+    { name: "Nagpur", state: "Maharashtra", lat: 21.1458, lng: 79.0882, tz: "Asia/Kolkata" },
+    { name: "Patna", state: "Bihar", lat: 25.5941, lng: 85.1376, tz: "Asia/Kolkata" },
+    { name: "Varanasi", state: "Uttar Pradesh", lat: 25.3176, lng: 82.9739, tz: "Asia/Kolkata" },
+    { name: "Kochi", state: "Kerala", lat: 9.9312, lng: 76.2673, tz: "Asia/Kolkata" }
+  ];
+
+  const PLANETS = {
+    Sun: { abbr: "Su", name: "Surya", color: "#FFD700" },       // Gold
+    Moon: { abbr: "Mo", name: "Chandra", color: "#E6E6FA" },    // Light Lavender
+    Mars: { abbr: "Ma", name: "Mangala", color: "#FF6347" },    // Tomato Red
+    Mercury: { abbr: "Me", name: "Budha", color: "#98FB98" },   // Pale Green
+    Jupiter: { abbr: "Ju", name: "Guru", color: "#FFDAB9" },    // Pale Peach
+    Venus: { abbr: "Ve", name: "Shukra", color: "#FFC0CB" },    // Pink
+    Saturn: { abbr: "Sa", name: "Shani", color: "#87CEEB" },    // Sky Blue
+    Rahu: { abbr: "Ra", name: "Rahu", color: "#D3D3D3" },       // Light Gray
+    Ketu: { abbr: "Ke", name: "Ketu", color: "#C0C0C0" }        // Silver
+  };
+
+  // ================== ASTRONOMY ==================
+  // Using Astronomy Engine instead of Swiss Ephemeris for local file:// compatibility
+  function getPlanetaryPositions(date, timezoneOffsetMin) {
+    // Adjust date object so it represents the correct UTC time based on the local time entered
+    // The javascript Date object will interpret "2026-08-18T18:47" in the browser's local timezone.
+    // If we want it to be specific to the selected city, we construct the Date manually.
+
+    // Since we are assuming standard India timezone for the cities:
+    const t = Astronomy.MakeTime(date);
+
+    // Calculate Lahiri Ayanamsha approximately
+    // Number of centuries since J2000
+    const T = (t.ut - 2451545.0) / 36525;
+    const ayanamsha = 23.85 + (1.39636 * T); // Simple approximation of Lahiri
+
+    const bodies = [
+      { name: "Sun", id: 'Sun' },
+      { name: "Moon", id: 'Moon' },
+      { name: "Mars", id: 'Mars' },
+      { name: "Mercury", id: 'Mercury' },
+      { name: "Jupiter", id: 'Jupiter' },
+      { name: "Venus", id: 'Venus' },
+      { name: "Saturn", id: 'Saturn' },
+    ];
+
+    const results = [];
+
+    for (const b of bodies) {
+      const vec = Astronomy.GeoVector(b.id, t, false);
+      const e = Astronomy.Ecliptic(vec);
+
+      let sidereal = e.elon - ayanamsha;
+      if (sidereal < 0) sidereal += 360;
+
+      results.push({
+        name: b.name,
+        longitude: sidereal
+      });
+    }
+
+    // Very basic calculation for Rahu (Mean Node)
+    // Mean lunar node regression is ~19.34 degrees per year
+    // J2000 Mean Node was at ~125.04 degrees tropical
+    const daysSinceJ2000 = t.ut - 2451545.0;
+    let meanNodeTropical = 125.0445 - (0.0529537648 * daysSinceJ2000);
+    meanNodeTropical = meanNodeTropical % 360;
+    if (meanNodeTropical < 0) meanNodeTropical += 360;
+
+    let rahuSidereal = meanNodeTropical - ayanamsha;
+    if (rahuSidereal < 0) rahuSidereal += 360;
+
+    results.push({
+        name: "Rahu",
+        longitude: rahuSidereal
+    });
+
+    results.push({
+        name: "Ketu",
+        longitude: (rahuSidereal + 180) % 360
+    });
+
+    return results;
+  }
+
+  function getNakshatraFromLongitude(longitude) {
+    const NAKSHATRA_SPAN = 40 / 3;
+    const PADA_SPAN = 10 / 3;
+    let positiveLongitude = longitude;
+    if (positiveLongitude < 0) positiveLongitude += 360;
+    const nakshatraIndex = Math.floor(positiveLongitude / NAKSHATRA_SPAN) % 27;
+    const remainder = positiveLongitude % NAKSHATRA_SPAN;
+    const pada = Math.floor(remainder / PADA_SPAN) + 1;
+    return { index: nakshatraIndex, pada: pada };
+  }
+
+  function getTaraCategory(janmaIndex, currentNakshatraIndex) {
+    let diff = currentNakshatraIndex - janmaIndex;
+    if (diff < 0) diff += 27;
+    return diff % 9;
+  }
+
+  function calculateTransits(startDate, planetsData, janmaIndex) {
+     // Return an array of transit data for each planet
+     // We do this by iterating days and checking when Nakshatra changes
+     // This is computationally intensive but completely correct.
+
+     const results = {};
+     const t_start = Astronomy.MakeTime(startDate);
+     const daysToSimulate = 30000; // ~80 years max search to ensure Saturn hits 5 transits safely
+
+     planetsData.forEach(p => {
+         results[p.name] = [];
+         let currentNakIndex = p.nakshatraIndex;
+
+         // Step size optimization depending on planet speed
+         let stepDays = 0.1;
+         if(p.name === 'Moon') stepDays = 0.05; // Fast
+         else if(p.name === 'Saturn' || p.name === 'Rahu' || p.name === 'Ketu') stepDays = 5.0; // Very Slow - Saturn stays ~1 year in a sign
+         else if(p.name === 'Jupiter') stepDays = 2.0;
+         else stepDays = 0.5; // Sun, Mercury, Venus, Mars
+
+         let jd = t_start.ut;
+         let transitsFound = 0;
+         let searchCount = 0;
+
+         while(transitsFound < 5 && searchCount < (daysToSimulate / stepDays)) {
+             jd += stepDays;
+             searchCount++;
+
+             // Compute Ayanamsha
+             const T = (jd - 2451545.0) / 36525;
+             const ayanamsha = 23.85 + (1.39636 * T);
+
+             let sidereal = 0;
+             if (p.name === "Rahu" || p.name === "Ketu") {
+                 // Mean Node
+                 const daysSinceJ2000 = jd - 2451545.0;
+                 let meanNodeTropical = 125.0445 - (0.0529537648 * daysSinceJ2000);
+                 meanNodeTropical = meanNodeTropical % 360;
+                 if (meanNodeTropical < 0) meanNodeTropical += 360;
+
+                 let rahuSidereal = meanNodeTropical - ayanamsha;
+                 if (rahuSidereal < 0) rahuSidereal += 360;
+
+                 if (p.name === "Rahu") sidereal = rahuSidereal;
+                 else sidereal = (rahuSidereal + 180) % 360;
+             } else {
+                 const newTime = new Astronomy.AstroTime(jd);
+                 const vec = Astronomy.GeoVector(p.name, newTime, false);
+                 const e = Astronomy.Ecliptic(vec);
+                 sidereal = e.elon - ayanamsha;
+                 if (sidereal < 0) sidereal += 360;
+             }
+
+             const NAKSHATRA_SPAN = 40 / 3;
+             let posLon = sidereal;
+             if (posLon < 0) posLon += 360;
+
+             const newNakIndex = Math.floor(posLon / NAKSHATRA_SPAN) % 27;
+
+             if (newNakIndex !== currentNakIndex) {
+                 // Transition happened!
+                 // But because planets retrograde, they might transition back. We record it anyway because it's a real transition.
+                 // Refine to exact day
+
+                 const transitTime = new Astronomy.AstroTime(jd);
+                 const jsDate = transitTime.date; // Correct property is .date
+
+                 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                 const formattedDate = `${String(jsDate.getUTCDate()).padStart(2, '0')} ${monthNames[jsDate.getUTCMonth()]} ${jsDate.getUTCFullYear()}`;
+
+                 const taraIdx = getTaraCategory(janmaIndex, newNakIndex);
+                 const taraInfo = TARA_CATEGORIES[taraIdx];
+
+                 results[p.name].push({
+                     nakshatraName: NAKSHATRAS[newNakIndex],
+                     dateStr: formattedDate,
+                     tara: taraInfo,
+                     isError: false
+                 });
+
+                 currentNakIndex = newNakIndex;
+                 transitsFound++;
+             }
+         }
+
+         // If we couldn't find 5, pad with error
+         while (results[p.name].length < 5) {
+             results[p.name].push({ isError: true });
+         }
+     });
+
+     return results;
+  }
+
+  // ================== RENDERER ==================
+  function renderChakra(containerId, appState) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
+    const SVG_SIZE = 8192;
+    const CENTER = SVG_SIZE / 2;
+    const RADIUS_OUTER = SVG_SIZE / 2 - 200;
+    const RADIUS_INNER = RADIUS_OUTER - 1800;
+    const RADIUS_TEXT = RADIUS_OUTER - 900;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("viewBox", `0 0 ${SVG_SIZE} ${SVG_SIZE}`);
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "100%");
+    svg.setAttribute("id", "navatara-svg");
+    svg.style.backgroundColor = "#050505";
+
+    for (let i = 0; i < 500; i++) {
+      const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      star.setAttribute("cx", Math.random() * SVG_SIZE);
+      star.setAttribute("cy", Math.random() * SVG_SIZE);
+      star.setAttribute("r", Math.random() * 4 + 1);
+      star.setAttribute("fill", "#ffffff");
+      star.setAttribute("opacity", Math.random() * 0.5 + 0.1);
+      svg.appendChild(star);
+    }
+
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    defs.innerHTML = `
+        <radialGradient id="gradSun" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#FFFFE0" />
+            <stop offset="50%" stop-color="#FFD700" />
+            <stop offset="100%" stop-color="#FF8C00" />
+        </radialGradient>
+        <radialGradient id="gradMars" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#FF7F50" />
+            <stop offset="70%" stop-color="#DC143C" />
+            <stop offset="100%" stop-color="#8B0000" />
+        </radialGradient>
+        <radialGradient id="gradMercury" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#E0FFFF" />
+            <stop offset="70%" stop-color="#98FB98" />
+            <stop offset="100%" stop-color="#3CB371" />
+        </radialGradient>
+        <radialGradient id="gradJupiter" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#FFFACD" />
+            <stop offset="70%" stop-color="#DEB887" />
+            <stop offset="100%" stop-color="#D2691E" />
+        </radialGradient>
+        <radialGradient id="gradVenus" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#FFF0F5" />
+            <stop offset="70%" stop-color="#FFB6C1" />
+            <stop offset="100%" stop-color="#FF69B4" />
+        </radialGradient>
+        <radialGradient id="gradSaturn" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#E0FFFF" />
+            <stop offset="70%" stop-color="#87CEFA" />
+            <stop offset="100%" stop-color="#4682B4" />
+        </radialGradient>
+        <radialGradient id="gradNode" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#D3D3D3" />
+            <stop offset="70%" stop-color="#808080" />
+            <stop offset="100%" stop-color="#696969" />
+        </radialGradient>
+    `;
+    svg.appendChild(defs);
+    const gSectors = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    svg.appendChild(gSectors);
+    const SECTOR_ANGLE = 360 / 27;
+
+    for (let i = 0; i < 27; i++) {
+      const currentNakIndex = (appState.janmaIndex + i) % 27;
+      const taraIndex = i % 9;
+      const taraInfo = TARA_CATEGORIES[taraIndex];
+      const startAngle = -90 - (SECTOR_ANGLE / 2) + (i * SECTOR_ANGLE);
+      const endAngle = startAngle + SECTOR_ANGLE;
+      const startRad = startAngle * Math.PI / 180;
+      const endRad = endAngle * Math.PI / 180;
+
+      const x1_out = CENTER + RADIUS_OUTER * Math.cos(startRad);
+      const y1_out = CENTER + RADIUS_OUTER * Math.sin(startRad);
+      const x2_out = CENTER + RADIUS_OUTER * Math.cos(endRad);
+      const y2_out = CENTER + RADIUS_OUTER * Math.sin(endRad);
+
+      const x1_in = CENTER + RADIUS_INNER * Math.cos(startRad);
+      const y1_in = CENTER + RADIUS_INNER * Math.sin(startRad);
+      const x2_in = CENTER + RADIUS_INNER * Math.cos(endRad);
+      const y2_in = CENTER + RADIUS_INNER * Math.sin(endRad);
+
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      const d = `
+        M ${x1_in} ${y1_in}
+        L ${x1_out} ${y1_out}
+        A ${RADIUS_OUTER} ${RADIUS_OUTER} 0 0 1 ${x2_out} ${y2_out}
+        L ${x2_in} ${y2_in}
+        A ${RADIUS_INNER} ${RADIUS_INNER} 0 0 0 ${x1_in} ${y1_in}
+        Z
+      `;
+      path.setAttribute("d", d);
+      path.setAttribute("fill", taraInfo.color);
+      path.setAttribute("fill-opacity", "0.2");
+      path.setAttribute("stroke", "#d4af37");
+      path.setAttribute("stroke-width", "8");
+      gSectors.appendChild(path);
+
+      const textMidAngle = startAngle + (SECTOR_ANGLE / 2);
+      const textMidRad = textMidAngle * Math.PI / 180;
+
+      let rotation = textMidAngle + 90;
+      if (rotation > 90 && rotation < 270) {
+        rotation -= 180;
+      }
+
+      const tx = CENTER + RADIUS_TEXT * Math.cos(textMidRad);
+      const ty = CENTER + RADIUS_TEXT * Math.sin(textMidRad);
+
+      const gText = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      gText.setAttribute("transform", `translate(${tx}, ${ty}) rotate(${rotation})`);
+
+      const textHi = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textHi.setAttribute("x", "0");
+      textHi.setAttribute("y", "-80");
+      textHi.setAttribute("text-anchor", "middle");
+      textHi.setAttribute("fill", "#ffffff");
+      textHi.setAttribute("font-size", "110");
+      textHi.setAttribute("font-weight", "bold");
+      textHi.textContent = NAKSHATRAS_HINDI[currentNakIndex];
+      gText.appendChild(textHi);
+
+      const textEn = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textEn.setAttribute("x", "0");
+      textEn.setAttribute("y", "40");
+      textEn.setAttribute("text-anchor", "middle");
+      textEn.setAttribute("fill", "#dddddd");
+      textEn.setAttribute("font-size", "75");
+      textEn.textContent = NAKSHATRAS[currentNakIndex];
+      gText.appendChild(textEn);
+
+      const textTaraHi = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textTaraHi.setAttribute("x", "0");
+      textTaraHi.setAttribute("y", "170");
+      textTaraHi.setAttribute("text-anchor", "middle");
+      textTaraHi.setAttribute("fill", taraInfo.color);
+      textTaraHi.setAttribute("font-size", "75");
+      textTaraHi.setAttribute("font-weight", "bold");
+      textTaraHi.textContent = taraInfo.hindi;
+      gText.appendChild(textTaraHi);
+
+      const textTaraEn = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textTaraEn.setAttribute("x", "0");
+      textTaraEn.setAttribute("y", "260");
+      textTaraEn.setAttribute("text-anchor", "middle");
+      textTaraEn.setAttribute("fill", taraInfo.color);
+      textTaraEn.setAttribute("font-size", "65");
+      textTaraEn.setAttribute("font-weight", "bold");
+      textTaraEn.textContent = taraInfo.name;
+      gText.appendChild(textTaraEn);
+
+      gSectors.appendChild(gText);
+
+      const planetsHere = appState.planets.filter(p => p.nakshatraIndex === currentNakIndex);
+      if (planetsHere.length > 0) {
+        const PLANET_RADIUS_OFFSET = RADIUS_INNER + 400;
+        const px = CENTER + PLANET_RADIUS_OFFSET * Math.cos(textMidRad);
+        const py = CENTER + PLANET_RADIUS_OFFSET * Math.sin(textMidRad);
+
+        const gPlanets = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        gPlanets.setAttribute("transform", `translate(${px}, ${py}) rotate(${rotation})`);
+
+        planetsHere.forEach((p, idx) => {
+          const stackY = (idx - (planetsHere.length - 1) / 2) * 160;
+
+          const gIcon = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          gIcon.setAttribute("transform", `translate(0, ${stackY})`);
+
+          // Planet stylized representations
+          const pDefs = {
+            "Sun": `<circle r="70" fill="url(#gradSun)" /><circle r="70" fill="none" stroke="#FFA500" stroke-width="4"/><path d="M0 -90 L0 -110 M0 90 L0 110 M-90 0 L-110 0 M90 0 L110 0 M-60 -60 L-80 -80 M60 60 L80 80 M-60 60 L-80 80 M60 -60 L80 -80" stroke="#FFD700" stroke-width="8" stroke-linecap="round"/>`,
+            "Moon": `<circle r="70" fill="#1A1C23" /><path d="M20,-60 A70,70 0 1,0 20,60 A50,50 0 1,1 20,-60 Z" fill="#E6E6FA" /><circle r="70" fill="none" stroke="#E6E6FA" stroke-width="2"/>`,
+            "Mars": `<circle r="70" fill="url(#gradMars)" /><circle cx="-20" cy="-20" r="15" fill="#8B0000" opacity="0.4" /><circle cx="30" cy="20" r="25" fill="#8B0000" opacity="0.3" /><circle r="70" fill="none" stroke="#FF4500" stroke-width="2"/>`,
+            "Mercury": `<circle r="70" fill="url(#gradMercury)" /><circle cx="0" cy="0" r="70" fill="none" stroke="#A9A9A9" stroke-width="2"/>`,
+            "Jupiter": `<circle r="70" fill="url(#gradJupiter)" /><path d="M-65 -20 Q0 -40 65 -20 M-68 20 Q0 40 68 20" fill="none" stroke="#D2B48C" stroke-width="15" opacity="0.6" /><circle cx="30" cy="-10" r="10" fill="#8B4513" opacity="0.8" /><circle r="70" fill="none" stroke="#DEB887" stroke-width="2"/>`,
+            "Venus": `<circle r="70" fill="url(#gradVenus)" /><path d="M-60 -30 Q0 -60 60 -30 M-68 10 Q0 40 68 10" fill="none" stroke="#FFB6C1" stroke-width="20" opacity="0.5" /><circle r="70" fill="none" stroke="#FFC0CB" stroke-width="2"/>`,
+            "Saturn": `<path d="M-110 0 A110,30 0 0,0 110 0 A110,30 0 0,0 -110 0 Z" fill="none" stroke="#F4A460" stroke-width="15" opacity="0.9" /><circle r="60" fill="url(#gradSaturn)" /><path d="M-110 0 A110,30 0 0,0 110 0" fill="none" stroke="#F4A460" stroke-width="15" opacity="0.9" />`,
+            "Rahu": `<circle r="70" fill="url(#gradNode)" /><circle cx="0" cy="0" r="50" fill="none" stroke="#000" stroke-width="8" stroke-dasharray="10 10"/><text x="0" y="20" text-anchor="middle" fill="#000" font-size="50" font-weight="bold">Ra</text><circle r="70" fill="none" stroke="#696969" stroke-width="2"/>`,
+            "Ketu": `<circle r="70" fill="url(#gradNode)" /><circle cx="0" cy="0" r="50" fill="none" stroke="#000" stroke-width="8" stroke-dasharray="10 10"/><text x="0" y="20" text-anchor="middle" fill="#000" font-size="50" font-weight="bold">Ke</text><circle r="70" fill="none" stroke="#696969" stroke-width="2"/>`
+          };
+
+          gIcon.innerHTML = pDefs[p.name] || `<circle r="70" fill="${PLANETS[p.name].color}" /><circle r="70" fill="none" stroke="#fff" stroke-width="4"/>`;
+
+          if(p.name !== "Rahu" && p.name !== "Ketu" && p.name !== "Moon") {
+            const pText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            pText.setAttribute("x", "0");
+            pText.setAttribute("y", "20");
+            pText.setAttribute("text-anchor", "middle");
+            pText.setAttribute("fill", "#000000");
+            pText.setAttribute("font-size", "50");
+            pText.setAttribute("font-weight", "bold");
+            pText.setAttribute("paint-order", "stroke");
+            pText.setAttribute("stroke", "#ffffff");
+            pText.setAttribute("stroke-width", "6");
+            pText.textContent = PLANETS[p.name].abbr;
+            gIcon.appendChild(pText);
+          }
+
+          gPlanets.appendChild(gIcon);
+        });
+        gSectors.appendChild(gPlanets);
+      }
+    }
+
+    const centerCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    centerCircle.setAttribute("cx", CENTER);
+    centerCircle.setAttribute("cy", CENTER);
+    centerCircle.setAttribute("r", RADIUS_INNER);
+    centerCircle.setAttribute("fill", "none");
+    centerCircle.setAttribute("stroke", "#d4af37");
+    centerCircle.setAttribute("stroke-width", "16");
+    svg.appendChild(centerCircle);
+
+    const title1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title1.setAttribute("x", CENTER);
+    title1.setAttribute("y", CENTER - 300);
+    title1.setAttribute("text-anchor", "middle");
+    title1.setAttribute("fill", "#d4af37");
+    title1.setAttribute("font-size", "220");
+    title1.setAttribute("font-weight", "bold");
+    title1.textContent = "नवतारा चक्र";
+    svg.appendChild(title1);
+
+    const title2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title2.setAttribute("x", CENTER);
+    title2.setAttribute("y", CENTER - 50);
+    title2.setAttribute("text-anchor", "middle");
+    title2.setAttribute("fill", "#ffffff");
+    title2.setAttribute("font-size", "160");
+    title2.setAttribute("letter-spacing", "10");
+    title2.textContent = "NAVATARA CHAKRA";
+    svg.appendChild(title2);
+
+    const city = CITIES[appState.cityIndex];
+    const infoText = `${city.name}, ${city.state} | ${appState.date} ${appState.time}`;
+
+    const title3 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title3.setAttribute("x", CENTER);
+    title3.setAttribute("y", CENTER + 180);
+    title3.setAttribute("text-anchor", "middle");
+    title3.setAttribute("fill", "#aaaaaa");
+    title3.setAttribute("font-size", "100");
+    title3.textContent = infoText;
+    svg.appendChild(title3);
+
+    const title4 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title4.setAttribute("x", CENTER);
+    title4.setAttribute("y", CENTER + 350);
+    title4.setAttribute("text-anchor", "middle");
+    title4.setAttribute("fill", "#888888");
+    title4.setAttribute("font-size", "80");
+    title4.textContent = "Sidereal | Lahiri Ayanamsha | Mean Node";
+    svg.appendChild(title4);
+
+    container.appendChild(svg);
+  }
+
+  // ================== EXPORTER ==================
+  function exportTo8kPng(svgId, filename) {
+    return new Promise((resolve, reject) => {
+      const svgElement = document.getElementById(svgId);
+      if (!svgElement) return reject(new Error("SVG element not found"));
+
+      const serializer = new XMLSerializer();
+      let svgString = serializer.serializeToString(svgElement);
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 8192;
+        canvas.height = 8192;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        try {
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              URL.revokeObjectURL(url);
+              return reject(new Error("Canvas toBlob failed"));
+            }
+            const downloadUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(downloadUrl);
+            resolve();
+          }, 'image/png');
+        } catch (e) {
+          URL.revokeObjectURL(url);
+          reject(e);
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error("Failed to load SVG"));
+      };
+      img.src = url;
+    });
+  }
+
+  // ================== MAIN APP ==================
+  let appState = {
+    janmaIndex: 0,
+    cityIndex: 0,
+    date: '',
+    time: '',
+    planets: [],
+    loaded: true
+  };
+
+  function formatDegrees(deg) {
+    const d = Math.floor(deg);
+    const m = Math.floor((deg - d) * 60);
+    return `${d}° ${m.toString().padStart(2, '0')}'`;
+  }
+
+  function formatDatetimeForFilename(dateStr, timeStr) {
+    return `${dateStr}_${timeStr.replace(':', '-')}-00`;
+  }
+
+  function initializeApp() {
+    const janmaSelect = document.getElementById('janmaSelect');
+    NAKSHATRAS.forEach((n, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.text = `${NAKSHATRAS_HINDI[i]} / ${n}`;
+      janmaSelect.appendChild(opt);
+    });
+
+    const citySelect = document.getElementById('citySelect');
+    CITIES.forEach((c, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.text = `${c.name}, ${c.state}`;
+      citySelect.appendChild(opt);
+    });
+
+    document.getElementById('btnCurrentTime').addEventListener('click', setCurrentTime);
+    document.getElementById('btnGenerate').addEventListener('click', handleGenerate);
+    document.getElementById('btnReset').addEventListener('click', handleReset);
+    document.getElementById('btnDownload').addEventListener('click', handleDownload);
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const currentYear = new Date().getFullYear();
+
+    // Past Event logic
+    document.getElementById('btnTogglePast').addEventListener('click', () => {
+      document.getElementById('futurePanel').style.display = 'none';
+      document.getElementById('btnToggleFuture').style.backgroundColor = '#333';
+      document.getElementById('btnToggleFuture').style.color = 'white';
+
+      const panel = document.getElementById('pastPanel');
+      const isHidden = panel.style.display === 'none';
+      panel.style.display = isHidden ? 'block' : 'none';
+      document.getElementById('btnTogglePast').style.backgroundColor = isHidden ? 'var(--accent)' : '#333';
+      document.getElementById('btnTogglePast').style.color = isHidden ? '#000' : 'white';
+    });
+
+    // Future Event logic
+    document.getElementById('btnToggleFuture').addEventListener('click', () => {
+      document.getElementById('pastPanel').style.display = 'none';
+      document.getElementById('btnTogglePast').style.backgroundColor = '#333';
+      document.getElementById('btnTogglePast').style.color = 'white';
+
+      const panel = document.getElementById('futurePanel');
+      const isHidden = panel.style.display === 'none';
+      panel.style.display = isHidden ? 'block' : 'none';
+      document.getElementById('btnToggleFuture').style.backgroundColor = isHidden ? 'var(--accent)' : '#333';
+      document.getElementById('btnToggleFuture').style.color = isHidden ? '#000' : 'white';
+    });
+
+    // Populate Past Dropdowns
+    const pastYear = document.getElementById('pastYear');
+    for (let i = currentYear; i >= currentYear - 150; i--) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.text = i;
+      pastYear.appendChild(opt);
+    }
+
+    const pastMonth = document.getElementById('pastMonth');
+    monthNames.forEach((m, i) => {
+      const opt = document.createElement('option');
+      opt.value = String(i + 1).padStart(2, '0');
+      opt.text = m;
+      pastMonth.appendChild(opt);
+    });
+
+    const pastDay = document.getElementById('pastDay');
+    for (let i = 1; i <= 31; i++) {
+      const opt = document.createElement('option');
+      opt.value = String(i).padStart(2, '0');
+      opt.text = i;
+      pastDay.appendChild(opt);
+    }
+
+    pastMonth.addEventListener('change', () => {
+       const y = parseInt(pastYear.value) || currentYear;
+       const m = parseInt(pastMonth.value);
+       if(!m) return;
+       const daysInMonth = new Date(y, m, 0).getDate();
+       pastDay.innerHTML = '<option value="">Select Day...</option>';
+       for(let i = 1; i <= daysInMonth; i++) {
+          const opt = document.createElement('option');
+          opt.value = String(i).padStart(2, '0');
+          opt.text = i;
+          pastDay.appendChild(opt);
+       }
+    });
+
+    // Populate Future Dropdowns
+    const futureYear = document.getElementById('futureYear');
+    for (let i = currentYear; i <= currentYear + 150; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.text = i;
+      futureYear.appendChild(opt);
+    }
+
+    const futureMonth = document.getElementById('futureMonth');
+    monthNames.forEach((m, i) => {
+      const opt = document.createElement('option');
+      opt.value = String(i + 1).padStart(2, '0');
+      opt.text = m;
+      futureMonth.appendChild(opt);
+    });
+
+    const futureDay = document.getElementById('futureDay');
+    for (let i = 1; i <= 31; i++) {
+      const opt = document.createElement('option');
+      opt.value = String(i).padStart(2, '0');
+      opt.text = i;
+      futureDay.appendChild(opt);
+    }
+
+    futureMonth.addEventListener('change', () => {
+       const y = parseInt(futureYear.value) || currentYear;
+       const m = parseInt(futureMonth.value);
+       if(!m) return;
+       const daysInMonth = new Date(y, m, 0).getDate();
+       futureDay.innerHTML = '<option value="">Select Day...</option>';
+       for(let i = 1; i <= daysInMonth; i++) {
+          const opt = document.createElement('option');
+          opt.value = String(i).padStart(2, '0');
+          opt.text = i;
+          futureDay.appendChild(opt);
+       }
+    });
+
+    setCurrentTime();
+  }
+
+  function setCurrentTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    document.getElementById('dateInput').value = `${year}-${month}-${day}`;
+    document.getElementById('timeInput').value = `${hours}:${minutes}`;
+  }
+
+  function handleReset() {
+    document.getElementById('janmaSelect').value = "0";
+    document.getElementById('citySelect').value = "0";
+
+    document.getElementById('pastPanel').style.display = 'none';
+    document.getElementById('pastYear').value = "";
+    document.getElementById('pastMonth').value = "";
+    document.getElementById('pastDay').value = "";
+    document.getElementById('btnTogglePast').style.backgroundColor = '#333';
+    document.getElementById('btnTogglePast').style.color = 'white';
+
+    document.getElementById('futurePanel').style.display = 'none';
+    document.getElementById('futureYear').value = "";
+    document.getElementById('futureMonth').value = "";
+    document.getElementById('futureDay').value = "";
+    document.getElementById('btnToggleFuture').style.backgroundColor = '#333';
+    document.getElementById('btnToggleFuture').style.color = 'white';
+
+    setCurrentTime();
+    document.getElementById('visualizationSection').style.display = 'none';
+    showError(false);
+  }
+
+  function showError(show) {
+    document.getElementById('errorPanel').style.display = show ? 'block' : 'none';
+  }
+
+  function updateMethodology() {
+    const city = CITIES[appState.cityIndex];
+    document.getElementById('methodologyCity').innerText = `${city.name} (${city.lat}°, ${city.lng}°), TZ: ${city.tz}`;
+    document.getElementById('methodologyTime').innerText = `${appState.date} ${appState.time}`;
+  }
+
+  async function handleGenerate() {
+    showError(false);
+
+    appState.janmaIndex = parseInt(document.getElementById('janmaSelect').value);
+    appState.cityIndex = parseInt(document.getElementById('citySelect').value);
+    // Handle Past/Future Event override
+    const pastPanelVisible = document.getElementById('pastPanel').style.display === 'block';
+    const futurePanelVisible = document.getElementById('futurePanel').style.display === 'block';
+
+    if (pastPanelVisible && document.getElementById('pastYear').value) {
+        const py = document.getElementById('pastYear').value;
+        const pm = document.getElementById('pastMonth').value || '01';
+        const pd = document.getElementById('pastDay').value || '01';
+        appState.date = `${py}-${pm}-${pd}`;
+        appState.time = '12:00';
+    } else if (futurePanelVisible && document.getElementById('futureYear').value) {
+        const fy = document.getElementById('futureYear').value;
+        const fm = document.getElementById('futureMonth').value || '01';
+        const fd = document.getElementById('futureDay').value || '01';
+        appState.date = `${fy}-${fm}-${fd}`;
+        appState.time = '12:00';
+    } else {
+        appState.date = document.getElementById('dateInput').value;
+        appState.time = document.getElementById('timeInput').value;
+    }
+
+    if (!appState.date || !appState.time) {
+      alert("Please select a valid date and time.");
+      return;
+    }
+
+    const city = CITIES[appState.cityIndex];
+    let tzOffsetMin = 330;
+    if (city.tz !== "Asia/Kolkata") {
+       const localNow = new Date(`${appState.date}T${appState.time}:00`);
+       tzOffsetMin = -localNow.getTimezoneOffset();
+    }
+
+    try {
+      const dateObj = new Date(`${appState.date}T${appState.time}:00+05:30`);
+      const pos = getPlanetaryPositions(dateObj, tzOffsetMin);
+
+      appState.planets = pos.map(p => {
+        const nakData = getNakshatraFromLongitude(p.longitude);
+        const taraIndex = getTaraCategory(appState.janmaIndex, nakData.index);
+        return {
+          ...p,
+          nakshatraIndex: nakData.index,
+          pada: nakData.pada,
+          taraIndex: taraIndex,
+          taraInfo: TARA_CATEGORIES[taraIndex]
+        };
+      });
+
+      updateTable();
+      updateMethodology();
+
+      renderChakra('chakraContainer', appState);
+
+      document.getElementById('visualizationSection').style.display = 'block';
+
+      // Try calculating transits
+      document.getElementById('transitSection').style.display = 'block';
+      document.getElementById('transitErrorNote').style.display = 'none';
+
+      try {
+         // Create original date object for starting point
+         // Ensure it represents the UTC time of the selected local time
+         const offsetMs = tzOffsetMin * 60 * 1000;
+         // Constructing date is tricky; we will just construct an AstroTime from the julian day we used.
+         // Actually dateObj is defined in handleGenerate.
+
+         // To ensure safety, calculate them dynamically
+         const transits = calculateTransits(dateObj, appState.planets, appState.janmaIndex);
+
+         const transitBody = document.querySelector('#transitTable tbody');
+         transitBody.innerHTML = '';
+
+         appState.planets.forEach(p => {
+             const tr = document.createElement('tr');
+             const tdName = document.createElement('td');
+             tdName.textContent = PLANETS[p.name].name + " (" + p.name + ")";
+             tr.appendChild(tdName);
+
+             const trans = transits[p.name] || [];
+             for(let i=0; i<5; i++) {
+                 const td = document.createElement('td');
+                 if (trans[i] && !trans[i].isError) {
+                     const color = trans[i].tara.color;
+                     td.innerHTML = `${trans[i].dateStr} <br><span style="color:${color}; font-weight:bold">${trans[i].tara.name}</span>`;
+                 } else {
+                     td.innerHTML = `<span style="color:var(--danger)">Data unavailable</span>`;
+                     document.getElementById('transitErrorNote').style.display = 'block';
+                 }
+                 tr.appendChild(td);
+             }
+             transitBody.appendChild(tr);
+         });
+
+      } catch (e) {
+         console.error("Transit calculation error", e);
+         document.getElementById('transitErrorNote').style.display = 'block';
+         const transitBody = document.querySelector('#transitTable tbody');
+         transitBody.innerHTML = '';
+         appState.planets.forEach(p => {
+             const tr = document.createElement('tr');
+             tr.innerHTML = `<td>${p.name}</td><td>Data unavailable</td><td>Data unavailable</td><td>Data unavailable</td><td>Data unavailable</td><td>Data unavailable</td>`;
+             transitBody.appendChild(tr);
+         });
+      }
+
+    } catch (e) {
+      console.error("Calculation Error", e);
+      document.getElementById('errorMsg').innerText = "Calculation error: " + e.message;
+      showError(true);
+      document.getElementById('visualizationSection').style.display = 'none';
+    }
+  }
+
+  function updateTable() {
+    const tbody = document.querySelector('#planetaryTable tbody');
+    tbody.innerHTML = '';
+
+    appState.planets.forEach(p => {
+      const tr = document.createElement('tr');
+      // Add a background color to the row matching the Tara category color
+      // We use a slight transparency so the text remains readable
+      tr.style.backgroundColor = p.taraInfo.color + '40'; // 40 is hex for 25% opacity
+      tr.innerHTML = `
+        <td>${PLANETS[p.name].name} (${p.name})</td>
+        <td>${formatDegrees(p.longitude)}</td>
+        <td>${NAKSHATRAS[p.nakshatraIndex]}</td>
+        <td>${p.pada}</td>
+        <td><strong>${p.taraInfo.name} (${p.taraInfo.hindi})</strong></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function handleDownload() {
+    const city = CITIES[appState.cityIndex];
+    const filename = `Navatara_Chakra_${city.name}_${formatDatetimeForFilename(appState.date, appState.time)}.png`;
+
+    const originalText = document.getElementById('btnDownload').innerText;
+    document.getElementById('btnDownload').innerText = "Generating 8K Image... Please wait";
+    document.getElementById('btnDownload').disabled = true;
+
+    try {
+      await exportTo8kPng('navatara-svg', filename);
+    } catch(e) {
+      console.error(e);
+      alert("Failed to generate image. Please try again.");
+    } finally {
+      document.getElementById('btnDownload').innerText = originalText;
+      document.getElementById('btnDownload').disabled = false;
+    }
+  }
+
+  window.onload = function() { initializeApp(); };
+</script>
+
+</div>
+
+<div id="Tab2" class="tabcontent">
+  <h3>Tab 2</h3>
+  <p>Content for HTML 2 goes here.</p>
+</div>
+
+<div id="Tab3" class="tabcontent">
+  <h3>Tab 3</h3>
+  <p>Content for HTML 3 goes here.</p>
+</div>
+
+<div id="Tab4" class="tabcontent">
+    <!DOCTYPE html>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+</body>
+</html>

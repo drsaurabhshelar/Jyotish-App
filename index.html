@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standalone Tabbed App</title>
+
+  <script>
+    // ==========================================
+    // CONFIGURATION SECTION
+    // Modify filenames here to change tab content.
+    // Ensure there are exactly 4 tabs.
+    // ==========================================
+    const TAB_CONFIG = [
+      { name: "Tab 1", file: "tab1.html" },
+      { name: "Tab 2", file: "tab2.html" },
+      { name: "Tab 3", file: "tab3.html" },
+      { name: "Tab 4", file: "tab4.html" }
+    ];
+  </script>
+
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --active-color: #3498db;
+      --bg-color: #ecf0f1;
+      --text-color: #333;
+      --border-color: #bdc3c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      height: 100%;
+      width: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      overflow: hidden; /* Prevent scrolling in main app */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Tab Navigation */
+    .tab-header {
+      display: flex;
+      background-color: var(--primary-color);
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
+    .tab-btn {
+      flex: 1; /* 4 equal width tabs */
+      background-color: inherit;
+      color: #fff;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      border-bottom: 4px solid transparent;
+      opacity: 0.8;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tab-btn:hover {
+      background-color: rgba(255,255,255,0.1);
+      opacity: 1;
+    }
+
+    .tab-btn.active {
+      opacity: 1;
+      border-bottom: 4px solid var(--active-color);
+      background-color: rgba(255,255,255,0.15);
+    }
+
+    /* Main Content Area */
+    .content-area {
+      flex-grow: 1;
+      width: 100%;
+      position: relative;
+      background-color: #fff;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Error Message Area */
+    #error-container {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #f8d7da;
+      color: #721c24;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      z-index: 5;
+    }
+
+    #error-container h2 {
+      margin-bottom: 10px;
+    }
+
+    #error-details {
+      font-family: monospace;
+      background: rgba(255,255,255,0.5);
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Tabs will be injected here -->
+  <div class="tab-header" id="tab-header"></div>
+
+  <!-- Content Container -->
+  <div class="content-area">
+    <iframe id="content-frame" title="Tab Content"></iframe>
+
+    <!-- Error Fallback -->
+    <div id="error-container">
+      <h2>Error Loading File</h2>
+      <p>The application could not find or load:</p>
+      <p id="error-details"></p>
+      <p style="margin-top: 15px; font-size: 14px;">Check the TAB_CONFIG in index.html to ensure the filename is correct.</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tabHeader = document.getElementById("tab-header");
+      const contentFrame = document.getElementById("content-frame");
+      const errorContainer = document.getElementById("error-container");
+      const errorDetails = document.getElementById("error-details");
+
+      // Validate config
+      if (!TAB_CONFIG || TAB_CONFIG.length !== 4) {
+        console.warn("TAB_CONFIG does not contain exactly 4 tabs.");
+      }
+
+      // Generate Tabs
+      TAB_CONFIG.forEach((tab, index) => {
+        const btn = document.createElement("button");
+        btn.className = "tab-btn";
+        btn.textContent = tab.name;
+        btn.title = tab.name;
+
+        btn.addEventListener("click", () => loadTab(index));
+        tabHeader.appendChild(btn);
+      });
+
+      // Load specific tab
+      function loadTab(index) {
+        if (index < 0 || index >= TAB_CONFIG.length) return;
+
+        const tabData = TAB_CONFIG[index];
+        const buttons = document.querySelectorAll(".tab-btn");
+
+        // Update Active State
+        buttons.forEach((btn, i) => {
+          if (i === index) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+
+        // Hide error container initially
+        errorContainer.style.display = "none";
+        contentFrame.style.display = "block";
+
+        // To handle errors cleanly (like 404s without showing browser default 404 page in iframe),
+        // we can fetch the header first to see if it exists (works in HTTP server).
+        // If it's a file:// protocol, fetch might fail due to CORS, so we fallback to iframe error/onload.
+
+        if (window.location.protocol === 'file:') {
+            // Direct load for file protocol
+            contentFrame.src = tabData.file;
+        } else {
+            // Use fetch to check if the file exists on a web server
+            fetch(tabData.file, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        contentFrame.src = tabData.file;
+                    } else {
+                        throw new Error(`HTTP Error ${response.status}`);
+                    }
+                })
+                .catch(error => {
+                    // File not found or network error
+                    contentFrame.style.display = "none";
+                    errorContainer.style.display = "flex";
+                    errorDetails.textContent = tabData.file;
+                });
+        }
+      }
+
+      // Automatically load the first tab on startup
+      if (TAB_CONFIG.length > 0) {
+        loadTab(0);
+      }
+    });
+  </script>
+
+</body>
+</html>

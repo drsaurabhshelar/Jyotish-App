@@ -1,0 +1,103 @@
+Saturn Position Log for 100 Days
+================================
+
+Date: 2026-09-08 | Saturn Sidereal Lon: 349.01 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-09 | Saturn Sidereal Lon: 348.94 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-10 | Saturn Sidereal Lon: 348.87 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-11 | Saturn Sidereal Lon: 348.81 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-12 | Saturn Sidereal Lon: 348.74 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-13 | Saturn Sidereal Lon: 348.67 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-14 | Saturn Sidereal Lon: 348.60 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-15 | Saturn Sidereal Lon: 348.53 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-16 | Saturn Sidereal Lon: 348.46 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-17 | Saturn Sidereal Lon: 348.39 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-18 | Saturn Sidereal Lon: 348.31 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-19 | Saturn Sidereal Lon: 348.24 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-20 | Saturn Sidereal Lon: 348.17 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-21 | Saturn Sidereal Lon: 348.09 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-22 | Saturn Sidereal Lon: 348.02 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-23 | Saturn Sidereal Lon: 347.94 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-24 | Saturn Sidereal Lon: 347.86 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-25 | Saturn Sidereal Lon: 347.79 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-26 | Saturn Sidereal Lon: 347.71 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-27 | Saturn Sidereal Lon: 347.63 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-28 | Saturn Sidereal Lon: 347.55 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-29 | Saturn Sidereal Lon: 347.48 | Nakshatra: Revati | Pada: 1
+Date: 2026-09-30 | Saturn Sidereal Lon: 347.40 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-01 | Saturn Sidereal Lon: 347.32 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-02 | Saturn Sidereal Lon: 347.24 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-03 | Saturn Sidereal Lon: 347.16 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-04 | Saturn Sidereal Lon: 347.08 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-05 | Saturn Sidereal Lon: 347.01 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-06 | Saturn Sidereal Lon: 346.93 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-07 | Saturn Sidereal Lon: 346.85 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-08 | Saturn Sidereal Lon: 346.77 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-09 | Saturn Sidereal Lon: 346.69 | Nakshatra: Revati | Pada: 1
+Date: 2026-10-10 | Saturn Sidereal Lon: 346.61 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-11 | Saturn Sidereal Lon: 346.54 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-12 | Saturn Sidereal Lon: 346.46 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-13 | Saturn Sidereal Lon: 346.38 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-14 | Saturn Sidereal Lon: 346.30 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-15 | Saturn Sidereal Lon: 346.23 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-16 | Saturn Sidereal Lon: 346.15 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-17 | Saturn Sidereal Lon: 346.08 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-18 | Saturn Sidereal Lon: 346.00 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-19 | Saturn Sidereal Lon: 345.93 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-20 | Saturn Sidereal Lon: 345.85 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-21 | Saturn Sidereal Lon: 345.78 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-22 | Saturn Sidereal Lon: 345.71 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-23 | Saturn Sidereal Lon: 345.64 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-24 | Saturn Sidereal Lon: 345.57 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-25 | Saturn Sidereal Lon: 345.50 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-26 | Saturn Sidereal Lon: 345.43 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-27 | Saturn Sidereal Lon: 345.36 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-28 | Saturn Sidereal Lon: 345.29 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-29 | Saturn Sidereal Lon: 345.23 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-30 | Saturn Sidereal Lon: 345.16 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-10-31 | Saturn Sidereal Lon: 345.10 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-01 | Saturn Sidereal Lon: 345.03 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-02 | Saturn Sidereal Lon: 344.97 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-03 | Saturn Sidereal Lon: 344.91 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-04 | Saturn Sidereal Lon: 344.85 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-05 | Saturn Sidereal Lon: 344.79 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-06 | Saturn Sidereal Lon: 344.73 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-07 | Saturn Sidereal Lon: 344.68 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-08 | Saturn Sidereal Lon: 344.62 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-09 | Saturn Sidereal Lon: 344.57 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-10 | Saturn Sidereal Lon: 344.52 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-11 | Saturn Sidereal Lon: 344.47 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-12 | Saturn Sidereal Lon: 344.42 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-13 | Saturn Sidereal Lon: 344.37 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-14 | Saturn Sidereal Lon: 344.32 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-15 | Saturn Sidereal Lon: 344.28 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-16 | Saturn Sidereal Lon: 344.24 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-17 | Saturn Sidereal Lon: 344.20 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-18 | Saturn Sidereal Lon: 344.16 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-19 | Saturn Sidereal Lon: 344.12 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-20 | Saturn Sidereal Lon: 344.08 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-21 | Saturn Sidereal Lon: 344.04 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-22 | Saturn Sidereal Lon: 344.01 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-23 | Saturn Sidereal Lon: 343.98 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-24 | Saturn Sidereal Lon: 343.95 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-25 | Saturn Sidereal Lon: 343.92 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-26 | Saturn Sidereal Lon: 343.89 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-27 | Saturn Sidereal Lon: 343.87 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-28 | Saturn Sidereal Lon: 343.84 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-29 | Saturn Sidereal Lon: 343.82 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-11-30 | Saturn Sidereal Lon: 343.80 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-01 | Saturn Sidereal Lon: 343.78 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-02 | Saturn Sidereal Lon: 343.77 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-03 | Saturn Sidereal Lon: 343.75 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-04 | Saturn Sidereal Lon: 343.74 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-05 | Saturn Sidereal Lon: 343.73 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-06 | Saturn Sidereal Lon: 343.72 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-07 | Saturn Sidereal Lon: 343.71 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-08 | Saturn Sidereal Lon: 343.71 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-09 | Saturn Sidereal Lon: 343.70 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-10 | Saturn Sidereal Lon: 343.70 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-11 | Saturn Sidereal Lon: 343.70 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-12 | Saturn Sidereal Lon: 343.70 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-13 | Saturn Sidereal Lon: 343.71 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-14 | Saturn Sidereal Lon: 343.71 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-15 | Saturn Sidereal Lon: 343.72 | Nakshatra: Uttara Bhadrapada | Pada: 4
+Date: 2026-12-16 | Saturn Sidereal Lon: 343.73 | Nakshatra: Uttara Bhadrapada | Pada: 4

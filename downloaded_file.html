@@ -149,9 +149,10 @@ button.primary:hover {
 
 .chakra-container svg {
   max-width: 100%;
+  max-height: 80vh;
   height: auto;
   aspect-ratio: 1 / 1;
-  background-color: #050505;
+  background-color: transparent;
   border-radius: 50%;
   box-shadow: 0 0 40px rgba(212, 175, 55, 0.1);
 }
@@ -621,8 +622,8 @@ th {
         const SVG_SIZE = 8192;
         const CENTER = SVG_SIZE / 2;
         const RADIUS_OUTER = SVG_SIZE / 2 - 200;
-        const RADIUS_INNER = RADIUS_OUTER - 1800;
-        const RADIUS_TEXT = RADIUS_OUTER - 900;
+        const RADIUS_INNER = RADIUS_OUTER - 2400;
+        const RADIUS_TEXT = RADIUS_OUTER - 1200;
 
         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
@@ -630,17 +631,7 @@ th {
         svg.setAttribute("width", "100%");
         svg.setAttribute("height", "100%");
         svg.setAttribute("id", "navatara-svg");
-        svg.style.backgroundColor = "#050505";
-
-        for (let i = 0; i < 500; i++) {
-          const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          star.setAttribute("cx", Math.random() * SVG_SIZE);
-          star.setAttribute("cy", Math.random() * SVG_SIZE);
-          star.setAttribute("r", Math.random() * 4 + 1);
-          star.setAttribute("fill", "#ffffff");
-          star.setAttribute("opacity", Math.random() * 0.5 + 0.1);
-          svg.appendChild(star);
-        }
+        svg.style.backgroundColor = "#ffffff";
 
         const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
         defs.innerHTML = `
@@ -738,7 +729,7 @@ th {
           textHi.setAttribute("x", "0");
           textHi.setAttribute("y", "-80");
           textHi.setAttribute("text-anchor", "middle");
-          textHi.setAttribute("fill", "#ffffff");
+          textHi.setAttribute("fill", "#1a1a1a");
           textHi.setAttribute("font-size", "110");
           textHi.setAttribute("font-weight", "bold");
           textHi.textContent = NAKSHATRAS_HINDI[currentNakIndex];
@@ -748,7 +739,7 @@ th {
           textEn.setAttribute("x", "0");
           textEn.setAttribute("y", "40");
           textEn.setAttribute("text-anchor", "middle");
-          textEn.setAttribute("fill", "#dddddd");
+          textEn.setAttribute("fill", "#333333");
           textEn.setAttribute("font-size", "75");
           textEn.textContent = NAKSHATRAS[currentNakIndex];
           gText.appendChild(textEn);
@@ -777,7 +768,7 @@ th {
 
           const planetsHere = appState.planets.filter(p => p.nakshatraIndex === currentNakIndex);
           if (planetsHere.length > 0) {
-            const PLANET_RADIUS_OFFSET = RADIUS_INNER + 400;
+            const PLANET_RADIUS_OFFSET = RADIUS_INNER + 600;
             const px = CENTER + PLANET_RADIUS_OFFSET * Math.cos(textMidRad);
             const py = CENTER + PLANET_RADIUS_OFFSET * Math.sin(textMidRad);
 
@@ -849,7 +840,7 @@ th {
         title2.setAttribute("x", CENTER);
         title2.setAttribute("y", CENTER - 50);
         title2.setAttribute("text-anchor", "middle");
-        title2.setAttribute("fill", "#ffffff");
+        title2.setAttribute("fill", "#1a1a1a");
         title2.setAttribute("font-size", "160");
         title2.setAttribute("letter-spacing", "10");
         title2.textContent = "NAVATARA CHAKRA";

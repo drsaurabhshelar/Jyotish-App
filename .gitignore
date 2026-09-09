@@ -1,0 +1,13 @@
+*.json
+*.pdf
+*.png
+test*
+inspect*
+extract*
+validate*
+build*
+render*
+generate*
+find*
+test.html
+calendar_365_pages.html

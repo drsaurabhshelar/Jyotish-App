@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shivsiddha Calender v128</title>
+    <title>Shivsiddha Calender</title>
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
     <style>
 :root {
@@ -3101,7 +3101,7 @@ function initApp() {
     let appHtml = `
         <div class="container">
             <div class="header">
-                <h1 style="margin: 0; font-size: 42px; font-family: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', Palatino, serif; font-weight: 800; color: #b7791f; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #b7791f; padding-bottom: 10px; display: inline-block;">Shivsiddha Calender v128</h1>
+                <h1 style="margin: 0; font-size: 42px; font-family: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', Palatino, serif; font-weight: 800; color: #b7791f; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #b7791f; padding-bottom: 10px; display: inline-block;">Shivsiddha Calender</h1>
                 <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 5px; font-weight:bold;" id="currentDateTimeBadge"></p>
             </div>
 
@@ -3663,96 +3663,6 @@ const NAKSHATRA_DEITIES_FULL = {
     'Anuradha': 'मित्र — अर्थात् सूर्यविशेष', 'Jyeshtha': 'इन्द्र', 'Moola': 'राक्षस', 'Purva Ashadha': 'जल',
     'Uttara Ashadha': 'विश्वदेव', 'Abhijit': 'ब्रह्मा', 'Shravana': 'विष्णु', 'Dhanishtha': 'वसु', 'Shatabhisha': 'वरुण',
     'Purva Bhadrapada': 'अजचरण — अर्थात् रुद्रविशेष', 'Uttara Bhadrapada': 'अहिर्बुध्न्य — अर्थात् रुद्रविशेष', 'Revati': 'पूषा — अर्थात् सूर्यविशेष'
-};
-
-const NAKSHATRA_VRUKSHA = {
-    'Ashwini': 'करस्तर',
-    'Bharani': 'आमलक (आँवला)',
-    'Krittika': 'उदुम्बर (गूलर)',
-    'Rohini': 'जामुन',
-    'Mrigashira': 'खैर',
-    'Ardra': 'कृष्ण',
-    'Punarvasu': 'पिप्पली',
-    'Pushya': 'बाँस',
-    'Ashlesha': 'नाग',
-    'Magha': 'रोहिण',
-    'Purva Phalguni': 'पलाश',
-    'Uttara Phalguni': 'पर्कटी',
-    'Hasta': 'आम्र',
-    'Chitra': 'बिल्व',
-    'Swati': 'अर्जुन',
-    'Vishakha': 'विकंकत',
-    'Anuradha': 'वकुल',
-    'Jyeshtha': 'सरल (देवदार)',
-    'Moola': 'सर्ज',
-    'Purva Ashadha': 'बकुल',
-    'Uttara Ashadha': 'पनस (कटहल)',
-    'Shravana': 'अर्कक (मदार)',
-    'Dhanishtha': 'शमी',
-    'Shatabhisha': 'कदम्ब',
-    'Purva Bhadrapada': 'आम',
-    'Uttara Bhadrapada': 'निम्ब',
-    'Revati': 'मधूक'
-};
-
-const NAKSHATRA_YONI = {
-    'Ashwini': 'अश्व',
-    'Bharani': 'गज',
-    'Krittika': 'मेष',
-    'Rohini': 'सर्प',
-    'Mrigashira': 'सर्प',
-    'Ardra': 'श्वान',
-    'Punarvasu': 'मार्जार',
-    'Pushya': 'महिष',
-    'Ashlesha': 'मार्जार',
-    'Magha': 'मूषक',
-    'Purva Phalguni': 'मूषक',
-    'Uttara Phalguni': 'गौ',
-    'Hasta': 'महिष',
-    'Chitra': 'व्याघ्र',
-    'Swati': 'महिष',
-    'Vishakha': 'व्याघ्र',
-    'Anuradha': 'मृग',
-    'Jyeshtha': 'मृग',
-    'Moola': 'श्वान',
-    'Purva Ashadha': 'वानर',
-    'Uttara Ashadha': 'नकुल',
-    'Shravana': 'वानर',
-    'Dhanishtha': 'सिंह',
-    'Shatabhisha': 'अश्व',
-    'Purva Bhadrapada': 'सिंह',
-    'Uttara Bhadrapada': 'गौ',
-    'Revati': 'गज'
-};
-
-const NAKSHATRA_AKSHAR = {
-    'Ashwini': 'अ, आ',
-    'Bharani': 'इ, ई, उ, ऊ, ऋ',
-    'Krittika': 'इ, ई, उ, ऊ, ऋ',
-    'Rohini': 'इ, ई, उ, ऊ, ऋ',
-    'Mrigashira': 'ए, ऐ',
-    'Ardra': 'ए, ऐ',
-    'Punarvasu': 'ओ, औ',
-    'Pushya': 'अं, अः',
-    'Ashlesha': 'क, ख',
-    'Magha': 'प, फ',
-    'Purva Phalguni': 'च',
-    'Uttara Phalguni': 'ट, ठ',
-    'Hasta': 'त, थ',
-    'Chitra': 'द, ध',
-    'Swati': 'न',
-    'Vishakha': 'प, फ',
-    'Anuradha': 'ब, भ',
-    'Jyeshtha': 'म',
-    'Moola': 'य, र',
-    'Purva Ashadha': 'ल, व',
-    'Uttara Ashadha': 'श, ष',
-    'Shravana': 'स, ह',
-    'Dhanishtha': 'क्ष',
-    'Shatabhisha': 'त्र',
-    'Purva Bhadrapada': 'ज्ञ',
-    'Uttara Bhadrapada': 'अं',
-    'Revati': 'अः'
 };
 
 const NAKSHATRA_LORDS = {
@@ -4822,7 +4732,394 @@ window.closeCalendarModal = function() {
         let modal = document.getElementById('calModalBg');
         if(modal) modal.remove();
     };
+
+window.NAKSHATRA_VRUKSHA = {
+    'Ashwini': 'करस्तर',
+    'Bharani': 'आमलक (आँवला)',
+    'Krittika': 'उदुम्बर (गूलर)',
+    'Rohini': 'जामुन',
+    'Mrigashira': 'खैर',
+    'Ardra': 'कृष्ण',
+    'Punarvasu': 'पिप्पली',
+    'Pushya': 'बाँस',
+    'Ashlesha': 'नाग',
+    'Magha': 'रोहिण',
+    'Purva Phalguni': 'पलाश',
+    'Uttara Phalguni': 'पर्कटी',
+    'Hasta': 'आम्र',
+    'Chitra': 'बिल्व',
+    'Swati': 'अर्जुन',
+    'Vishakha': 'विकंकत',
+    'Anuradha': 'वकुल',
+    'Jyeshtha': 'सरल (देवदार)',
+    'Moola': 'सर्ज',
+    'Purva Ashadha': 'बकुल',
+    'Uttara Ashadha': 'पनस (कटहल)',
+    'Shravana': 'अर्कक (मदार)',
+    'Dhanishtha': 'शमी',
+    'Shatabhisha': 'कदम्ब',
+    'Purva Bhadrapada': 'आम',
+    'Uttara Bhadrapada': 'निम्ब',
+    'Revati': 'मधूक'
+};
+
+window.NAKSHATRA_YONI = {
+    'Ashwini': 'अश्व',
+    'Bharani': 'गज',
+    'Krittika': 'मेष',
+    'Rohini': 'सर्प',
+    'Mrigashira': 'सर्प',
+    'Ardra': 'श्वान',
+    'Punarvasu': 'मार्जार',
+    'Pushya': 'महिष',
+    'Ashlesha': 'मार्जार',
+    'Magha': 'मूषक',
+    'Purva Phalguni': 'मूषक',
+    'Uttara Phalguni': 'गौ',
+    'Hasta': 'महिष',
+    'Chitra': 'व्याघ्र',
+    'Swati': 'महिष',
+    'Vishakha': 'व्याघ्र',
+    'Anuradha': 'मृग',
+    'Jyeshtha': 'मृग',
+    'Moola': 'श्वान',
+    'Purva Ashadha': 'वानर',
+    'Uttara Ashadha': 'नकुल',
+    'Shravana': 'वानर',
+    'Dhanishtha': 'सिंह',
+    'Shatabhisha': 'अश्व',
+    'Purva Bhadrapada': 'सिंह',
+    'Uttara Bhadrapada': 'गौ',
+    'Revati': 'गज'
+};
+
+window.NAKSHATRA_AKSHAR = {
+    'Ashwini': 'अ, आ',
+    'Bharani': 'इ, ई, उ, ऊ, ऋ',
+    'Krittika': 'इ, ई, उ, ऊ, ऋ',
+    'Rohini': 'इ, ई, उ, ऊ, ऋ',
+    'Mrigashira': 'ए, ऐ',
+    'Ardra': 'ए, ऐ',
+    'Punarvasu': 'ओ, औ',
+    'Pushya': 'अं, अः',
+    'Ashlesha': 'क, ख',
+    'Magha': 'प, फ',
+    'Purva Phalguni': 'च',
+    'Uttara Phalguni': 'ट, ठ',
+    'Hasta': 'त, थ',
+    'Chitra': 'द, ध',
+    'Swati': 'न',
+    'Vishakha': 'प, फ',
+    'Anuradha': 'ब, भ',
+    'Jyeshtha': 'म',
+    'Moola': 'य, र',
+    'Purva Ashadha': 'ल, व',
+    'Uttara Ashadha': 'श, ष',
+    'Shravana': 'स, ह',
+    'Dhanishtha': 'क्ष',
+    'Shatabhisha': 'त्र',
+    'Purva Bhadrapada': 'ज्ञ',
+    'Uttara Bhadrapada': 'अं',
+    'Revati': 'अः'
+};
+
+
     window.openCalendarModal = function(year, month, dateStr, scrollTarget = null) {
+        let dateObj;
+        if (typeof dateStr === 'string') {
+            let parts = dateStr.split(' ');
+            let mIdx = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(parts[1]);
+            if (mIdx !== -1) {
+                 dateObj = new Date(year, mIdx, parseInt(parts[2]));
+            } else {
+                 dateObj = new Date(dateStr);
+            }
+        } else {
+             dateObj = new Date(dateStr);
+        }
+
+        let lat = 28.6139; let lng = 77.2090;
+        if (window.globalYatraNatalData && document.getElementById('yatraLat')) {
+            lat = parseFloat(document.getElementById('yatraLat').value) || lat;
+            lng = parseFloat(document.getElementById('yatraLng').value) || lng;
+        }
+        let sunriseDate = getSunriseTime(dateObj, lat, lng);
+        let p = new PanchangEngine(sunriseDate);
+
+        let nakName = p.moonNakshatraName;
+        let yoniVal = window.NAKSHATRA_YONI[nakName] || 'N/A';
+        let vrukshaVal = window.NAKSHATRA_VRUKSHA[nakName] || 'N/A';
+        let aksharVal = window.NAKSHATRA_AKSHAR[nakName] || 'N/A';
+
+        // Remove old modal if exists
+        let oldModal = document.getElementById('calModalBg');
+        if (oldModal) oldModal.remove();
+
+        let modalBg = document.createElement('div');
+        modalBg.id = 'calModalBg';
+        modalBg.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:1000;";
+
+        let scrollContainer = document.createElement('div');
+        scrollContainer.className = "card modal-scroll-container";
+        scrollContainer.id = "calModalScrollContainer";
+        scrollContainer.style.cssText = "width: 80%; max-width: 600px; max-height: 80vh; overflow-y:auto; position:relative; scroll-behavior: smooth; background:#fff; padding:20px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.2);";
+
+        let closeBtn = document.createElement('button');
+        closeBtn.innerHTML = "×";
+        closeBtn.style.cssText = "position:absolute; top: 10px; right: 10px; background: var(--red-ashubh, #e53e3e); color: #fff; border: none; font-size: 24px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.4); z-index: 9999; display: flex; align-items: center; justify-content: center;";
+        closeBtn.onclick = function() { modalBg.remove(); };
+        scrollContainer.appendChild(closeBtn);
+
+        let titleHeading = document.createElement('h2');
+        titleHeading.style.cssText = "margin-top:0; border-bottom: 2px solid var(--primary-light, #3182ce); padding-bottom: 10px; font-size:20px; color:#2d3748;";
+        titleHeading.innerText = `${dateObj.toDateString()} Details`;
+        scrollContainer.appendChild(titleHeading);
+
+        let bodyDiv = document.createElement('div');
+        bodyDiv.id = "modalBody";
+
+        let html = '';
+
+        // 1. Day Information Section (FIRST in popup)
+        html += `
+        <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--primary-color, #2b6cb0); border-bottom: 2px solid var(--primary-color, #2b6cb0); padding-bottom: 5px; font-size: 16px;">Day Information</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 13px;">
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">मास (Amanta Month)</span>
+                    <strong style="color:#1e293b;">${p.amantaMonthHindi || ''} (${p.amantaMonthName || p.amantaMonth || ''})</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">तिथि (Tithi)</span>
+                    <strong style="color:#1e293b;">${p.tithiName || ''}</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">तिथि स्वामी (Tithi Swami)</span>
+                    <strong style="color:#1e293b;">${(typeof TITHI_SWAMI !== 'undefined' ? TITHI_SWAMI[p.tithiNumber] : '') || 'N/A'}</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">तिथि संज्ञा (Tithi Saṃjñā)</span>
+                    <strong style="color:#1e293b;">${(typeof getTithiSanjna === 'function' ? getTithiSanjna(p.tithiNumber, p.paksha) : '') || 'N/A'}</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">सिद्ध तिथि (Siddha Tithi)</span>
+                    <strong style="color:#1e293b;">${(typeof getIsSiddhaTithi === 'function' && getIsSiddhaTithi(getTithiSanjna(p.tithiNumber, p.paksha), dateObj.getDay())) ? 'Yes / हाँ' : 'No / नहीं'}</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">मृत संज्ञक (Mṛta Saṃjñāka)</span>
+                    <strong style="color:#1e293b;">${(typeof getIsMrtaTithi === 'function' && getIsMrtaTithi(getTithiSanjna(p.tithiNumber, p.paksha), dateObj.getDay())) ? 'Yes / हाँ' : 'No / नहीं'}</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">दग्ध नक्षत्र (Dagdha Nakshatra)</span>
+                    <strong style="color:#1e293b;">${(typeof getIsDagdhaNakshatra === 'function' && getIsDagdhaNakshatra(nakName, dateObj.getDay())) ? 'Yes / हाँ' : 'No / नहीं'}</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">नक्षत्र (Nakshatra)</span>
+                    <strong style="color:#1e293b;">${p.moonNakshatraHindi || nakName} / ${nakName} (Pada ${p.moonPada || 1})</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">नक्षत्र देवता (Nakshatra Samjñā / Deity)</span>
+                    <strong style="color:#1e293b;">${(typeof NAKSHATRA_DEITIES !== 'undefined' ? NAKSHATRA_DEITIES[nakName] : '') || 'N/A'}</strong>
+                </div>
+                <div style="background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3px solid var(--primary-color, #2b6cb0);">
+                    <span style="color:#64748b; font-size:11px; display:block;">नक्षत्र स्वामी (Nakshatra Swami)</span>
+                    <strong style="color:#1e293b;">${(typeof NAKSHATRA_LORDS !== 'undefined' ? NAKSHATRA_LORDS[nakName] : '') || 'N/A'}</strong>
+                </div>
+                <div style="background:#fff7ed; padding:8px 12px; border-radius:6px; border-left:3px solid #f97316;">
+                    <span style="color:#c2410c; font-size:11px; display:block;">🌙 योनि</span>
+                    <strong style="color:#9a3412;">${yoniVal}</strong>
+                </div>
+                <div style="background:#f0fdf4; padding:8px 12px; border-radius:6px; border-left:3px solid #16a34a;">
+                    <span style="color:#15803d; font-size:11px; display:block;">🌳 नक्षत्र-वृक्ष</span>
+                    <strong style="color:#166534;">${vrukshaVal}</strong>
+                </div>
+                <div style="background:#f0f9ff; padding:8px 12px; border-radius:6px; border-left:3px solid #0284c7; grid-column: 1 / -1;">
+                    <span style="color:#0369a1; font-size:11px; display:block;">🔤 नक्षत्र अक्षर</span>
+                    <strong style="color:#075985;">${aksharVal}</strong>
+                </div>
+            </div>
+        </div>`;
+
+        // 2. Yogas / Special Yogas & Tithis (MOVED UP - SECOND)
+        if (typeof renderSpecialYogasSection === 'function') {
+            html += renderSpecialYogasSection(p);
+        } else if (typeof generateSpecialYogasHTML === 'function') {
+            html += generateSpecialYogasHTML(p);
+        }
+
+        // 3. ✨ नक्षत्र का स्वरूप
+        if (typeof NAKSHATRA_FORM_DATA !== 'undefined' && NAKSHATRA_FORM_DATA[nakName]) {
+            let formInfo = NAKSHATRA_FORM_DATA[nakName];
+            html += `
+            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+                <h4 style="margin: 0 0 10px 0; color: #0369a1; font-size: 14px;">✨ नक्षत्र का स्वरूप</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px;">
+                    <div style="background: #fff; padding: 8px 12px; border-radius: 6px;">
+                        <span style="color:#64748b; font-size:11px; display:block;">ताराओं की संख्या</span>
+                        <strong>${formInfo.stars || 'N/A'}</strong>
+                    </div>
+                    <div style="background: #fff; padding: 8px 12px; border-radius: 6px;">
+                        <span style="color:#64748b; font-size:11px; display:block;">स्वरूप</span>
+                        <strong>${formInfo.shape || 'N/A'}</strong>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // 4. नक्षत्र संज्ञा और अनुकूल कार्य
+        if (typeof renderNakshatraSanjnaSection === 'function') {
+            html += renderNakshatraSanjnaSection(p);
+        }
+
+        // 5. 🔎 खोई/चोरी हुई वस्तु — नक्षत्र लोचन
+        if (typeof renderNakshatraLochanSection === 'function') {
+            html += renderNakshatraLochanSection(p);
+        }
+
+        // 6. चंद्र स्थिति (Moon Status)
+        if (typeof renderMoonStatusSection === 'function') {
+            html += renderMoonStatusSection(p);
+        }
+
+        // 7. 24-Hour Muhurta Timeline
+        if (typeof render24HourTimeline === 'function') {
+            html += render24HourTimeline(p);
+        }
+
+        // 8. 🔴 भद्रा काल
+        if (typeof renderBhadraSection === 'function') {
+            html += renderBhadraSection(p);
+        }
+
+        // 9. Remaining sections
+        if (typeof renderAstaUdayaSection === 'function') {
+            html += renderAstaUdayaSection(p);
+        }
+        if (typeof renderSankrantiSection === 'function') {
+            html += renderSankrantiSection(p);
+        }
+        if (typeof renderVastraAbhushanSection === 'function') {
+            html += renderVastraAbhushanSection(p);
+        }
+
+        // 10. Sunrise Kundali (at end before agriculture/jalashay)
+        if (typeof renderSunriseKundaliSection === 'function') {
+            html += renderSunriseKundaliSection(p);
+        }
+
+        // 11. कृषि एवं खेती के मुहूर्त (Agriculture - AT VERY END)
+        if (typeof renderAgricultureSection === 'function') {
+            html += renderAgricultureSection(p);
+        }
+
+        // 12. जलाशय खनन (Jalashay Khanan - AT VERY END)
+        if (typeof renderJalashaySection === 'function') {
+            html += renderJalashaySection(p);
+        }
+
+        bodyDiv.innerHTML = html;
+        scrollContainer.appendChild(bodyDiv);
+        modalBg.appendChild(scrollContainer);
+        document.body.appendChild(modalBg);
+    };
+
+
+    window.closeCalendarModal = function() {
+        let modal = document.getElementById('calModalBg');
+        if(modal) modal.remove();
+    };
+
+window.NAKSHATRA_VRUKSHA = {
+    'Ashwini': 'करस्तर',
+    'Bharani': 'आमलक (आँवला)',
+    'Krittika': 'उदुम्बर (गूलर)',
+    'Rohini': 'जामुन',
+    'Mrigashira': 'खैर',
+    'Ardra': 'कृष्ण',
+    'Punarvasu': 'पिप्पली',
+    'Pushya': 'बाँस',
+    'Ashlesha': 'नाग',
+    'Magha': 'रोहिण',
+    'Purva Phalguni': 'पलाश',
+    'Uttara Phalguni': 'पर्कटी',
+    'Hasta': 'आम्र',
+    'Chitra': 'बिल्व',
+    'Swati': 'अर्जुन',
+    'Vishakha': 'विकंकत',
+    'Anuradha': 'वकुल',
+    'Jyeshtha': 'सरल (देवदार)',
+    'Moola': 'सर्ज',
+    'Purva Ashadha': 'बकुल',
+    'Uttara Ashadha': 'पनस (कटहल)',
+    'Shravana': 'अर्कक (मदार)',
+    'Dhanishtha': 'शमी',
+    'Shatabhisha': 'कदम्ब',
+    'Purva Bhadrapada': 'आम',
+    'Uttara Bhadrapada': 'निम्ब',
+    'Revati': 'मधूक'
+};
+
+window.NAKSHATRA_YONI = {
+    'Ashwini': 'अश्व',
+    'Bharani': 'गज',
+    'Krittika': 'मेष',
+    'Rohini': 'सर्प',
+    'Mrigashira': 'सर्प',
+    'Ardra': 'श्वान',
+    'Punarvasu': 'मार्जार',
+    'Pushya': 'महिष',
+    'Ashlesha': 'मार्जार',
+    'Magha': 'मूषक',
+    'Purva Phalguni': 'मूषक',
+    'Uttara Phalguni': 'गौ',
+    'Hasta': 'महिष',
+    'Chitra': 'व्याघ्र',
+    'Swati': 'महिष',
+    'Vishakha': 'व्याघ्र',
+    'Anuradha': 'मृग',
+    'Jyeshtha': 'मृग',
+    'Moola': 'श्वान',
+    'Purva Ashadha': 'वानर',
+    'Uttara Ashadha': 'नकुल',
+    'Shravana': 'वानर',
+    'Dhanishtha': 'सिंह',
+    'Shatabhisha': 'अश्व',
+    'Purva Bhadrapada': 'सिंह',
+    'Uttara Bhadrapada': 'गौ',
+    'Revati': 'गज'
+};
+
+window.NAKSHATRA_AKSHAR = {
+    'Ashwini': 'अ, आ',
+    'Bharani': 'इ, ई, उ, ऊ, ऋ',
+    'Krittika': 'इ, ई, उ, ऊ, ऋ',
+    'Rohini': 'इ, ई, उ, ऊ, ऋ',
+    'Mrigashira': 'ए, ऐ',
+    'Ardra': 'ए, ऐ',
+    'Punarvasu': 'ओ, औ',
+    'Pushya': 'अं, अः',
+    'Ashlesha': 'क, ख',
+    'Magha': 'प, फ',
+    'Purva Phalguni': 'च',
+    'Uttara Phalguni': 'ट, ठ',
+    'Hasta': 'त, थ',
+    'Chitra': 'द, ध',
+    'Swati': 'न',
+    'Vishakha': 'प, फ',
+    'Anuradha': 'ब, भ',
+    'Jyeshtha': 'म',
+    'Moola': 'य, र',
+    'Purva Ashadha': 'ल, व',
+    'Uttara Ashadha': 'श, ष',
+    'Shravana': 'स, ह',
+    'Dhanishtha': 'क्ष',
+    'Shatabhisha': 'त्र',
+    'Purva Bhadrapada': 'ज्ञ',
+    'Uttara Bhadrapada': 'अं',
+    'Revati': 'अः'
+};
+
+window.openCalendarModal = function(year, month, dateStr, scrollTarget = null) {
     let dateObj;
     if (typeof dateStr === 'string') {
         let parts = dateStr.split(' ');
@@ -5032,109 +5329,6 @@ window.closeCalendarModal = function() {
     }
 
 
-
-
-                let smHtml = '';
-                if (p.specialMuhurta) {
-                    let sm = p.specialMuhurta;
-                    let v = p.vishaghati;
-                    let fTime = (d) => d ? d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-                    let fDateTime = (d) => d ? d.toLocaleString([], {month:'short', day:'numeric', hour: '2-digit', minute:'2-digit'}) : '';
-
-                    let dayTableRows = sm.dayMuhurtas.map(m => `<tr style="${m.isProhibited ? 'background:#fff5f5;' : ''}">
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color); color:${m.isProhibited ? 'var(--red-ashubh)' : 'inherit'};">${m.isProhibited ? 'हाँ' : 'नहीं'}</td>
-                    </tr>`).join('');
-
-                    let nightTableRows = sm.nightMuhurtas.map(m => `<tr>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
-                    </tr>`).join('');
-
-                    let prohibitedList = sm.dayMuhurtas.filter(m => m.isProhibited).map(m => m.swami).join(', ');
-
-                    let vHtml = '';
-                    if (v && v.hasVishaghati) {
-                        vHtml = `<div style="margin-bottom:15px; padding:10px; background:#fffcf5; border:1px solid #fbd38d; border-radius:6px;">
-                            <h4 style="margin:0 0 10px 0; color:#b7791f;">विषघटी</h4>
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:13px;">
-                                <div><strong>नक्षत्र:</strong> ${v.nakName}</div>
-                                <div><strong>स्थिति:</strong> <span style="color:var(--red-ashubh); font-weight:bold;">शुभ कार्य में त्याज्य</span></div>
-                                <div><strong>नक्षत्र आरंभ:</strong> ${fDateTime(v.nakStart)}</div>
-                                <div><strong>नक्षत्र समाप्ति:</strong> ${fDateTime(v.nakEnd)}</div>
-                                <div><strong>पूर्ण नक्षत्र अवधि:</strong> ${(v.nakDurationMs / 3600000).toFixed(2)} घंटे</div>
-                                <div><strong>निर्धारित दण्ड (Offset):</strong> ${v.offsetDanda} दण्ड</div>
-                                <div><strong>वास्तविक विषघटी आरंभ:</strong> ${fDateTime(v.vishaghatiStart)}</div>
-                                <div><strong>वास्तविक विषघटी समाप्ति:</strong> ${fDateTime(v.vishaghatiEnd)}</div>
-                            </div>
-                        </div>`;
-                    } else {
-                        vHtml = `<div style="margin-bottom:15px; padding:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-size:13px; color:#64748b;">
-                            आज के नक्षत्र के लिए विषघटी निर्धारित नहीं है।
-                        </div>`;
-                    }
-
-                    smHtml = `
-                    <div style="margin-top:20px; border-top:2px solid var(--primary-light); padding-top:15px;">
-                        ${renderSpecialTimeline(p)}
-                        <h3 id="muhurtaVishaghatiSection" style="margin:0 0 15px 0; color:var(--primary-dark);">⏳ विशेष मुहूर्त एवं विषघटी</h3>
-
-                        <div style="margin-bottom:15px;">
-                            <h4 style="margin:0 0 5px 0;">आज के निषिद्ध मुहूर्त (वार अनुसार)</h4>
-                            <div style="padding:10px; background:${prohibitedList ? '#fff5f5' : '#f0fdf4'}; border:1px solid ${prohibitedList ? '#ffcdd2' : '#bbf7d0'}; border-radius:6px; font-size:13px;">
-                                ${prohibitedList ? `<strong style="color:var(--red-ashubh);">${prohibitedList}</strong> (शुभ कार्य न करें)` : '<span style="color:#166534;">आज कोई दिन का मुहूर्त निषिद्ध नहीं है।</span>'}
-                            </div>
-                        </div>
-
-                        ${vHtml}
-
-                        <h4 style="margin:0 0 10px 0;">दिवा के 15 मुहूर्त</h4>
-                        <div style="overflow-x:auto; margin-bottom:15px;">
-                            <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
-                                <thead>
-                                    <tr style="background:var(--primary-light);">
-                                        <th style="padding:6px; border:1px solid var(--border-color);">क्रम</th>
-                                        <th style="padding:6px; border:1px solid var(--border-color);">स्वामी</th>
-                                        <th style="padding:6px; border:1px solid var(--border-color);">आरंभ</th>
-                                        <th style="padding:6px; border:1px solid var(--border-color);">समाप्ति</th>
-                                        <th style="padding:6px; border:1px solid var(--border-color);">निषिद्ध</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${dayTableRows}</tbody>
-                            </table>
-                        </div>
-
-                        <h4 style="margin:0 0 10px 0;">रात्रि के 15 मुहूर्त</h4>
-                        <div style="overflow-x:auto; margin-bottom:15px;">
-                            <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
-                                <thead>
-                                    <tr style="background:#f1f5f9;">
-                                        <th style="padding:6px; border:1px solid var(--border-color);">क्रम</th>
-                                        <th style="padding:6px; border:1px solid var(--border-color);">स्वामी</th>
-                                        <th style="padding:6px; border:1px solid var(--border-color);">आरंभ</th>
-                                        <th style="padding:6px; border:1px solid var(--border-color);">समाप्ति</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${nightTableRows}</tbody>
-                            </table>
-                        </div>
-
-                        <div style="font-size:12px; color:var(--text-muted); background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
-                            <strong>नियम (Rules):</strong><br>
-                            - संपूर्ण दिनमान (सूर्योदय से सूर्यास्त) को 15 समान भागों में बांटकर 'दिवा मुहूर्त' निकाले जाते हैं। इसी प्रकार रात्रिमान को 15 भागों में बांटकर 'रात्रि मुहूर्त' निकलते हैं।<br>
-                            - यदि कोई कार्य आवश्यक हो और उस कार्य का विहित नक्षत्र वर्तमान न हो, तो उस नक्षत्र के स्वामी के मुहूर्त में वह कार्य किया जा सकता है।<br>
-                            - विषघटी की गणना नक्षत्र के वास्तविक कुल मान (अवधि) के आधार पर अनुपातिक रूप (proportional) से की जाती है (60 दण्ड मानकर)। उल्लिखित दण्ड व्यतीत होने के बाद की 4 दण्ड की अवधि विषघटी कहलाती है जो विवाहादि शुभ कार्यों में त्याज्य है।
-                        </div>
-                    </div>`;
-                }
-
-restrictionModalHtml += smHtml;
-
     // ----- AGRICULTURE POPUP SECTION -----
     let agri = window.evaluateAgriRules(p, kundaliObjForPopup);
     let wdNames = ['रविवार', 'सोमवार', 'मंगलवार', 'बुधवार', 'गुरुवार', 'शुक्रवार', 'शनिवार'];
@@ -5296,7 +5490,7 @@ restrictionModalHtml += smHtml;
     let newRulesHtml = '';
 
     // 1. Jalashay Khanan
-    if (true) {
+    if (jKhanan.isEligibleNakshatra || jKhanan.isShubh) {
         newRulesHtml += `
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
             <h3 style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 18px; border-bottom: 1px solid #bfdbfe; padding-bottom: 5px;">
@@ -5374,6 +5568,107 @@ restrictionModalHtml += smHtml;
     }
 
     restrictionModalHtml += newRulesHtml;
+
+                let smHtml = '';
+                if (p.specialMuhurta) {
+                    let sm = p.specialMuhurta;
+                    let v = p.vishaghati;
+                    let fTime = (d) => d ? d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                    let fDateTime = (d) => d ? d.toLocaleString([], {month:'short', day:'numeric', hour: '2-digit', minute:'2-digit'}) : '';
+
+                    let dayTableRows = sm.dayMuhurtas.map(m => `<tr style="${m.isProhibited ? 'background:#fff5f5;' : ''}">
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color); color:${m.isProhibited ? 'var(--red-ashubh)' : 'inherit'};">${m.isProhibited ? 'हाँ' : 'नहीं'}</td>
+                    </tr>`).join('');
+
+                    let nightTableRows = sm.nightMuhurtas.map(m => `<tr>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
+                    </tr>`).join('');
+
+                    let prohibitedList = sm.dayMuhurtas.filter(m => m.isProhibited).map(m => m.swami).join(', ');
+
+                    let vHtml = '';
+                    if (v && v.hasVishaghati) {
+                        vHtml = `<div style="margin-bottom:15px; padding:10px; background:#fffcf5; border:1px solid #fbd38d; border-radius:6px;">
+                            <h4 style="margin:0 0 10px 0; color:#b7791f;">विषघटी</h4>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:13px;">
+                                <div><strong>नक्षत्र:</strong> ${v.nakName}</div>
+                                <div><strong>स्थिति:</strong> <span style="color:var(--red-ashubh); font-weight:bold;">शुभ कार्य में त्याज्य</span></div>
+                                <div><strong>नक्षत्र आरंभ:</strong> ${fDateTime(v.nakStart)}</div>
+                                <div><strong>नक्षत्र समाप्ति:</strong> ${fDateTime(v.nakEnd)}</div>
+                                <div><strong>पूर्ण नक्षत्र अवधि:</strong> ${(v.nakDurationMs / 3600000).toFixed(2)} घंटे</div>
+                                <div><strong>निर्धारित दण्ड (Offset):</strong> ${v.offsetDanda} दण्ड</div>
+                                <div><strong>वास्तविक विषघटी आरंभ:</strong> ${fDateTime(v.vishaghatiStart)}</div>
+                                <div><strong>वास्तविक विषघटी समाप्ति:</strong> ${fDateTime(v.vishaghatiEnd)}</div>
+                            </div>
+                        </div>`;
+                    } else {
+                        vHtml = `<div style="margin-bottom:15px; padding:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-size:13px; color:#64748b;">
+                            आज के नक्षत्र के लिए विषघटी निर्धारित नहीं है।
+                        </div>`;
+                    }
+
+                    smHtml = `
+                    <div style="margin-top:20px; border-top:2px solid var(--primary-light); padding-top:15px;">
+                        ${renderSpecialTimeline(p)}
+                        <h3 id="muhurtaVishaghatiSection" style="margin:0 0 15px 0; color:var(--primary-dark);">⏳ विशेष मुहूर्त एवं विषघटी</h3>
+
+                        <div style="margin-bottom:15px;">
+                            <h4 style="margin:0 0 5px 0;">आज के निषिद्ध मुहूर्त (वार अनुसार)</h4>
+                            <div style="padding:10px; background:${prohibitedList ? '#fff5f5' : '#f0fdf4'}; border:1px solid ${prohibitedList ? '#ffcdd2' : '#bbf7d0'}; border-radius:6px; font-size:13px;">
+                                ${prohibitedList ? `<strong style="color:var(--red-ashubh);">${prohibitedList}</strong> (शुभ कार्य न करें)` : '<span style="color:#166534;">आज कोई दिन का मुहूर्त निषिद्ध नहीं है।</span>'}
+                            </div>
+                        </div>
+
+                        ${vHtml}
+
+                        <h4 style="margin:0 0 10px 0;">दिवा के 15 मुहूर्त</h4>
+                        <div style="overflow-x:auto; margin-bottom:15px;">
+                            <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+                                <thead>
+                                    <tr style="background:var(--primary-light);">
+                                        <th style="padding:6px; border:1px solid var(--border-color);">क्रम</th>
+                                        <th style="padding:6px; border:1px solid var(--border-color);">स्वामी</th>
+                                        <th style="padding:6px; border:1px solid var(--border-color);">आरंभ</th>
+                                        <th style="padding:6px; border:1px solid var(--border-color);">समाप्ति</th>
+                                        <th style="padding:6px; border:1px solid var(--border-color);">निषिद्ध</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${dayTableRows}</tbody>
+                            </table>
+                        </div>
+
+                        <h4 style="margin:0 0 10px 0;">रात्रि के 15 मुहूर्त</h4>
+                        <div style="overflow-x:auto; margin-bottom:15px;">
+                            <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+                                <thead>
+                                    <tr style="background:#f1f5f9;">
+                                        <th style="padding:6px; border:1px solid var(--border-color);">क्रम</th>
+                                        <th style="padding:6px; border:1px solid var(--border-color);">स्वामी</th>
+                                        <th style="padding:6px; border:1px solid var(--border-color);">आरंभ</th>
+                                        <th style="padding:6px; border:1px solid var(--border-color);">समाप्ति</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${nightTableRows}</tbody>
+                            </table>
+                        </div>
+
+                        <div style="font-size:12px; color:var(--text-muted); background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
+                            <strong>नियम (Rules):</strong><br>
+                            - संपूर्ण दिनमान (सूर्योदय से सूर्यास्त) को 15 समान भागों में बांटकर 'दिवा मुहूर्त' निकाले जाते हैं। इसी प्रकार रात्रिमान को 15 भागों में बांटकर 'रात्रि मुहूर्त' निकलते हैं।<br>
+                            - यदि कोई कार्य आवश्यक हो और उस कार्य का विहित नक्षत्र वर्तमान न हो, तो उस नक्षत्र के स्वामी के मुहूर्त में वह कार्य किया जा सकता है।<br>
+                            - विषघटी की गणना नक्षत्र के वास्तविक कुल मान (अवधि) के आधार पर अनुपातिक रूप (proportional) से की जाती है (60 दण्ड मानकर)। उल्लिखित दण्ड व्यतीत होने के बाद की 4 दण्ड की अवधि विषघटी कहलाती है जो विवाहादि शुभ कार्यों में त्याज्य है।
+                        </div>
+                    </div>`;
+                }
+
+restrictionModalHtml += smHtml;
 
 
 
@@ -5968,11 +6263,7 @@ restrictionModalHtml += smHtml;
                 </div>
                 <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
                     <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">नक्षत्र (Nakshatra)</span>
-                    <strong style="font-size: 15px; color: var(--primary-dark);">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex] || p.moonNakshatraName} / ${p.moonNakshatraName} <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">(Pada ${Math.floor((p.moonLongitude % (360/27)) / (360/108)) + 1})</span></strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">नक्षत्र देवता (Nakshatra Saṃjñā / Deity)</span>
-                    <strong style="font-size: 15px; color: var(--primary-dark);">${NAKSHATRA_DEITIES[p.moonNakshatraName] || 'Unknown'}</strong>
+                    <strong style="font-size: 15px; color: var(--primary-dark);">${p.moonNakshatraName} <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">(Pada ${Math.floor((p.moonLongitude % (360/27)) / (360/108)) + 1})</span></strong>
                 </div>
                             ${(() => {
                 let nData = window.NAKSHATRA_FORM_DATA[p.moonNakshatraName];
@@ -6014,18 +6305,6 @@ restrictionModalHtml += smHtml;
             <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
                     <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">नक्षत्र स्वामी (Nakshatra Swami)</span>
                     <strong style="font-size: 15px; color: var(--primary-dark);">${NAKSHATRA_LORDS[p.moonNakshatraName] || 'Unknown'}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">🌙 योनि</span>
-                    <strong style="font-size: 15px; color: var(--primary-dark);">${NAKSHATRA_YONI[p.moonNakshatraName] || 'Unknown'}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">🌳 नक्षत्र-वृक्ष</span>
-                    <strong style="font-size: 15px; color: var(--primary-dark);">${NAKSHATRA_VRUKSHA[p.moonNakshatraName] || 'Unknown'}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">🔤 नक्षत्र अक्षर</span>
-                    <strong style="font-size: 15px; color: var(--primary-dark);">${NAKSHATRA_AKSHAR[p.moonNakshatraName] || 'Unknown'}</strong>
                 </div>
                 <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
                     <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">चन्द्र राशि (Moon Rashi)</span>

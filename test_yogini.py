@@ -2,6 +2,7 @@ import os
 import glob
 import math
 import xml.etree.ElementTree as ET
+from datetime import datetime
 
 YOGINIS = [
     {'name': 'Mangala', 'years': 1},
@@ -48,24 +49,8 @@ def calculate_moon_lon(jd):
     return sidereal_lon
 
 def jd_to_date_string(jd):
-    # Standard Astronomical Julian Day Number to Gregorian calendar date YYYY-MM-DD
-    Z = int(math.floor(jd + 0.5))
-    if Z < 2299161:
-        A = Z
-    else:
-        alpha = int(math.floor((Z - 1867216.25) / 36524.25))
-        A = Z + 1 + alpha - int(math.floor(alpha / 4.0))
-
-    B = A + 1524
-    C = int(math.floor((B - 122.1) / 365.25))
-    D = int(math.floor(365.25 * C))
-    E = int(math.floor((B - D) / 30.6001))
-
-    day = int(math.floor(B - D - int(math.floor(30.6001 * E))))
-    month = int(E - 1 if E < 14 else E - 13)
-    year = int(C - 4715 if month > 2 else C - 4604)
-
-    return f"{year:04d}-{month:02d}-{day:02d}"
+    dt = datetime.fromtimestamp((jd - 2440587.5) * 86400)
+    return dt.strftime('%Y-%m-%d')
 
 def get_yogini_periods(birth_jd, max_years=100):
     moon_lon = calculate_moon_lon(birth_jd)
@@ -79,11 +64,9 @@ def get_yogini_periods(birth_jd, max_years=100):
     # Starting Yogini
     start_y_idx = (nak_num + 3 - 1) % 8
 
-    # MD 0 total duration
     first_md_years = YOGINIS[start_y_idx]['years']
     elapsed_md_days = elapsed_fraction * first_md_years * DAYS_PER_YEAR
 
-    # Start JD of MD 0
     md_start_jd = birth_jd - elapsed_md_days
 
     periods = []
@@ -98,7 +81,9 @@ def get_yogini_periods(birth_jd, max_years=100):
         md_years = md_info['years']
         md_duration_days = md_years * DAYS_PER_YEAR
 
-        # Calculate ADs within this MD
+        md_end_jd = current_md_start_jd + md_duration_days
+
+        ad_periods = []
         curr_ad_start_jd = current_md_start_jd
         for ad_offset in range(8):
             ad_y_idx = (curr_y_idx + ad_offset) % 8
@@ -109,7 +94,7 @@ def get_yogini_periods(birth_jd, max_years=100):
             ad_duration_days = (md_years * ad_years / TOTAL_YOGINI_YEARS) * DAYS_PER_YEAR
             curr_ad_end_jd = curr_ad_start_jd + ad_duration_days
 
-            periods.append({
+            ad_periods.append({
                 'mahadasha': md_name,
                 'antardasha': ad_name,
                 'start_jd': curr_ad_start_jd,
@@ -120,6 +105,15 @@ def get_yogini_periods(birth_jd, max_years=100):
 
             curr_ad_start_jd = curr_ad_end_jd
 
+        periods.append({
+            'mahadasha': md_name,
+            'start_jd': current_md_start_jd,
+            'end_jd': md_end_jd,
+            'start_date': jd_to_date_string(current_md_start_jd),
+            'end_date': jd_to_date_string(md_end_jd),
+            'antardashas': ad_periods
+        })
+
         current_md_start_jd += md_duration_days
         curr_y_idx = (curr_y_idx + 1) % 8
 
@@ -127,7 +121,9 @@ def get_yogini_periods(birth_jd, max_years=100):
 
 def main():
     files = sorted(glob.glob('Kundalis/*.xml'))
-    print(f"Found {len(files)} XML files.")
+    print(f"Testing current dasha for {len(files)} people:")
+    now_jd = (datetime.now().timestamp() / 86400.0) + 2440587.5
+
     for f in files:
         tree = ET.parse(f)
         root = tree.getroot()
@@ -137,10 +133,11 @@ def main():
         birth_jd = float(binfo.find('BirthDate').text)
 
         periods = get_yogini_periods(birth_jd)
-        print(f"\n--- {fname} {lname} (Birth JD: {birth_jd}) ---")
-        print(f"First 5 periods:")
-        for p in periods[:5]:
-            print(f"  MD: {p['mahadasha']:<10} AD: {p['antardasha']:<10} | {p['start_date']} to {p['end_date']}")
+        for md in periods:
+            if md['start_jd'] <= now_jd <= md['end_jd']:
+                for ad in md['antardashas']:
+                    if ad['start_jd'] <= now_jd <= ad['end_jd']:
+                        print(f"  {fname} {lname}: Current MD = {md['mahadasha']} ({md['start_date']} to {md['end_date']}), Current AD = {ad['antardasha']} ({ad['start_date']} to {ad['end_date']})")
 
 if __name__ == '__main__':
     main()

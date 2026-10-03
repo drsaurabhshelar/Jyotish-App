@@ -4,7 +4,7 @@ test_birthday_generator.py
 
 Generates synthetic XML Kundali files along with non-XML files (.grp, .pdf, .txt)
 and Julian Day Number XML files, then tests generate_birthday_pdf.py across multiple
-iterations to ensure accuracy and robust filtering.
+iterations to ensure accuracy, robust filtering, and interactive month links.
 """
 
 import os
@@ -209,6 +209,9 @@ class TestBirthdayGenerator(unittest.TestCase):
         reader = pypdf.PdfReader(TEST_PDF_PATH)
         self.assertGreater(len(reader.pages), 0)
         extracted_text = "".join([page.extract_text() for page in reader.pages])
+
+        # Check Quick Jump section text in PDF
+        self.assertIn("Quick Jump to Month", extracted_text)
 
         for _, _, name, _, _, _ in SAMPLE_DATA:
             self.assertIn(name, extracted_text)

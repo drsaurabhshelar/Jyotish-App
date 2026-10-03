@@ -5,7 +5,7 @@ generate_birthday_pdf.py
 Searches a specified directory (default "Kundalis") strictly for XML files (ignoring .grp, .pdf, etc.),
 extracts names and Dates of Birth (DOB) using structured parsing, Julian Day Number (JDN) conversion,
 and regex fallback across various encodings, sorts them in ascending order from January to December (and by day/year),
-and generates a PDF birthday report grouped by month.
+and generates a PDF birthday report grouped by month with clickable month navigation links on the first page.
 """
 
 import os
@@ -53,7 +53,6 @@ def julian_day_to_gregorian(jd_value):
     """
     try:
         jd = float(jd_value)
-        # JDN validity range check (e.g. year 1800 to 2100 JDN: ~2378497 to ~2488070)
         if jd < 2000000 or jd > 3000000:
             return None
 
@@ -149,7 +148,6 @@ def parse_xml_for_dob_and_name(filepath):
     dob_tags = ["dob", "date_of_birth", "birthdate", "birth_date", "dateofbirth", "date", "birth_date_time", "bdate"]
 
     if root is not None:
-        # Check specific BirthInfo node structure (Parashara's Light)
         birth_info = root.find(".//BirthInfo")
         if birth_info is not None:
             fn_elem = birth_info.find("FirstName")
@@ -170,18 +168,15 @@ def parse_xml_for_dob_and_name(filepath):
 
             if bd_elem is not None and bd_elem.text:
                 raw_bd = bd_elem.text.strip()
-                # Check if it's Julian Day Number
                 jdn_dt = julian_day_to_gregorian(raw_bd)
                 if jdn_dt:
                     dob_date = jdn_dt
                     dob_raw = raw_bd
 
-        # Generic ElementTree search if not already resolved
         if not name or not dob_date:
             for elem in root.iter():
                 elem_tag = elem.tag.split("}")[-1].lower() if "}" in elem.tag else elem.tag.lower()
 
-                # Check attributes
                 for attr, val in elem.attrib.items():
                     attr_lower = attr.lower()
                     if not name and any(nt in attr_lower for nt in name_tags):
@@ -189,7 +184,6 @@ def parse_xml_for_dob_and_name(filepath):
                     if not dob_raw and any(dt in attr_lower for dt in dob_tags):
                         dob_raw = val.strip()
 
-                # Check element text
                 if elem.text and elem.text.strip():
                     text_val = elem.text.strip()
                     if elem_tag == "firstname" and not first_name:
@@ -204,7 +198,6 @@ def parse_xml_for_dob_and_name(filepath):
             if not name and (first_name or last_name):
                 name = f"{first_name or ''} {last_name or ''}".strip()
 
-            # Separate day/month/year tags check
             if not dob_raw and not dob_date:
                 day_elem = (root.find(".//day") if root.find(".//day") is not None else
                             root.find(".//Day") if root.find(".//Day") is not None else
@@ -225,7 +218,6 @@ def parse_xml_for_dob_and_name(filepath):
                     if day_elem.text and month_elem.text and year_elem.text:
                         dob_raw = f"{day_elem.text.strip()}/{month_elem.text.strip()}/{year_elem.text.strip()}"
 
-    # Regex Fallback for DOB if not resolved
     if not dob_raw and not dob_date:
         for pattern in DATE_REGEX_PATTERNS:
             match = re.search(pattern, content, re.IGNORECASE)
@@ -233,7 +225,6 @@ def parse_xml_for_dob_and_name(filepath):
                 dob_raw = match.group(0).strip()
                 break
 
-    # Regex Fallback for Name if not resolved
     if not name:
         name_match = re.search(r'<(?:name|native_name|full_name|person_name|title|native)[^>]*>([^<]+)</', content, re.IGNORECASE)
         if name_match:
@@ -246,9 +237,7 @@ def parse_xml_for_dob_and_name(filepath):
             cleaned_name = cleaned_name[7:].strip()
         name = cleaned_name if cleaned_name else base_name
 
-    # Parse dob_raw if dob_date is not already parsed via JDN
     if not dob_date and dob_raw:
-        # Check if dob_raw itself is Julian Day Number
         jdn_dt = julian_day_to_gregorian(dob_raw)
         if jdn_dt:
             dob_date = jdn_dt
@@ -291,14 +280,13 @@ def group_and_sort_birthdays(records):
         month = rec["dob_date"].month
         grouped[month].append(rec)
 
-    # Sort each month's list by day then year then name
     for month in grouped:
         grouped[month].sort(key=lambda r: (r["dob_date"].day, r["dob_date"].year, r["name"].lower()))
 
     return grouped
 
 def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
-    """Generates a beautifully formatted PDF grouped by month."""
+    """Generates a beautifully formatted PDF grouped by month with navigation links on page 1."""
     doc = SimpleDocTemplate(
         output_pdf_path,
         pagesize=letter,
@@ -318,7 +306,7 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
         leading=28,
         textColor=colors.HexColor('#1A365D'),
         alignment=1, # Center
-        spaceAfter=15
+        spaceAfter=12
     )
 
     subtitle_style = ParagraphStyle(
@@ -329,7 +317,38 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
         leading=14,
         textColor=colors.HexColor('#4A5568'),
         alignment=1,
-        spaceAfter=20
+        spaceAfter=15
+    )
+
+    nav_heading_style = ParagraphStyle(
+        'NavHeading',
+        parent=styles['Heading3'],
+        fontName='Helvetica-Bold',
+        fontSize=12,
+        leading=15,
+        textColor=colors.HexColor('#2C6CB0'),
+        alignment=1,
+        spaceAfter=8
+    )
+
+    nav_link_active = ParagraphStyle(
+        'NavLinkActive',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=10,
+        leading=13,
+        textColor=colors.HexColor('#1A365D'),
+        alignment=1
+    )
+
+    nav_link_disabled = ParagraphStyle(
+        'NavLinkDisabled',
+        parent=styles['Normal'],
+        fontName='Helvetica',
+        fontSize=10,
+        leading=13,
+        textColor=colors.HexColor('#A0AEC0'),
+        alignment=1
     )
 
     month_heading_style = ParagraphStyle(
@@ -370,7 +389,43 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
     elements.append(Paragraph(f"Total Records: {total_count} &nbsp;|&nbsp; Generated on: {generated_on}", subtitle_style))
     elements.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor('#2B6CB0'), spaceAfter=15))
 
-    # Iterate through months Jan (1) to Dec (12)
+    # --- PAGE 1: MONTH QUICK NAVIGATION GRID ---
+    elements.append(Paragraph("<b>Quick Jump to Month</b>", nav_heading_style))
+
+    # Build 4 columns x 3 rows grid for 12 months
+    nav_table_data = []
+    row = []
+    for month_num in range(1, 13):
+        m_name = MONTH_NAMES[month_num - 1]
+        m_records = grouped_records.get(month_num, [])
+        count = len(m_records)
+
+        if count > 0:
+            link_text = f'<a href="#Month_{m_name}" color="#2B6CB0"><u><b>{m_name}</b> ({count})</u></a>'
+            cell_p = Paragraph(link_text, nav_link_active)
+        else:
+            cell_p = Paragraph(f"{m_name} (0)", nav_link_disabled)
+
+        row.append(cell_p)
+        if len(row) == 4:
+            nav_table_data.append(row)
+            row = []
+
+    nav_table = Table(nav_table_data, colWidths=[1.85 * inch] * 4)
+    nav_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#F7FAFC')),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#E2E8F0')),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]))
+
+    elements.append(nav_table)
+    elements.append(Spacer(1, 20))
+    elements.append(HRFlowable(width="100%", thickness=0.5, color=colors.HexColor('#CBD5E0'), spaceAfter=15))
+
+    # --- MONTH BIRTHDAY SECTIONS ---
     has_entries = False
     for month_num in range(1, 13):
         month_name = MONTH_NAMES[month_num - 1]
@@ -381,7 +436,10 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
 
         has_entries = True
         month_elements = []
-        month_elements.append(Paragraph(f"{month_name}", month_heading_style))
+
+        # Add destination anchor for internal PDF link
+        anchor_p = Paragraph(f'<a name="Month_{month_name}"/>{month_name}', month_heading_style)
+        month_elements.append(anchor_p)
 
         # Build table data
         table_data = [

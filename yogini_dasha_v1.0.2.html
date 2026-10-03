@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Yogini Dasha Search - Panchang v1.0.2</title>
+<style>
+  :root {
+    --primary-color: #1a365d;
+    --primary-hover: #2b6cb0;
+    --bg-color: #f7fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-color: #2d3748;
+    --text-muted: #718096;
+    --accent-color: #319795;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 30px 20px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  header {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+  }
+
+  h1 {
+    font-size: 26px;
+    color: var(--primary-color);
+    margin: 0 0 8px 0;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .file-section {
+    background: #edf2f7;
+    padding: 18px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px dashed #cbd5e0;
+  }
+
+  .file-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+  }
+
+  input[type="file"] {
+    background: #fff;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .folder-info {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    align-items: end;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 25px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field-group label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  select {
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #fff;
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  select:focus {
+    border-color: var(--primary-hover);
+  }
+
+  .search-btn {
+    padding: 11px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .search-btn:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .status-msg {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-color);
+  }
+
+  .active-filter-badge {
+    display: inline-block;
+    background: #e6fffa;
+    color: #234e52;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 14px 18px;
+    text-align: left;
+  }
+
+  th {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  tr:not(:last-child) td {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+
+  tr:hover td {
+    background-color: #edf2f7;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Current Yogini Dasha Search</h1>
+    <p class="subtitle">Search running and historical Yogini Mahadashas & Antardashas across Kundalis</p>
+  </header>
+
+  <div class="file-section">
+    <label for="fileInput">Select Kundali XML files or Folder:</label>
+    <input type="file" id="fileInput" multiple accept=".xml" webkitdirectory directory />
+    <div class="folder-info">Default target folder variable: <strong id="folderVarDisplay">Kundalis</strong></div>
+    <div id="statusMsg" class="status-msg"></div>
+  </div>
+
+  <div class="filter-grid">
+    <div class="field-group">
+      <label for="mahadashaSelect">Yogini Mahadasha</label>
+      <select id="mahadashaSelect">
+        <option value="ALL">All Mahadashas</option>
+        <option value="Mangala">Mangala</option>
+        <option value="Pingala">Pingala</option>
+        <option value="Dhanya">Dhanya</option>
+        <option value="Bhramari">Bhramari</option>
+        <option value="Bhadrika">Bhadrika</option>
+        <option value="Ulka">Ulka</option>
+        <option value="Siddha">Siddha</option>
+        <option value="Sankata">Sankata</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label for="antardashaSelect">Yogini Antardasha</label>
+      <select id="antardashaSelect">
+        <option value="ALL">All Antardashas</option>
+        <option value="Mangala">Mangala</option>
+        <option value="Pingala">Pingala</option>
+        <option value="Dhanya">Dhanya</option>
+        <option value="Bhramari">Bhramari</option>
+        <option value="Bhadrika">Bhadrika</option>
+        <option value="Ulka">Ulka</option>
+        <option value="Siddha">Siddha</option>
+        <option value="Sankata">Sankata</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label for="yearSelect">Year (Optional)</label>
+      <select id="yearSelect">
+        <!-- Populated dynamically with previous years above, current year centered and selected, future years below -->
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label for="monthSelect">Month (Optional)</label>
+      <select id="monthSelect">
+        <!-- Populated dynamically with previous months above, current month centered and selected, future months below -->
+      </select>
+    </div>
+
+    <div class="field-group">
+      <button class="search-btn" id="searchBtn">Search</button>
+    </div>
+  </div>
+
+  <div id="filterModeBadge" class="active-filter-badge">Filter Mode</div>
+
+  <table id="resultsTable">
+    <thead>
+      <tr>
+        <th>Person Name</th>
+        <th>Mahadasha - Antardasha</th>
+        <th>Start Date - End Date</th>
+      </tr>
+    </thead>
+    <tbody id="resultsBody">
+      <tr>
+        <td colspan="3" class="no-results">Loading XML files...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+// Configurable folder name variable
+var KUNDALIS_FOLDER = 'Kundalis';
+document.getElementById('folderVarDisplay').innerText = KUNDALIS_FOLDER;
+
+var YOGINIS = [
+  { name: 'Mangala', years: 1 },
+  { name: 'Pingala', years: 2 },
+  { name: 'Dhanya', years: 3 },
+  { name: 'Bhramari', years: 4 },
+  { name: 'Bhadrika', years: 5 },
+  { name: 'Ulka', years: 6 },
+  { name: 'Siddha', years: 7 },
+  { name: 'Sankata', years: 8 }
+];
+
+var MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+var TOTAL_YOGINI_YEARS = 36.0;
+var DAYS_PER_YEAR = 365.2425;
+
+var parsedPeople = [];
+
+// Populate Year & Month dropdowns centered around current date
+(function initDropdowns() {
+  var yearSelect = document.getElementById('yearSelect');
+  var monthSelect = document.getElementById('monthSelect');
+
+  var now = new Date();
+  var currentYear = now.getFullYear();
+  var currentMonth = now.getMonth() + 1; // 1-indexed (1..12)
+
+  // Top optional "All Years"
+  var optAllYr = document.createElement('option');
+  optAllYr.value = 'ALL';
+  optAllYr.textContent = 'All Years';
+  yearSelect.appendChild(optAllYr);
+
+  // Years from past to future (previous years above, current year centered, future years below)
+  for (var y = currentYear - 50; y <= currentYear + 50; y++) {
+    var opt = document.createElement('option');
+    opt.value = y.toString();
+    opt.textContent = y.toString();
+    if (y === currentYear) {
+      opt.selected = true;
+    }
+    yearSelect.appendChild(opt);
+  }
+
+  // Top optional "All Months"
+  var optAllMo = document.createElement('option');
+  optAllMo.value = 'ALL';
+  optAllMo.textContent = 'All Months';
+  monthSelect.appendChild(optAllMo);
+
+  // Months from 1 to 12 (Jan above, current month centered/selected, Dec below)
+  for (var m = 1; m <= 12; m++) {
+    var optM = document.createElement('option');
+    optM.value = m.toString();
+    optM.textContent = MONTH_NAMES[m - 1];
+    if (m === currentMonth) {
+      optM.selected = true;
+    }
+    monthSelect.appendChild(optM);
+  }
+})();
+
+// Astronomical Moon Sidereal Longitude calculation
+function calculateMoonLon(jd) {
+  var T = (jd - 2451545.0) / 36525.0;
+  var L0 = 218.3164477 + 481267.88123421 * T - 0.0015786 * T * T + (T * T * T) / 538841.0 - (T * T * T * T) / 65194000.0;
+  var D = 297.8501921 + 445267.1114034 * T - 0.0018819 * T * T + (T * T * T) / 545868.0 - (T * T * T * T) / 113065000.0;
+  var M = 357.5291092 + 35999.0502909 * T - 0.0001536 * T * T + (T * T * T) / 24490000.0;
+  var M1 = 134.9633964 + 477198.8675055 * T + 0.0087414 * T * T + (T * T * T) / 69699.0 - (T * T * T * T) / 14712000.0;
+  var F = 93.2720950 + 483202.0175233 * T - 0.0036539 * T * T - (T * T * T) / 3526000.0 + (T * T * T * T) / 863310000.0;
+
+  function rad(deg) { return deg * Math.PI / 180.0; }
+
+  var dL = (62886 * Math.sin(rad(M1)) +
+            12740 * Math.sin(rad(2*D - M1)) +
+            6583 * Math.sin(rad(2*D)) +
+            2136 * Math.sin(rad(2*M1)) -
+            1851 * Math.sin(rad(M)) -
+            1143 * Math.sin(rad(2*F)) +
+            587 * Math.sin(rad(2*D - 2*M1)) +
+            570 * Math.sin(rad(2*D - M - M1)) +
+            533 * Math.sin(rad(2*D + M1)) +
+            457 * Math.sin(rad(2*D - M)) -
+            410 * Math.sin(rad(M - M1)) -
+            347 * Math.sin(rad(D)) -
+            306 * Math.sin(rad(M + M1))) / 10000.0;
+
+  var tropicalLon = (L0 + dL) % 360.0;
+  if (tropicalLon < 0) tropicalLon += 360.0;
+
+  var year = 2000.0 + (jd - 2451545.0) / 365.25;
+  var ayanamsa = 23.85709167 + (year - 2000.0) * 0.0139694;
+  var siderealLon = (tropicalLon - ayanamsa) % 360.0;
+  if (siderealLon < 0) siderealLon += 360.0;
+
+  return siderealLon;
+}
+
+function jdToDateString(jd) {
+  var date = new Date((jd - 2440587.5) * 86400000);
+  var year = date.getUTCFullYear();
+  var month = date.getUTCMonth() + 1;
+  var day = date.getUTCDate();
+  var pad = function(n) { return n < 10 ? '0' + n : n; };
+  return year + '-' + pad(month) + '-' + pad(day);
+}
+
+function dateToJd(year, month, day) {
+  var date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  return (date.getTime() / 86400000.0) + 2440587.5;
+}
+
+function getYoginiPeriods(birthJd, maxYears) {
+  if (!maxYears) maxYears = 100;
+  var moonLon = calculateMoonLon(birthJd);
+  var nakSpan = 360.0 / 27.0;
+  var nakIndex = Math.floor(moonLon / nakSpan);
+  var nakNum = nakIndex + 1;
+  var remDeg = moonLon % nakSpan;
+
+  var elapsedFraction = remDeg / nakSpan;
+  var startYIdx = (nakNum + 3 - 1) % 8;
+
+  var firstMdYears = YOGINIS[startYIdx].years;
+  var elapsedMdDays = elapsedFraction * firstMdYears * DAYS_PER_YEAR;
+
+  var mdStartJd = birthJd - elapsedMdDays;
+  var periods = [];
+  var currentMdStartJd = mdStartJd;
+  var currYIdx = startYIdx;
+
+  var endJdLimit = birthJd + (maxYears * DAYS_PER_YEAR);
+
+  while (currentMdStartJd < endJdLimit) {
+    var mdInfo = YOGINIS[currYIdx];
+    var mdName = mdInfo.name;
+    var mdYears = mdInfo.years;
+    var mdDurationDays = mdYears * DAYS_PER_YEAR;
+    var mdEndJd = currentMdStartJd + mdDurationDays;
+
+    var adPeriods = [];
+    var currAdStartJd = currentMdStartJd;
+    for (var adOffset = 0; adOffset < 8; adOffset++) {
+      var adYIdx = (currYIdx + adOffset) % 8;
+      var adInfo = YOGINIS[adYIdx];
+      var adName = adInfo.name;
+      var adYears = adInfo.years;
+
+      var adDurationDays = (mdYears * adYears / TOTAL_YOGINI_YEARS) * DAYS_PER_YEAR;
+      var currAdEndJd = currAdStartJd + adDurationDays;
+
+      adPeriods.push({
+        mahadasha: mdName,
+        antardasha: adName,
+        startJd: currAdStartJd,
+        endJd: currAdEndJd,
+        startDate: jdToDateString(currAdStartJd),
+        endDate: jdToDateString(currAdEndJd)
+      });
+
+      currAdStartJd = currAdEndJd;
+    }
+
+    periods.push({
+      mahadasha: mdName,
+      startJd: currentMdStartJd,
+      endJd: mdEndJd,
+      startDate: jdToDateString(currentMdStartJd),
+      endDate: jdToDateString(mdEndJd),
+      antardashas: adPeriods
+    });
+
+    currentMdStartJd += mdDurationDays;
+    currYIdx = (currYIdx + 1) % 8;
+  }
+
+  return periods;
+}
+
+function parseXmlContent(xmlText, fileName) {
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(xmlText, "text/xml");
+  var bInfo = xmlDoc.getElementsByTagName("BirthInfo")[0];
+  if (!bInfo) return null;
+
+  var getTagValue = function(tagName) {
+    var el = bInfo.getElementsByTagName(tagName)[0];
+    return el ? (el.textContent || "").trim() : "";
+  };
+
+  var firstName = getTagValue("FirstName");
+  var lastName = getTagValue("LastName");
+  var name = (firstName + " " + lastName).trim();
+  if (!name) name = fileName.replace(/\.xml$/i, '');
+
+  var birthDateStr = getTagValue("BirthDate");
+  if (!birthDateStr) return null;
+
+  var birthJd = parseFloat(birthDateStr);
+  if (isNaN(birthJd)) return null;
+
+  var periods = getYoginiPeriods(birthJd, 100);
+
+  return {
+    name: name,
+    birthJd: birthJd,
+    periods: periods
+  };
+}
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  var files = e.target.files;
+  parsedPeople = [];
+  var count = 0;
+
+  if (!files || files.length === 0) return;
+
+  var pending = 0;
+  for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+    if (file.name.toLowerCase().endsWith('.xml')) {
+      pending++;
+      (function(f) {
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+          var res = parseXmlContent(evt.target.result, f.name);
+          if (res) {
+            parsedPeople.push(res);
+            count++;
+          }
+          pending--;
+          if (pending === 0) {
+            document.getElementById('statusMsg').innerText = "Loaded " + count + " Kundali XML files successfully.";
+            performSearch();
+          }
+        };
+        reader.readAsText(f);
+      })(file);
+    }
+  }
+});
+
+function performSearch() {
+  var selectedMd = document.getElementById('mahadashaSelect').value;
+  var selectedAd = document.getElementById('antardashaSelect').value;
+  var selectedYearVal = document.getElementById('yearSelect').value;
+  var selectedMonthVal = document.getElementById('monthSelect').value;
+
+  var badge = document.getElementById('filterModeBadge');
+  var tbody = document.getElementById('resultsBody');
+  tbody.innerHTML = '';
+
+  if (parsedPeople.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="no-results">No XML files loaded. Please select Kundali XML files.</td></tr>';
+    return;
+  }
+
+  // Determine Target Date Range
+  var targetStartJd = null;
+  var targetEndJd = null;
+
+  if (selectedYearVal === 'ALL') {
+    if (selectedMonthVal !== 'ALL') {
+      badge.innerText = "Filter Mode: All Years, Month = " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1];
+    } else {
+      badge.innerText = "Filter Mode: All Lifetime Periods";
+    }
+  } else {
+    var yr = parseInt(selectedYearVal, 10);
+    if (selectedMonthVal !== 'ALL') {
+      var mo = parseInt(selectedMonthVal, 10);
+      var lastDay = new Date(Date.UTC(yr, mo, 0)).getUTCDate();
+      targetStartJd = dateToJd(yr, mo, 1);
+      targetEndJd = dateToJd(yr, mo, lastDay);
+      badge.innerText = "Filter Mode: " + MONTH_NAMES[mo - 1] + " " + yr;
+    } else {
+      targetStartJd = dateToJd(yr, 1, 1);
+      targetEndJd = dateToJd(yr, 12, 31);
+      badge.innerText = "Filter Mode: Entire Year " + yr;
+    }
+  }
+
+  var results = [];
+
+  parsedPeople.forEach(function(person) {
+    person.periods.forEach(function(md) {
+      var matchMd = (selectedMd === 'ALL' || md.mahadasha === selectedMd);
+      if (!matchMd) return;
+
+      if (selectedAd === 'ALL') {
+        // Single aggregated Mahadasha row per person
+        var overlaps = checkOverlap(md.startJd, md.endJd, md.startDate, md.endDate, targetStartJd, targetEndJd, selectedYearVal, selectedMonthVal);
+        if (overlaps) {
+          results.push({
+            name: person.name,
+            dashaLabel: md.mahadasha,
+            startDate: md.startDate,
+            endDate: md.endDate,
+            startJd: md.startJd
+          });
+        }
+      } else {
+        // Individual Antardasha sub-periods
+        md.antardashas.forEach(function(ad) {
+          if (ad.antardasha === selectedAd) {
+            var overlaps = checkOverlap(ad.startJd, ad.endJd, ad.startDate, ad.endDate, targetStartJd, targetEndJd, selectedYearVal, selectedMonthVal);
+            if (overlaps) {
+              results.push({
+                name: person.name,
+                dashaLabel: ad.mahadasha + " - " + ad.antardasha,
+                startDate: ad.startDate,
+                endDate: ad.endDate,
+                startJd: ad.startJd
+              });
+            }
+          }
+        });
+      }
+    });
+  });
+
+  // Sort ascending by Start Date (startJd)
+  results.sort(function(a, b) {
+    return a.startJd - b.startJd;
+  });
+
+  if (results.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="no-results">No matching records found for the selected criteria.</td></tr>';
+    return;
+  }
+
+  results.forEach(function(item) {
+    var tr = document.createElement('tr');
+
+    var tdName = document.createElement('td');
+    tdName.textContent = item.name;
+
+    var tdDasha = document.createElement('td');
+    tdDasha.textContent = item.dashaLabel;
+
+    var tdDates = document.createElement('td');
+    tdDates.textContent = item.startDate + " to " + item.endDate;
+
+    tr.appendChild(tdName);
+    tr.appendChild(tdDasha);
+    tr.appendChild(tdDates);
+
+    tbody.appendChild(tr);
+  });
+}
+
+function checkOverlap(startJd, endJd, startDateStr, endDateStr, targetStartJd, targetEndJd, yearVal, monthVal) {
+  if (targetStartJd !== null && targetEndJd !== null) {
+    if (startJd > targetEndJd || endJd < targetStartJd) {
+      return false;
+    }
+  }
+
+  // Handle Month filter when Year is set to 'ALL'
+  if (yearVal === 'ALL' && monthVal !== 'ALL') {
+    var targetMo = parseInt(monthVal, 10);
+    var startMo = parseInt(startDateStr.split('-')[1], 10);
+    var endMo = parseInt(endDateStr.split('-')[1], 10);
+    var startYr = parseInt(startDateStr.split('-')[0], 10);
+    var endYr = parseInt(endDateStr.split('-')[0], 10);
+
+    if (startYr === endYr) {
+      if (targetMo < startMo || targetMo > endMo) return false;
+    } else {
+      var matchesStartYear = (targetMo >= startMo);
+      var matchesEndYear = (targetMo <= endMo);
+      if (!matchesStartYear && !matchesEndYear && (endYr - startYr <= 1)) return false;
+    }
+  }
+
+  return true;
+}
+
+document.getElementById('searchBtn').addEventListener('click', performSearch);
+
+window.addEventListener('DOMContentLoaded', function() {
+  var knownFiles = [
+    'Birare Dipali.xml',
+    'Borawake Arusha Adesh.xml',
+    'Dhawade Rushikesh.xml',
+    'Mahajan Anay Nikhil.xml',
+    'Mahajan Arnav Nikhil.xml',
+    'Mahajan Nikhil Abhimanyu.xml',
+    'Mithe Falguni.xml',
+    'Patil Rushikesh Datttreya.xml',
+    'Sonawane Prashant.xml',
+    'Sonawane Tanya.xml',
+    'Vispute Rajendra.xml'
+  ];
+
+  var loadedCount = 0;
+  var totalToFetch = knownFiles.length;
+
+  knownFiles.forEach(function(fileName) {
+    fetch(KUNDALIS_FOLDER + '/' + fileName)
+      .then(function(res) {
+        if (res.ok) return res.text();
+        throw new Error('Not found');
+      })
+      .then(function(xmlText) {
+        var res = parseXmlContent(xmlText, fileName);
+        if (res) {
+          parsedPeople.push(res);
+          loadedCount++;
+        }
+      })
+      .catch(function(err) {
+        // Handle local fetch restrictions
+      })
+      .finally(function() {
+        totalToFetch--;
+        if (totalToFetch === 0 && loadedCount > 0) {
+          document.getElementById('statusMsg').innerText = "Auto-loaded " + loadedCount + " XML files from '" + KUNDALIS_FOLDER + "' folder.";
+          performSearch();
+        }
+      });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Current Yogini Dasha Search - Panchang v1.0.1</title>
+<title>Current Yogini Dasha Search - Panchang v1.0.2</title>
 <style>
   :root {
     --primary-color: #1a365d;
@@ -205,7 +205,7 @@
 <div class="container">
   <header>
     <h1>Current Yogini Dasha Search</h1>
-    <p class="subtitle">Search current running or period-specific Yogini Mahadasha & Antardasha across Kundalis</p>
+    <p class="subtitle">Search running and historical Yogini Mahadashas & Antardashas across Kundalis</p>
   </header>
 
   <div class="file-section">
@@ -249,28 +249,14 @@
     <div class="field-group">
       <label for="yearSelect">Year (Optional)</label>
       <select id="yearSelect">
-        <option value="CURRENT">Current Date (Today)</option>
-        <option value="ALL">All Years</option>
-        <!-- Populated dynamically with years -->
+        <!-- Populated dynamically with previous years above, current year centered and selected, future years below -->
       </select>
     </div>
 
     <div class="field-group">
       <label for="monthSelect">Month (Optional)</label>
       <select id="monthSelect">
-        <option value="ALL">All Months</option>
-        <option value="1">January</option>
-        <option value="2">February</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
+        <!-- Populated dynamically with previous months above, current month centered and selected, future months below -->
       </select>
     </div>
 
@@ -279,7 +265,7 @@
     </div>
   </div>
 
-  <div id="filterModeBadge" class="active-filter-badge">Filter Mode: Active Today</div>
+  <div id="filterModeBadge" class="active-filter-badge">Filter Mode</div>
 
   <table id="resultsTable">
     <thead>
@@ -313,20 +299,57 @@ var YOGINIS = [
   { name: 'Sankata', years: 8 }
 ];
 
+var MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 var TOTAL_YOGINI_YEARS = 36.0;
 var DAYS_PER_YEAR = 365.2425;
 
 var parsedPeople = [];
 
-// Populate Year Select dropdown
-(function populateYears() {
+// Populate Year & Month dropdowns centered around current date
+(function initDropdowns() {
   var yearSelect = document.getElementById('yearSelect');
-  var currentYear = new Date().getFullYear();
-  for (var y = currentYear - 70; y <= currentYear + 50; y++) {
+  var monthSelect = document.getElementById('monthSelect');
+
+  var now = new Date();
+  var currentYear = now.getFullYear();
+  var currentMonth = now.getMonth() + 1; // 1-indexed (1..12)
+
+  // Top optional "All Years"
+  var optAllYr = document.createElement('option');
+  optAllYr.value = 'ALL';
+  optAllYr.textContent = 'All Years';
+  yearSelect.appendChild(optAllYr);
+
+  // Years from past to future (previous years above, current year centered, future years below)
+  for (var y = currentYear - 50; y <= currentYear + 50; y++) {
     var opt = document.createElement('option');
     opt.value = y.toString();
     opt.textContent = y.toString();
+    if (y === currentYear) {
+      opt.selected = true;
+    }
     yearSelect.appendChild(opt);
+  }
+
+  // Top optional "All Months"
+  var optAllMo = document.createElement('option');
+  optAllMo.value = 'ALL';
+  optAllMo.textContent = 'All Months';
+  monthSelect.appendChild(optAllMo);
+
+  // Months from 1 to 12 (Jan above, current month centered/selected, Dec below)
+  for (var m = 1; m <= 12; m++) {
+    var optM = document.createElement('option');
+    optM.value = m.toString();
+    optM.textContent = MONTH_NAMES[m - 1];
+    if (m === currentMonth) {
+      optM.selected = true;
+    }
+    monthSelect.appendChild(optM);
   }
 })();
 
@@ -525,22 +548,16 @@ function performSearch() {
     return;
   }
 
-  // Determine Range Criteria
-  var targetStartJd, targetEndJd;
-  var nowJd = (new Date().getTime() / 86400000.0) + 2440587.5;
+  // Determine Target Date Range
+  var targetStartJd = null;
+  var targetEndJd = null;
 
-  if (selectedYearVal === 'CURRENT') {
-    targetStartJd = nowJd;
-    targetEndJd = nowJd;
-    badge.innerText = "Filter Mode: Active Today (" + new Date().toISOString().slice(0, 10) + ")";
-  } else if (selectedYearVal === 'ALL') {
+  if (selectedYearVal === 'ALL') {
     if (selectedMonthVal !== 'ALL') {
-      badge.innerText = "Filter Mode: All Years, Month = " + selectedMonthVal;
+      badge.innerText = "Filter Mode: All Years, Month = " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1];
     } else {
       badge.innerText = "Filter Mode: All Lifetime Periods";
     }
-    targetStartJd = null;
-    targetEndJd = null;
   } else {
     var yr = parseInt(selectedYearVal, 10);
     if (selectedMonthVal !== 'ALL') {
@@ -548,7 +565,7 @@ function performSearch() {
       var lastDay = new Date(Date.UTC(yr, mo, 0)).getUTCDate();
       targetStartJd = dateToJd(yr, mo, 1);
       targetEndJd = dateToJd(yr, mo, lastDay);
-      badge.innerText = "Filter Mode: Year = " + yr + ", Month = " + mo;
+      badge.innerText = "Filter Mode: " + MONTH_NAMES[mo - 1] + " " + yr;
     } else {
       targetStartJd = dateToJd(yr, 1, 1);
       targetEndJd = dateToJd(yr, 12, 31);
@@ -564,7 +581,7 @@ function performSearch() {
       if (!matchMd) return;
 
       if (selectedAd === 'ALL') {
-        // Show only Mahadasha aggregated row
+        // Single aggregated Mahadasha row per person
         var overlaps = checkOverlap(md.startJd, md.endJd, md.startDate, md.endDate, targetStartJd, targetEndJd, selectedYearVal, selectedMonthVal);
         if (overlaps) {
           results.push({
@@ -576,7 +593,7 @@ function performSearch() {
           });
         }
       } else {
-        // Check matching Antardashas
+        // Individual Antardasha sub-periods
         md.antardashas.forEach(function(ad) {
           if (ad.antardasha === selectedAd) {
             var overlaps = checkOverlap(ad.startJd, ad.endJd, ad.startDate, ad.endDate, targetStartJd, targetEndJd, selectedYearVal, selectedMonthVal);
@@ -643,7 +660,6 @@ function checkOverlap(startJd, endJd, startDateStr, endDateStr, targetStartJd, t
     if (startYr === endYr) {
       if (targetMo < startMo || targetMo > endMo) return false;
     } else {
-      // Period spans year boundary
       var matchesStartYear = (targetMo >= startMo);
       var matchesEndYear = (targetMo <= endMo);
       if (!matchesStartYear && !matchesEndYear && (endYr - startYr <= 1)) return false;

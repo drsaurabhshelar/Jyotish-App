@@ -2,8 +2,9 @@
 """
 test_birthday_generator.py
 
-Generates synthetic XML Kundali files with varied XML tags, attributes, and date formats,
-then tests generate_birthday_pdf.py across multiple iterations to ensure accuracy.
+Generates synthetic XML Kundali files along with non-XML files (.grp, .pdf, .txt),
+and tests generate_birthday_pdf.py to ensure strictly XML files are processed
+and DOB records extracted across varied encodings and structures.
 """
 
 import os
@@ -11,7 +12,6 @@ import shutil
 import unittest
 from datetime import datetime
 import generate_birthday_pdf as gbp
-from reportlab.pdfgen import canvas
 import pypdf
 
 TEST_KUNDALIS_DIR = "Kundalis"
@@ -132,18 +132,42 @@ SAMPLE_DATA = [
         </kundali>""",
         "Lakshmi Narayanan", 12, 31, 1986
     ),
+    # Additional test XML with regex fallback date and non-standard structure
+    (
+        "kundali_13_unstructured.xml",
+        """<!-- Custom Kundali format -->
+        <custom_kundali>
+            <client_name>Mohan Das</client_name>
+            <description>Born on 14/08/1975 at 05:00 AM in Chennai</description>
+        </custom_kundali>""",
+        "Mohan Das", 8, 14, 1975
+    )
+]
+
+NON_XML_FILES = [
+    ("data.grp", "BINARY_OR_GRP_DATA_01010101"),
+    ("sample.pdf", "%PDF-1.4 ... Fake PDF binary content ..."),
+    ("notes.txt", "Some text file notes about birthdates"),
+    ("chart.png", "PNG Fake Image Bytes")
 ]
 
 def setup_test_files():
-    """Creates the Kundalis directory and populates test XML files."""
+    """Creates the Kundalis directory and populates test XML and non-XML files."""
     if os.path.exists(TEST_KUNDALIS_DIR):
         shutil.rmtree(TEST_KUNDALIS_DIR)
     os.makedirs(TEST_KUNDALIS_DIR, exist_ok=True)
 
+    # Write XML files
     for filename, content, _, _, _, _ in SAMPLE_DATA:
         filepath = os.path.join(TEST_KUNDALIS_DIR, filename)
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(content.strip())
+
+    # Write Non-XML files to ensure scanner ignores them
+    for filename, content in NON_XML_FILES:
+        filepath = os.path.join(TEST_KUNDALIS_DIR, filename)
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
 
 class TestBirthdayGenerator(unittest.TestCase):
 
@@ -151,10 +175,15 @@ class TestBirthdayGenerator(unittest.TestCase):
     def setUpClass(cls):
         setup_test_files()
 
+    def test_xml_only_filtering(self):
+        xml_files = gbp.find_xml_files(TEST_KUNDALIS_DIR)
+        # Verify non-xml files are excluded
+        self.assertEqual(len(xml_files), len(SAMPLE_DATA))
+        for xml_f in xml_files:
+            self.assertTrue(xml_f.lower().endswith(".xml"))
+
     def test_xml_parsing_and_sorting(self):
         xml_files = gbp.find_xml_files(TEST_KUNDALIS_DIR)
-        self.assertEqual(len(xml_files), len(SAMPLE_DATA))
-
         records = []
         for xml_file in xml_files:
             rec = gbp.parse_xml_for_dob_and_name(xml_file)

@@ -2,13 +2,15 @@
 """
 generate_birthday_pdf.py
 
-Searches a specified directory (default "Kundalis") for XML files, extracts names and
-Dates of Birth (DOB), sorts them in ascending order from January to December (and by day/year),
+Searches a specified directory (default "Kundalis") strictly for XML files (ignoring .grp, .pdf, etc.),
+extracts names and Dates of Birth (DOB) using structured parsing and regex fallback across various
+encodings, sorts them in ascending order from January to December (and by day/year),
 and generates a PDF birthday report grouped by month.
 """
 
 import os
 import sys
+import re
 import glob
 import argparse
 import xml.etree.ElementTree as ET
@@ -36,70 +38,139 @@ MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ]
 
+# Regex patterns for detecting DOB in unstructured text or XML node values
+# Matches DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD, DD.MM.YYYY, DD Month YYYY, etc.
+DATE_REGEX_PATTERNS = [
+    r'\b(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.](19|20)\d\d\b', # DD/MM/YYYY
+    r'\b(19|20)\d\d[\/\-\.](0?[1-9]|1[012])[\/\-\.](0?[1-9]|[12][0-9]|3[01])\b', # YYYY/MM/DD
+    r'\b(0?[1-9]|[12][0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(19|20)\d\d\b', # DD Mon YYYY
+    r'\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(0?[1-9]|[12][0-9]|3[01])[\s,]+(19|20)\d\d\b' # Mon DD, YYYY
+]
+
 def find_xml_files(folder_path):
-    """Finds all XML files in the given directory recursively."""
+    """
+    Finds all XML files in the given directory recursively.
+    Strictly filters for files ending in .xml (case-insensitive).
+    Excludes files ending with .grp, .pdf, .txt, etc.
+    """
     if not os.path.exists(folder_path):
         return []
     xml_files = []
     for root, _, files in os.walk(folder_path):
         for file in files:
-            if file.lower().endswith(".xml"):
+            ext = os.path.splitext(file)[1].lower()
+            if ext == ".xml":
                 xml_files.append(os.path.join(root, file))
     return sorted(xml_files)
+
+def read_file_content(filepath):
+    """
+    Attempts to read file content using multiple encodings.
+    Returns string content or None.
+    """
+    encodings = ['utf-8', 'utf-8-sig', 'utf-16', 'latin-1', 'cp1252', 'iso-8859-1']
+    for enc in encodings:
+        try:
+            with open(filepath, 'r', encoding=enc) as f:
+                return f.read()
+        except UnicodeDecodeError:
+            continue
+        except Exception:
+            break
+    # Fallback to binary read with ignore
+    try:
+        with open(filepath, 'rb') as f:
+            content = f.read()
+            return content.decode('utf-8', errors='ignore')
+    except Exception:
+        return None
 
 def parse_xml_for_dob_and_name(filepath):
     """
     Parses an XML file to extract name and date of birth.
     Returns a dict with 'name', 'dob_str', 'dob_date', 'file' or None if not found/invalid.
     """
-    try:
-        tree = ET.parse(filepath)
-        root = tree.getroot()
-    except Exception as e:
-        print(f"Warning: Failed to parse XML file '{filepath}': {e}", file=sys.stderr)
+    content = read_file_content(filepath)
+    if not content or not content.strip():
+        print(f"Warning: File '{filepath}' is empty or unreadable.", file=sys.stderr)
         return None
+
+    root = None
+    try:
+        clean_content = content.strip()
+        root = ET.fromstring(clean_content)
+    except Exception:
+        try:
+            if '<' in content:
+                content_xml = content[content.find('<'):]
+                root = ET.fromstring(content_xml)
+        except Exception:
+            pass
 
     name = None
     dob_raw = None
 
-    # Common tags for Name and DOB in Kundali XMLs
-    name_tags = ["name", "native_name", "person_name", "full_name", "jataka_name", "first_name", "title"]
-    dob_tags = ["dob", "date_of_birth", "birthdate", "birth_date", "dateofbirth", "date"]
+    name_tags = ["name", "native_name", "person_name", "full_name", "jataka_name", "first_name", "title", "native", "client_name"]
+    dob_tags = ["dob", "date_of_birth", "birthdate", "birth_date", "dateofbirth", "date", "birth_date_time", "bdate"]
 
-    # First search direct children or attributes or recursive search
-    # Check attributes of root or elements
-    for elem in root.iter():
-        elem_tag = elem.tag.split("}")[-1].lower() if "}" in elem.tag else elem.tag.lower()
+    if root is not None:
+        # 1. Search ElementTree elements & attributes
+        for elem in root.iter():
+            elem_tag = elem.tag.split("}")[-1].lower() if "}" in elem.tag else elem.tag.lower()
 
-        # Check attributes
-        for attr, val in elem.attrib.items():
-            attr_lower = attr.lower()
-            if not name and any(nt in attr_lower for nt in name_tags):
-                name = val.strip()
-            if not dob_raw and any(dt in attr_lower for dt in dob_tags):
-                dob_raw = val.strip()
+            # Check attributes
+            for attr, val in elem.attrib.items():
+                attr_lower = attr.lower()
+                if not name and any(nt in attr_lower for nt in name_tags):
+                    name = val.strip()
+                if not dob_raw and any(dt in attr_lower for dt in dob_tags):
+                    dob_raw = val.strip()
 
-        # Check text
-        if elem.text and elem.text.strip():
-            text_val = elem.text.strip()
-            if not name and elem_tag in name_tags:
-                name = text_val
-            elif not dob_raw and elem_tag in dob_tags:
-                dob_raw = text_val
+            # Check element text
+            if elem.text and elem.text.strip():
+                text_val = elem.text.strip()
+                if not name and elem_tag in name_tags:
+                    name = text_val
+                elif not dob_raw and elem_tag in dob_tags:
+                    dob_raw = text_val
 
-    # If day, month, year are separate tags (e.g. <day>15</day><month>08</month><year>1990</year>)
+        # 2. Separate day/month/year tags
+        if not dob_raw:
+            day_elem = (root.find(".//day") if root.find(".//day") is not None else
+                        root.find(".//Day") if root.find(".//Day") is not None else
+                        root.find(".//birth_day") if root.find(".//birth_day") is not None else
+                        root.find(".//bday"))
+
+            month_elem = (root.find(".//month") if root.find(".//month") is not None else
+                          root.find(".//Month") if root.find(".//Month") is not None else
+                          root.find(".//birth_month") if root.find(".//birth_month") is not None else
+                          root.find(".//bmonth"))
+
+            year_elem = (root.find(".//year") if root.find(".//year") is not None else
+                         root.find(".//Year") if root.find(".//Year") is not None else
+                         root.find(".//birth_year") if root.find(".//birth_year") is not None else
+                         root.find(".//byear"))
+
+            if day_elem is not None and month_elem is not None and year_elem is not None:
+                if day_elem.text and month_elem.text and year_elem.text:
+                    dob_raw = f"{day_elem.text.strip()}/{month_elem.text.strip()}/{year_elem.text.strip()}"
+
+    # 3. Fallback: Search DOB in entire content using Regex
     if not dob_raw:
-        day_elem = root.find(".//day") or root.find(".//Day") or root.find(".//birth_day")
-        month_elem = root.find(".//month") or root.find(".//Month") or root.find(".//birth_month")
-        year_elem = root.find(".//year") or root.find(".//Year") or root.find(".//birth_year")
-        if day_elem is not None and month_elem is not None and year_elem is not None:
-            if day_elem.text and month_elem.text and year_elem.text:
-                dob_raw = f"{day_elem.text.strip()}/{month_elem.text.strip()}/{year_elem.text.strip()}"
+        for pattern in DATE_REGEX_PATTERNS:
+            match = re.search(pattern, content, re.IGNORECASE)
+            if match:
+                dob_raw = match.group(0).strip()
+                break
 
-    # Fallback for name if still None: use filename without extension
+    # Fallback for name if still None: search content or use cleaned filename
+    if not name:
+        name_match = re.search(r'<(?:name|native_name|full_name|person_name|title|native)[^>]*>([^<]+)</', content, re.IGNORECASE)
+        if name_match:
+            name = name_match.group(1).strip()
+
     if not name:
         base_name = os.path.splitext(os.path.basename(filepath))[0]
-        # Clean up filename (e.g., Kundali_John_Doe -> John Doe)
         cleaned_name = base_name.replace("_", " ").replace("-", " ")
         if cleaned_name.lower().startswith("kundali"):
             cleaned_name = cleaned_name[7:].strip()
@@ -124,14 +195,16 @@ def parse_xml_for_dob_and_name(filepath):
 
 def parse_date_string(date_str):
     """Parses various date formats safely."""
-    # Handle standard python date formats or dateutil parser
+    cleaned_str = date_str.strip()
+    if " " in cleaned_str and (":" in cleaned_str or "T" in cleaned_str):
+        parts = cleaned_str.split()
+        cleaned_str = parts[0]
+
     try:
-        # Check dayfirst=True for ambiguity (e.g. 05/06/1995 -> 5th June or 6th May? Usually DD/MM/YYYY in standard Indian Kundalis)
-        # We try dayfirst=True
-        return date_parser.parse(date_str, dayfirst=True)
+        return date_parser.parse(cleaned_str, dayfirst=True)
     except Exception:
         try:
-            return date_parser.parse(date_str, dayfirst=False)
+            return date_parser.parse(cleaned_str, dayfirst=False)
         except Exception:
             return None
 
@@ -164,7 +237,6 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
 
     styles = getSampleStyleSheet()
 
-    # Custom styles
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Heading1'],
@@ -251,7 +323,7 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
 
         for idx, rec in enumerate(records, 1):
             dob_dt = rec["dob_date"]
-            formatted_dob = dob_dt.strftime("%d %b %Y") # e.g. 15 Aug 1990
+            formatted_dob = dob_dt.strftime("%d %b %Y")
             day_of_week = dob_dt.strftime("%A")
 
             table_data.append([
@@ -262,7 +334,6 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
                 Paragraph(rec["file"], table_cell_style)
             ])
 
-        # Table formatting
         col_widths = [0.4 * inch, 2.5 * inch, 1.5 * inch, 1.3 * inch, 1.8 * inch]
         t = Table(table_data, colWidths=col_widths)
         t.setStyle(TableStyle([

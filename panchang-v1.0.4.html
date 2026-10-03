@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Current Yogini Dasha Search - Panchang v1.0.3</title>
+<title>Current Yogini Dasha Search - v1.0.4</title>
 <style>
   :root {
     --primary-color: #1a365d;
@@ -249,14 +249,14 @@
     <div class="field-group">
       <label for="yearSelect">Year (Optional)</label>
       <select id="yearSelect">
-        <!-- Populated dynamically with previous years above, current year centered and selected, future years below -->
+        <!-- Populated dynamically -->
       </select>
     </div>
 
     <div class="field-group">
       <label for="monthSelect">Month (Optional)</label>
       <select id="monthSelect">
-        <!-- Populated dynamically with previous months above, current month centered and selected, future months below -->
+        <!-- Populated dynamically -->
       </select>
     </div>
 
@@ -318,37 +318,38 @@ var parsedPeople = [];
   var currentYear = now.getFullYear();
   var currentMonth = now.getMonth() + 1; // 1-indexed (1..12)
 
-  // Top optional "All Years"
+  // 1) Current Date option (default selected)
+  var optCurrent = document.createElement('option');
+  optCurrent.value = 'CURRENT';
+  optCurrent.textContent = 'Active Today (Current Date)';
+  optCurrent.selected = true;
+  yearSelect.appendChild(optCurrent);
+
+  // 2) All Years
   var optAllYr = document.createElement('option');
   optAllYr.value = 'ALL';
   optAllYr.textContent = 'All Years';
   yearSelect.appendChild(optAllYr);
 
-  // Years from past to future (previous years above, current year centered, future years below)
+  // 3) Years list (previous years above, current year, future years below)
   for (var y = currentYear - 50; y <= currentYear + 50; y++) {
     var opt = document.createElement('option');
     opt.value = y.toString();
     opt.textContent = y.toString();
-    if (y === currentYear) {
-      opt.selected = true;
-    }
     yearSelect.appendChild(opt);
   }
 
-  // Top optional "All Months"
+  // Month select
   var optAllMo = document.createElement('option');
   optAllMo.value = 'ALL';
   optAllMo.textContent = 'All Months';
+  optAllMo.selected = true;
   monthSelect.appendChild(optAllMo);
 
-  // Months from 1 to 12 (Jan above, current month centered/selected, Dec below)
   for (var m = 1; m <= 12; m++) {
     var optM = document.createElement('option');
     optM.value = m.toString();
     optM.textContent = MONTH_NAMES[m - 1];
-    if (m === currentMonth) {
-      optM.selected = true;
-    }
     monthSelect.appendChild(optM);
   }
 })();
@@ -396,11 +397,6 @@ function jdToDateString(jd) {
   var day = date.getUTCDate();
   var pad = function(n) { return n < 10 ? '0' + n : n; };
   return year + '-' + pad(month) + '-' + pad(day);
-}
-
-function dateToJd(year, month, day) {
-  var date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
-  return (date.getTime() / 86400000.0) + 2440587.5;
 }
 
 function getYoginiPeriods(birthJd, maxYears) {
@@ -548,29 +544,20 @@ function performSearch() {
     return;
   }
 
-  // Determine Target Date Range
-  var targetStartJd = null;
-  var targetEndJd = null;
+  var nowJd = (new Date().getTime() / 86400000.0) + 2440587.5;
+  var todayStr = new Date().toISOString().slice(0, 10);
 
-  if (selectedYearVal === 'ALL') {
-    if (selectedMonthVal !== 'ALL') {
-      badge.innerText = "Filter Mode: All Years, Month = " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1];
-    } else {
-      badge.innerText = "Filter Mode: All Lifetime Periods";
-    }
+  // Update Badge Label
+  if (selectedYearVal === 'CURRENT') {
+    badge.innerText = "Filter Mode: Active Running Today (" + todayStr + ")";
+  } else if (selectedYearVal === 'ALL' && selectedMonthVal === 'ALL') {
+    badge.innerText = "Filter Mode: All Lifetime Periods";
+  } else if (selectedYearVal === 'ALL') {
+    badge.innerText = "Filter Mode: All Periods starting in Month " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1];
+  } else if (selectedMonthVal === 'ALL') {
+    badge.innerText = "Filter Mode: Periods starting in Year " + selectedYearVal;
   } else {
-    var yr = parseInt(selectedYearVal, 10);
-    if (selectedMonthVal !== 'ALL') {
-      var mo = parseInt(selectedMonthVal, 10);
-      var lastDay = new Date(Date.UTC(yr, mo, 0)).getUTCDate();
-      targetStartJd = dateToJd(yr, mo, 1);
-      targetEndJd = dateToJd(yr, mo, lastDay);
-      badge.innerText = "Filter Mode: " + MONTH_NAMES[mo - 1] + " " + yr;
-    } else {
-      targetStartJd = dateToJd(yr, 1, 1);
-      targetEndJd = dateToJd(yr, 12, 31);
-      badge.innerText = "Filter Mode: Entire Year " + yr;
-    }
+    badge.innerText = "Filter Mode: Periods starting in " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1] + " " + selectedYearVal;
   }
 
   var results = [];
@@ -581,9 +568,9 @@ function performSearch() {
       if (!matchMd) return;
 
       if (selectedAd === 'ALL') {
-        // Single aggregated Mahadasha row per person
-        var overlaps = checkOverlap(md.startJd, md.endJd, md.startDate, md.endDate, targetStartJd, targetEndJd, selectedYearVal, selectedMonthVal);
-        if (overlaps) {
+        // Single aggregated Mahadasha row
+        var isMatch = checkMatch(md.startJd, md.endJd, md.startDate, selectedYearVal, selectedMonthVal, nowJd);
+        if (isMatch) {
           results.push({
             name: person.name,
             dashaLabel: md.mahadasha,
@@ -593,11 +580,11 @@ function performSearch() {
           });
         }
       } else {
-        // Individual Antardasha sub-periods
+        // Sub-antardashas
         md.antardashas.forEach(function(ad) {
           if (ad.antardasha === selectedAd) {
-            var overlaps = checkOverlap(ad.startJd, ad.endJd, ad.startDate, ad.endDate, targetStartJd, targetEndJd, selectedYearVal, selectedMonthVal);
-            if (overlaps) {
+            var isMatch = checkMatch(ad.startJd, ad.endJd, ad.startDate, selectedYearVal, selectedMonthVal, nowJd);
+            if (isMatch) {
               results.push({
                 name: person.name,
                 dashaLabel: ad.mahadasha + " - " + ad.antardasha,
@@ -618,7 +605,7 @@ function performSearch() {
   });
 
   if (results.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="3" class="no-results">No matching records found for the selected criteria.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" class="no-results">No matching records found for selected criteria.</td></tr>';
     return;
   }
 
@@ -642,31 +629,21 @@ function performSearch() {
   });
 }
 
-function checkOverlap(startJd, endJd, startDateStr, endDateStr, targetStartJd, targetEndJd, yearVal, monthVal) {
-  if (targetStartJd !== null && targetEndJd !== null) {
-    if (startJd > targetEndJd || endJd < targetStartJd) {
-      return false;
-    }
+// Check match logic
+function checkMatch(startJd, endJd, startDateStr, yearVal, monthVal, nowJd) {
+  // If year is CURRENT, check if today falls between start and end date
+  if (yearVal === 'CURRENT') {
+    return (startJd <= nowJd && nowJd <= endJd);
   }
 
-  // Handle Month filter when Year is set to 'ALL'
-  if (yearVal === 'ALL' && monthVal !== 'ALL') {
-    var targetMo = parseInt(monthVal, 10);
-    var startMo = parseInt(startDateStr.split('-')[1], 10);
-    var endMo = parseInt(endDateStr.split('-')[1], 10);
-    var startYr = parseInt(startDateStr.split('-')[0], 10);
-    var endYr = parseInt(endDateStr.split('-')[0], 10);
+  var parts = startDateStr.split('-');
+  var startYr = parts[0];
+  var startMo = parseInt(parts[1], 10).toString();
 
-    if (startYr === endYr) {
-      if (targetMo < startMo || targetMo > endMo) return false;
-    } else {
-      var matchesStartYear = (targetMo >= startMo);
-      var matchesEndYear = (targetMo <= endMo);
-      if (!matchesStartYear && !matchesEndYear && (endYr - startYr <= 1)) return false;
-    }
-  }
+  var matchYr = (yearVal === 'ALL' || startYr === yearVal);
+  var matchMo = (monthVal === 'ALL' || startMo === monthVal);
 
-  return true;
+  return matchYr && matchMo;
 }
 
 document.getElementById('searchBtn').addEventListener('click', performSearch);

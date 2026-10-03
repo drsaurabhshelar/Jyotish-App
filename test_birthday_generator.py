@@ -2,9 +2,9 @@
 """
 test_birthday_generator.py
 
-Generates synthetic XML Kundali files along with non-XML files (.grp, .pdf, .txt),
-and tests generate_birthday_pdf.py to ensure strictly XML files are processed
-and DOB records extracted across varied encodings and structures.
+Generates synthetic XML Kundali files along with non-XML files (.grp, .pdf, .txt)
+and Julian Day Number XML files, then tests generate_birthday_pdf.py across multiple
+iterations to ensure accuracy and robust filtering.
 """
 
 import os
@@ -132,15 +132,17 @@ SAMPLE_DATA = [
         </kundali>""",
         "Lakshmi Narayanan", 12, 31, 1986
     ),
-    # Additional test XML with regex fallback date and non-standard structure
     (
-        "kundali_13_unstructured.xml",
-        """<!-- Custom Kundali format -->
-        <custom_kundali>
-            <client_name>Mohan Das</client_name>
-            <description>Born on 14/08/1975 at 05:00 AM in Chennai</description>
-        </custom_kundali>""",
-        "Mohan Das", 8, 14, 1975
+        "kundali_13_jdn.xml",
+        """<!DOCTYPE BirthData>
+        <BirthData>
+            <BirthInfo>
+                <FirstName>Dipali</FirstName>
+                <LastName>Birare</LastName>
+                <BirthDate>2446255.8715278</BirthDate>
+            </BirthInfo>
+        </BirthData>""",
+        "Dipali Birare", 7, 9, 1985
     )
 ]
 
@@ -177,7 +179,6 @@ class TestBirthdayGenerator(unittest.TestCase):
 
     def test_xml_only_filtering(self):
         xml_files = gbp.find_xml_files(TEST_KUNDALIS_DIR)
-        # Verify non-xml files are excluded
         self.assertEqual(len(xml_files), len(SAMPLE_DATA))
         for xml_f in xml_files:
             self.assertTrue(xml_f.lower().endswith(".xml"))
@@ -209,7 +210,6 @@ class TestBirthdayGenerator(unittest.TestCase):
         self.assertGreater(len(reader.pages), 0)
         extracted_text = "".join([page.extract_text() for page in reader.pages])
 
-        # Check that expected names are in PDF
         for _, _, name, _, _, _ in SAMPLE_DATA:
             self.assertIn(name, extracted_text)
 

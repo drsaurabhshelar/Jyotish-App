@@ -3,14 +3,15 @@
 generate_birthday_pdf.py
 
 Searches a specified directory (default "Kundalis") strictly for XML files (ignoring .grp, .pdf, etc.),
-extracts names and Dates of Birth (DOB) using structured parsing and regex fallback across various
-encodings, sorts them in ascending order from January to December (and by day/year),
+extracts names and Dates of Birth (DOB) using structured parsing, Julian Day Number (JDN) conversion,
+and regex fallback across various encodings, sorts them in ascending order from January to December (and by day/year),
 and generates a PDF birthday report grouped by month.
 """
 
 import os
 import sys
 import re
+import math
 import glob
 import argparse
 import xml.etree.ElementTree as ET
@@ -38,14 +39,46 @@ MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ]
 
-# Regex patterns for detecting DOB in unstructured text or XML node values
-# Matches DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD, DD.MM.YYYY, DD Month YYYY, etc.
 DATE_REGEX_PATTERNS = [
     r'\b(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.](19|20)\d\d\b', # DD/MM/YYYY
     r'\b(19|20)\d\d[\/\-\.](0?[1-9]|1[012])[\/\-\.](0?[1-9]|[12][0-9]|3[01])\b', # YYYY/MM/DD
     r'\b(0?[1-9]|[12][0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(19|20)\d\d\b', # DD Mon YYYY
     r'\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(0?[1-9]|[12][0-9]|3[01])[\s,]+(19|20)\d\d\b' # Mon DD, YYYY
 ]
+
+def julian_day_to_gregorian(jd_value):
+    """
+    Converts a Julian Day Number (JDN / JD) float/int into a datetime object.
+    Used by Parashara's Light / Kundali software XML export formats (<BirthDate>2446255.8715278</BirthDate>).
+    """
+    try:
+        jd = float(jd_value)
+        # JDN validity range check (e.g. year 1800 to 2100 JDN: ~2378497 to ~2488070)
+        if jd < 2000000 or jd > 3000000:
+            return None
+
+        jd += 0.5
+        z = math.floor(jd)
+        f = jd - z
+        if z < 2299161:
+            a = z
+        else:
+            alpha = math.floor((z - 1867216.25) / 36524.25)
+            a = z + 1 + alpha - math.floor(alpha / 4)
+        b = a + 1524
+        c = math.floor((b - 122.1) / 365.25)
+        d = math.floor(365.25 * c)
+        e = math.floor((b - d) / 30.6001)
+        day = b - d - math.floor(30.6001 * e) + f
+        month = e - 1 if e < 14 else e - 13
+        year = c - 4716 if month > 2 else c - 4715
+
+        day_int = int(math.floor(day))
+        if day_int < 1 or day_int > 31 or month < 1 or month > 12:
+            return None
+        return datetime(int(year), int(month), day_int)
+    except Exception:
+        return None
 
 def find_xml_files(folder_path):
     """
@@ -77,7 +110,6 @@ def read_file_content(filepath):
             continue
         except Exception:
             break
-    # Fallback to binary read with ignore
     try:
         with open(filepath, 'rb') as f:
             content = f.read()
@@ -108,62 +140,100 @@ def parse_xml_for_dob_and_name(filepath):
             pass
 
     name = None
+    first_name = None
+    last_name = None
     dob_raw = None
+    dob_date = None
 
     name_tags = ["name", "native_name", "person_name", "full_name", "jataka_name", "first_name", "title", "native", "client_name"]
     dob_tags = ["dob", "date_of_birth", "birthdate", "birth_date", "dateofbirth", "date", "birth_date_time", "bdate"]
 
     if root is not None:
-        # 1. Search ElementTree elements & attributes
-        for elem in root.iter():
-            elem_tag = elem.tag.split("}")[-1].lower() if "}" in elem.tag else elem.tag.lower()
+        # Check specific BirthInfo node structure (Parashara's Light)
+        birth_info = root.find(".//BirthInfo")
+        if birth_info is not None:
+            fn_elem = birth_info.find("FirstName")
+            ln_elem = birth_info.find("LastName")
+            bd_elem = birth_info.find("BirthDate")
 
-            # Check attributes
-            for attr, val in elem.attrib.items():
-                attr_lower = attr.lower()
-                if not name and any(nt in attr_lower for nt in name_tags):
-                    name = val.strip()
-                if not dob_raw and any(dt in attr_lower for dt in dob_tags):
-                    dob_raw = val.strip()
+            if fn_elem is not None and fn_elem.text:
+                first_name = fn_elem.text.strip()
+            if ln_elem is not None and ln_elem.text:
+                last_name = ln_elem.text.strip()
 
-            # Check element text
-            if elem.text and elem.text.strip():
-                text_val = elem.text.strip()
-                if not name and elem_tag in name_tags:
-                    name = text_val
-                elif not dob_raw and elem_tag in dob_tags:
-                    dob_raw = text_val
+            if first_name and last_name:
+                name = f"{first_name} {last_name}"
+            elif first_name:
+                name = first_name
+            elif last_name:
+                name = last_name
 
-        # 2. Separate day/month/year tags
-        if not dob_raw:
-            day_elem = (root.find(".//day") if root.find(".//day") is not None else
-                        root.find(".//Day") if root.find(".//Day") is not None else
-                        root.find(".//birth_day") if root.find(".//birth_day") is not None else
-                        root.find(".//bday"))
+            if bd_elem is not None and bd_elem.text:
+                raw_bd = bd_elem.text.strip()
+                # Check if it's Julian Day Number
+                jdn_dt = julian_day_to_gregorian(raw_bd)
+                if jdn_dt:
+                    dob_date = jdn_dt
+                    dob_raw = raw_bd
 
-            month_elem = (root.find(".//month") if root.find(".//month") is not None else
-                          root.find(".//Month") if root.find(".//Month") is not None else
-                          root.find(".//birth_month") if root.find(".//birth_month") is not None else
-                          root.find(".//bmonth"))
+        # Generic ElementTree search if not already resolved
+        if not name or not dob_date:
+            for elem in root.iter():
+                elem_tag = elem.tag.split("}")[-1].lower() if "}" in elem.tag else elem.tag.lower()
 
-            year_elem = (root.find(".//year") if root.find(".//year") is not None else
-                         root.find(".//Year") if root.find(".//Year") is not None else
-                         root.find(".//birth_year") if root.find(".//birth_year") is not None else
-                         root.find(".//byear"))
+                # Check attributes
+                for attr, val in elem.attrib.items():
+                    attr_lower = attr.lower()
+                    if not name and any(nt in attr_lower for nt in name_tags):
+                        name = val.strip()
+                    if not dob_raw and any(dt in attr_lower for dt in dob_tags):
+                        dob_raw = val.strip()
 
-            if day_elem is not None and month_elem is not None and year_elem is not None:
-                if day_elem.text and month_elem.text and year_elem.text:
-                    dob_raw = f"{day_elem.text.strip()}/{month_elem.text.strip()}/{year_elem.text.strip()}"
+                # Check element text
+                if elem.text and elem.text.strip():
+                    text_val = elem.text.strip()
+                    if elem_tag == "firstname" and not first_name:
+                        first_name = text_val
+                    elif elem_tag == "lastname" and not last_name:
+                        last_name = text_val
+                    elif not name and elem_tag in name_tags:
+                        name = text_val
+                    elif not dob_raw and elem_tag in dob_tags:
+                        dob_raw = text_val
 
-    # 3. Fallback: Search DOB in entire content using Regex
-    if not dob_raw:
+            if not name and (first_name or last_name):
+                name = f"{first_name or ''} {last_name or ''}".strip()
+
+            # Separate day/month/year tags check
+            if not dob_raw and not dob_date:
+                day_elem = (root.find(".//day") if root.find(".//day") is not None else
+                            root.find(".//Day") if root.find(".//Day") is not None else
+                            root.find(".//birth_day") if root.find(".//birth_day") is not None else
+                            root.find(".//bday"))
+
+                month_elem = (root.find(".//month") if root.find(".//month") is not None else
+                              root.find(".//Month") if root.find(".//Month") is not None else
+                              root.find(".//birth_month") if root.find(".//birth_month") is not None else
+                              root.find(".//bmonth"))
+
+                year_elem = (root.find(".//year") if root.find(".//year") is not None else
+                             root.find(".//Year") if root.find(".//Year") is not None else
+                             root.find(".//birth_year") if root.find(".//birth_year") is not None else
+                             root.find(".//byear"))
+
+                if day_elem is not None and month_elem is not None and year_elem is not None:
+                    if day_elem.text and month_elem.text and year_elem.text:
+                        dob_raw = f"{day_elem.text.strip()}/{month_elem.text.strip()}/{year_elem.text.strip()}"
+
+    # Regex Fallback for DOB if not resolved
+    if not dob_raw and not dob_date:
         for pattern in DATE_REGEX_PATTERNS:
             match = re.search(pattern, content, re.IGNORECASE)
             if match:
                 dob_raw = match.group(0).strip()
                 break
 
-    # Fallback for name if still None: search content or use cleaned filename
+    # Regex Fallback for Name if not resolved
     if not name:
         name_match = re.search(r'<(?:name|native_name|full_name|person_name|title|native)[^>]*>([^<]+)</', content, re.IGNORECASE)
         if name_match:
@@ -176,19 +246,22 @@ def parse_xml_for_dob_and_name(filepath):
             cleaned_name = cleaned_name[7:].strip()
         name = cleaned_name if cleaned_name else base_name
 
-    if not dob_raw:
-        print(f"Warning: No DOB found in '{filepath}'", file=sys.stderr)
-        return None
+    # Parse dob_raw if dob_date is not already parsed via JDN
+    if not dob_date and dob_raw:
+        # Check if dob_raw itself is Julian Day Number
+        jdn_dt = julian_day_to_gregorian(dob_raw)
+        if jdn_dt:
+            dob_date = jdn_dt
+        else:
+            dob_date = parse_date_string(dob_raw)
 
-    # Parse dob_raw into datetime object
-    dob_date = parse_date_string(dob_raw)
     if not dob_date:
-        print(f"Warning: Could not parse DOB '{dob_raw}' in '{filepath}'", file=sys.stderr)
+        print(f"Warning: Could not parse DOB in '{filepath}'", file=sys.stderr)
         return None
 
     return {
         "name": name,
-        "dob_str": dob_raw,
+        "dob_str": dob_raw or dob_date.strftime("%d/%m/%Y"),
         "dob_date": dob_date,
         "file": os.path.basename(filepath)
     }

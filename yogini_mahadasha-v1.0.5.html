@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Current Yogini Dasha Search - v1.0.4</title>
+<title>Current Yogini Dasha Search - v1.0.5</title>
 <style>
   :root {
     --primary-color: #1a365d;
@@ -309,7 +309,7 @@ var DAYS_PER_YEAR = 365.2425;
 
 var parsedPeople = [];
 
-// Populate Year & Month dropdowns centered around current date
+// Populate Year & Month dropdowns chronologically centered around current date
 (function initDropdowns() {
   var yearSelect = document.getElementById('yearSelect');
   var monthSelect = document.getElementById('monthSelect');
@@ -318,24 +318,21 @@ var parsedPeople = [];
   var currentYear = now.getFullYear();
   var currentMonth = now.getMonth() + 1; // 1-indexed (1..12)
 
-  // 1) Current Date option (default selected)
-  var optCurrent = document.createElement('option');
-  optCurrent.value = 'CURRENT';
-  optCurrent.textContent = 'Active Today (Current Date)';
-  optCurrent.selected = true;
-  yearSelect.appendChild(optCurrent);
-
-  // 2) All Years
+  // 1) Option: All Years
   var optAllYr = document.createElement('option');
   optAllYr.value = 'ALL';
   optAllYr.textContent = 'All Years';
   yearSelect.appendChild(optAllYr);
 
-  // 3) Years list (previous years above, current year, future years below)
+  // 2) Years list in chronological order (currentYear - 50 to currentYear + 50)
+  // Default selected is current year. Scrolling UP shows older years, scrolling DOWN shows future years.
   for (var y = currentYear - 50; y <= currentYear + 50; y++) {
     var opt = document.createElement('option');
     opt.value = y.toString();
     opt.textContent = y.toString();
+    if (y === currentYear) {
+      opt.selected = true;
+    }
     yearSelect.appendChild(opt);
   }
 
@@ -343,13 +340,16 @@ var parsedPeople = [];
   var optAllMo = document.createElement('option');
   optAllMo.value = 'ALL';
   optAllMo.textContent = 'All Months';
-  optAllMo.selected = true;
   monthSelect.appendChild(optAllMo);
 
+  // Months list (January to December). Default selected is current month.
   for (var m = 1; m <= 12; m++) {
     var optM = document.createElement('option');
     optM.value = m.toString();
     optM.textContent = MONTH_NAMES[m - 1];
+    if (m === currentMonth) {
+      optM.selected = true;
+    }
     monthSelect.appendChild(optM);
   }
 })();
@@ -544,20 +544,15 @@ function performSearch() {
     return;
   }
 
-  var nowJd = (new Date().getTime() / 86400000.0) + 2440587.5;
-  var todayStr = new Date().toISOString().slice(0, 10);
-
   // Update Badge Label
-  if (selectedYearVal === 'CURRENT') {
-    badge.innerText = "Filter Mode: Active Running Today (" + todayStr + ")";
-  } else if (selectedYearVal === 'ALL' && selectedMonthVal === 'ALL') {
+  if (selectedYearVal === 'ALL' && selectedMonthVal === 'ALL') {
     badge.innerText = "Filter Mode: All Lifetime Periods";
   } else if (selectedYearVal === 'ALL') {
-    badge.innerText = "Filter Mode: All Periods starting in Month " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1];
+    badge.innerText = "Filter Mode: Starting in Month " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1] + " (All Years)";
   } else if (selectedMonthVal === 'ALL') {
-    badge.innerText = "Filter Mode: Periods starting in Year " + selectedYearVal;
+    badge.innerText = "Filter Mode: Starting in Year " + selectedYearVal;
   } else {
-    badge.innerText = "Filter Mode: Periods starting in " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1] + " " + selectedYearVal;
+    badge.innerText = "Filter Mode: Starting in " + MONTH_NAMES[parseInt(selectedMonthVal, 10) - 1] + " " + selectedYearVal;
   }
 
   var results = [];
@@ -569,7 +564,7 @@ function performSearch() {
 
       if (selectedAd === 'ALL') {
         // Single aggregated Mahadasha row
-        var isMatch = checkMatch(md.startJd, md.endJd, md.startDate, selectedYearVal, selectedMonthVal, nowJd);
+        var isMatch = checkStartMatch(md.startDate, selectedYearVal, selectedMonthVal);
         if (isMatch) {
           results.push({
             name: person.name,
@@ -583,7 +578,7 @@ function performSearch() {
         // Sub-antardashas
         md.antardashas.forEach(function(ad) {
           if (ad.antardasha === selectedAd) {
-            var isMatch = checkMatch(ad.startJd, ad.endJd, ad.startDate, selectedYearVal, selectedMonthVal, nowJd);
+            var isMatch = checkStartMatch(ad.startDate, selectedYearVal, selectedMonthVal);
             if (isMatch) {
               results.push({
                 name: person.name,
@@ -629,11 +624,10 @@ function performSearch() {
   });
 }
 
-// Check match logic
-function checkMatch(startJd, endJd, startDateStr, yearVal, monthVal, nowJd) {
-  // If year is CURRENT, check if today falls between start and end date
-  if (yearVal === 'CURRENT') {
-    return (startJd <= nowJd && nowJd <= endJd);
+// Check if a dasha period's start date matches the selected Year and/or Month
+function checkStartMatch(startDateStr, yearVal, monthVal) {
+  if (yearVal === 'ALL' && monthVal === 'ALL') {
+    return true;
   }
 
   var parts = startDateStr.split('-');

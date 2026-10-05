@@ -3,7 +3,7 @@
 generate_birthday_pdf.py
 
 Searches a specified directory (default "Kundalis") strictly for XML files (ignoring .grp, .pdf, etc.),
-extracts names, Dates of Birth (DOB), and calculates South Indian Amanta Month & Tithi at Sunrise using astronomical calculations / Swiss Ephemeris,
+extracts names, Dates of Birth (DOB), and calculates South Indian Amanta Month & Tithi at Sunrise in Hindi / Devanagari using astronomical calculations / Swiss Ephemeris,
 sorts them in ascending order from January to December (and by day/year),
 and generates a PDF birthday report grouped by month with clickable month navigation links on the first page.
 """
@@ -45,29 +45,17 @@ MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ]
 
-# Amanta (South Indian / Amavasyant) month names based on Sun Sidereal Rashi at PRECEDING Amavasya:
-# 0: Mesha -> Vaishakha
-# 1: Vrishabha -> Jyeshtha
-# 2: Mithuna -> Ashadha
-# 3: Karka -> Shravana
-# 4: Simha -> Bhadrapada
-# 5: Kanya -> Ashvina
-# 6: Tula -> Kartika
-# 7: Vrishchika -> Margashirsha
-# 8: Dhanu -> Pausha
-# 9: Makara -> Magha
-# 10: Kumbha -> Phalguna
-# 11: Meena -> Chaitra
-AMANTA_MONTHS = [
-    'Vaishakha', 'Jyeshtha', 'Ashadha', 'Shravana',
-    'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha',
-    'Pausha', 'Magha', 'Phalguna', 'Chaitra'
+# Devanagari / Hindi South Indian Amanta Month names:
+AMANTA_MONTHS_HINDI = [
+    'वैशाख', 'ज्येष्ठ', 'आषाढ़', 'श्रावण',
+    'भाद्रपद', 'आश्विन', 'कार्तिक', 'मार्गशीर्ष',
+    'पौष', 'माघ', 'फाल्गुन', 'चैत्र'
 ]
 
-TITHI_NAMES = [
-    'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
-    'Shasthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
-    'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Purnima'
+TITHI_NAMES_HINDI = [
+    'प्रतिपदा', 'द्वितीया', 'तृतीया', 'चतुर्थी', 'पंचमी',
+    'षष्ठी', 'सप्तमी', 'अष्टमी', 'नवमी', 'दशमी',
+    'एकादशी', 'द्वादशी', 'त्रयोदशी', 'चतुर्दशी', 'पूर्णिमा'
 ]
 
 DATE_REGEX_PATTERNS = [
@@ -127,8 +115,8 @@ def gregorian_to_jdn(dt):
 
 def calculate_south_indian_tithi(jd_ut):
     """
-    Calculates South Indian Amanta Month & Tithi at Sunrise from JDN using Swiss Ephemeris or Keplerian approx.
-    Returns string like 'Pausha Shukla Panchami'.
+    Calculates South Indian Amanta Month & Tithi at Sunrise in Hindi from JDN using Swiss Ephemeris or Keplerian approx.
+    Returns string like 'पौष शुक्ल पंचमी'.
     """
     # Tithi in Panchang is determined at Sunrise (~6:30 AM IST / 1:00 AM UTC)
     jd_sunrise = math.floor(jd_ut - 0.5) + 0.5 + (1.0 / 24.0)
@@ -148,15 +136,15 @@ def calculate_south_indian_tithi(jd_ut):
             sun_long_at_prev_amavasya = (sun_long - days_since_amavasya * 0.985647) % 360
             prev_amavasya_sun_rashi = int(sun_long_at_prev_amavasya // 30)
 
-            lunar_month = AMANTA_MONTHS[prev_amavasya_sun_rashi]
+            lunar_month = AMANTA_MONTHS_HINDI[prev_amavasya_sun_rashi]
 
             if tithi_num <= 15:
-                paksha = 'Shukla'
-                t_name = TITHI_NAMES[tithi_num - 1] if tithi_num < 15 else 'Purnima'
+                paksha = 'शुक्ल'
+                t_name = TITHI_NAMES_HINDI[tithi_num - 1] if tithi_num < 15 else 'पूर्णिमा'
             else:
-                paksha = 'Krishna'
+                paksha = 'कृष्ण'
                 t_num = tithi_num - 15
-                t_name = TITHI_NAMES[t_num - 1] if t_num < 15 else 'Amavasya'
+                t_name = TITHI_NAMES_HINDI[t_num - 1] if t_num < 15 else 'अमावस्या'
 
             return f"{lunar_month} {paksha} {t_name}"
         except Exception:
@@ -188,15 +176,15 @@ def calculate_south_indian_tithi(jd_ut):
     if sun_long_at_prev_amavasya < 0: sun_long_at_prev_amavasya += 360
 
     prev_amavasya_sun_rashi = int(sun_long_at_prev_amavasya // 30)
-    lunar_month = AMANTA_MONTHS[prev_amavasya_sun_rashi]
+    lunar_month = AMANTA_MONTHS_HINDI[prev_amavasya_sun_rashi]
 
     if tithi_num <= 15:
-        paksha = 'Shukla'
-        t_name = TITHI_NAMES[tithi_num - 1] if tithi_num < 15 else 'Purnima'
+        paksha = 'शुक्ल'
+        t_name = TITHI_NAMES_HINDI[tithi_num - 1] if tithi_num < 15 else 'पूर्णिमा'
     else:
-        paksha = 'Krishna'
+        paksha = 'कृष्ण'
         t_num = tithi_num - 15
-        t_name = TITHI_NAMES[t_num - 1] if t_num < 15 else 'Amavasya'
+        t_name = TITHI_NAMES_HINDI[t_num - 1] if t_num < 15 else 'अमावस्या'
 
     return f"{lunar_month} {paksha} {t_name}"
 

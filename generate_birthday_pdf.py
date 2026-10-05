@@ -45,7 +45,7 @@ MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ]
 
-AMANTA_MONTHS = [
+SOUTH_INDIAN_AMANTA_MONTHS = [
     'Vaishakha', 'Jyeshtha', 'Ashadha', 'Shravana',
     'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha',
     'Pausha', 'Magha', 'Phalguna', 'Chaitra'
@@ -115,7 +115,7 @@ def gregorian_to_jdn(dt):
 def calculate_south_indian_tithi(jd_ut):
     """
     Calculates South Indian Amanta Month & Tithi from JDN using Swiss Ephemeris or Keplerian approx.
-    Returns string like 'Ashadha Krishna Saptami'.
+    Returns string like 'Pausha Shukla Shasthi'.
     """
     if HAS_SWISSEPH:
         try:
@@ -128,11 +128,8 @@ def calculate_south_indian_tithi(jd_ut):
             diff = (moon_long - sun_long) % 360
             tithi_num = int(diff // 12) + 1
 
-            days_since_amavasya = diff / 12.19074
-            sun_long_at_amavasya = (sun_long - days_since_amavasya * 0.985647) % 360
-            amavasya_rashi_idx = int(sun_long_at_amavasya // 30)
-
-            lunar_month = AMANTA_MONTHS[amavasya_rashi_idx]
+            sun_rashi_idx = int(sun_long // 30)
+            lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[sun_rashi_idx]
 
             if tithi_num <= 15:
                 paksha = 'Shukla'
@@ -148,16 +145,16 @@ def calculate_south_indian_tithi(jd_ut):
 
     # Mathematical approximation fallback
     d = jd_ut - 2451545.0
-    sun_long = (280.460 + 0.9856474 * d) % 360
-    moon_long = (218.316 + 13.176396 * d) % 360
+    sun_long = (280.460 + 0.9856474 * d - 23.85) % 360
+    if sun_long < 0: sun_long += 360
+    moon_long = (218.316 + 13.176396 * d - 23.85) % 360
+    if moon_long < 0: moon_long += 360
 
     diff = (moon_long - sun_long) % 360
     tithi_num = int(diff // 12) + 1
 
-    days_since_amavasya = diff / 12.19074
-    sun_long_at_amavasya = (sun_long - days_since_amavasya * 0.985647) % 360
-    amavasya_rashi_idx = int(sun_long_at_amavasya // 30)
-    lunar_month = AMANTA_MONTHS[amavasya_rashi_idx]
+    sun_rashi_idx = int(sun_long // 30)
+    lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[sun_rashi_idx]
 
     if tithi_num <= 15:
         paksha = 'Shukla'
@@ -256,7 +253,6 @@ def parse_xml_for_dob_and_name(filepath):
                     dob_raw = raw_bd
                     jdn_val = float(raw_bd)
 
-        # Direct tithi tag check
         tithi_elem = root.find(".//tithi") or root.find(".//Tithi") or root.find(".//birth_tithi")
         if tithi_elem is not None and tithi_elem.text:
             xml_tithi = tithi_elem.text.strip()

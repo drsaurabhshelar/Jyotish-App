@@ -232,7 +232,20 @@ const MONTH_NAMES = [
 
 const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-const AMANTA_MONTHS = [
+// South Indian (Amanta) Lunar Month corresponding directly to Sidereal Sun Rashi index:
+// 0: Mesha -> Vaishakha
+// 1: Vrishabha -> Jyeshtha
+// 2: Mithuna -> Ashadha
+// 3: Karka -> Shravana
+// 4: Simha -> Bhadrapada
+// 5: Kanya -> Ashvina
+// 6: Tula -> Kartika
+// 7: Vrishchika -> Margashirsha
+// 8: Dhanu -> Pausha
+// 9: Makara -> Magha
+// 10: Kumbha -> Phalguna
+// 11: Meena -> Chaitra
+const SOUTH_INDIAN_AMANTA_MONTHS = [
   'Vaishakha', 'Jyeshtha', 'Ashadha', 'Shravana',
   'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha',
   'Pausha', 'Magha', 'Phalguna', 'Chaitra'
@@ -302,10 +315,12 @@ function gregorianToJdn(dateObj) {
  */
 function calculateSouthIndianTithi(jdNum) {
   let d = jdNum - 2451545.0;
-  let sunLong = (280.460 + 0.9856474 * d) % 360;
+
+  // Sidereal Sun & Moon longitudes (approx)
+  let sunLong = (280.460 + 0.9856474 * d - 23.85) % 360; // adjusted for Ayanamsha
   if (sunLong < 0) sunLong += 360;
 
-  let moonLong = (218.316 + 13.176396 * d) % 360;
+  let moonLong = (218.316 + 13.176396 * d - 23.85) % 360;
   if (moonLong < 0) moonLong += 360;
 
   let diff = (moonLong - sunLong) % 360;
@@ -313,12 +328,9 @@ function calculateSouthIndianTithi(jdNum) {
 
   let tithiNum = Math.floor(diff / 12) + 1;
 
-  let daysSinceAmavasya = diff / 12.19074;
-  let sunLongAtAmavasya = (sunLong - daysSinceAmavasya * 0.985647) % 360;
-  if (sunLongAtAmavasya < 0) sunLongAtAmavasya += 360;
-
-  let amavasyaRashiIdx = Math.floor(sunLongAtAmavasya / 30);
-  let lunarMonth = AMANTA_MONTHS[amavasyaRashiIdx];
+  // In South Indian (Amanta) system, the lunar month is named after Sun's Sidereal Rashi
+  let sunRashiIdx = Math.floor(sunLong / 30);
+  let lunarMonth = SOUTH_INDIAN_AMANTA_MONTHS[sunRashiIdx];
 
   let paksha, tName;
   if (tithiNum <= 15) {
@@ -343,7 +355,6 @@ function parseDateString(dateStr) {
     cleanStr = cleanStr.split(" ")[0];
   }
 
-  // 1. Explicitly check numeric delimiter formats (DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD, etc.)
   let parts = cleanStr.split(/[\/\-\.]/);
   if (parts.length === 3) {
     let p1 = parseInt(parts[0], 10);
@@ -360,7 +371,6 @@ function parseDateString(dateStr) {
     }
   }
 
-  // 2. Check textual month names e.g. "18 June 1985"
   const monthMap = {
     jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
     jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
@@ -396,13 +406,11 @@ function parseXmlContent(content, filename) {
   let jdnVal = null;
   let xmlTithi = null;
 
-  // Check direct tithi element
   let tithiElem = xmlDoc.querySelector("tithi, Tithi, birth_tithi");
   if (tithiElem && tithiElem.textContent) {
     xmlTithi = tithiElem.textContent.trim();
   }
 
-  // 1. Check BirthInfo tag structure (Parashara's Light)
   let birthInfo = xmlDoc.querySelector("BirthInfo");
   if (birthInfo) {
     let fnElem = birthInfo.querySelector("FirstName");
@@ -427,7 +435,6 @@ function parseXmlContent(content, filename) {
     }
   }
 
-  // 2. Generic tag search if not resolved
   if (!name || !dobDate) {
     const nameTags = ["name", "native_name", "person_name", "full_name", "jataka_name", "first_name", "title", "native", "client_name"];
     const dobTags = ["dob", "date_of_birth", "birthdate", "birth_date", "dateofbirth", "date", "birth_date_time", "bdate"];
@@ -473,7 +480,6 @@ function parseXmlContent(content, filename) {
     }
   }
 
-  // 3. Fallback Regex search for DOB in entire raw content
   if (!dobRaw && !dobDate) {
     for (let pattern of DATE_REGEX_PATTERNS) {
       let match = content.match(pattern);
@@ -526,7 +532,6 @@ function parseXmlContent(content, filename) {
 document.getElementById('folderInput').addEventListener('change', async function(event) {
   const files = Array.from(event.target.files);
 
-  // Strictly filter for .xml files (case-insensitive)
   const xmlFiles = files.filter(f => f.name.toLowerCase().endsWith('.xml'));
 
   if (xmlFiles.length === 0) {
@@ -640,7 +645,7 @@ function renderResults(totalXmlCount, records) {
               <td><b>${escapeHtml(r.name)}</b></td>
               <td>${formattedDob}</td>
               <td>${dayOfWeek}</td>
-              <td><b>${escapeHtml(r.tithi)}</b></td>
+              <td>${escapeHtml(r.tithi)}</td>
               <td>${escapeHtml(r.filename)}</td>
             </tr>
           `;

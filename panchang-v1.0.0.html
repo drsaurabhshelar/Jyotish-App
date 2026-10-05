@@ -23,7 +23,7 @@
   }
 
   .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
     background: #FFFFFF;
     padding: 30px;
@@ -196,7 +196,7 @@
 <div class="container">
   <header>
     <h1>Birthday Calendar & Directory</h1>
-    <div class="meta-info">Kundali XML Date of Birth Extractor &nbsp;|&nbsp; Version 1.0.0</div>
+    <div class="meta-info">Kundali XML Date of Birth & Panchang Tithi Extractor &nbsp;|&nbsp; Version 1.0.0</div>
   </header>
 
   <!-- Upload Section -->
@@ -232,6 +232,18 @@ const MONTH_NAMES = [
 
 const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+const AMANTA_MONTHS = [
+  'Vaishakha', 'Jyeshtha', 'Ashadha', 'Shravana',
+  'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha',
+  'Pausha', 'Magha', 'Phalguna', 'Chaitra'
+];
+
+const TITHI_NAMES = [
+  'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
+  'Shasthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
+  'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Purnima'
+];
+
 // Regex patterns for fallback date matching
 const DATE_REGEX_PATTERNS = [
   /\b(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.](19|20)\d\d\b/, // DD/MM/YYYY
@@ -242,7 +254,6 @@ const DATE_REGEX_PATTERNS = [
 
 /**
  * Converts Julian Day Number (JDN) to Gregorian Date (JS Date object)
- * Commonly used in Parashara's Light (<BirthDate>2446255.8715278</BirthDate>)
  */
 function julianDayToGregorian(jdVal) {
   const jdNum = parseFloat(jdVal);
@@ -270,6 +281,58 @@ function julianDayToGregorian(jdVal) {
   return new Date(year, month - 1, dayInt);
 }
 
+function gregorianToJdn(dateObj) {
+  let year = dateObj.getFullYear();
+  let month = dateObj.getMonth() + 1;
+  let day = dateObj.getDate() + 0.5;
+
+  if (month <= 2) {
+    year -= 1;
+    month += 12;
+  }
+
+  let a = Math.floor(year / 100);
+  let b = 2 - a + Math.floor(a / 4);
+  let jd = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5;
+  return jd;
+}
+
+/**
+ * Calculates South Indian Amanta Month & Tithi from JDN
+ */
+function calculateSouthIndianTithi(jdNum) {
+  let d = jdNum - 2451545.0;
+  let sunLong = (280.460 + 0.9856474 * d) % 360;
+  if (sunLong < 0) sunLong += 360;
+
+  let moonLong = (218.316 + 13.176396 * d) % 360;
+  if (moonLong < 0) moonLong += 360;
+
+  let diff = (moonLong - sunLong) % 360;
+  if (diff < 0) diff += 360;
+
+  let tithiNum = Math.floor(diff / 12) + 1;
+
+  let daysSinceAmavasya = diff / 12.19074;
+  let sunLongAtAmavasya = (sunLong - daysSinceAmavasya * 0.985647) % 360;
+  if (sunLongAtAmavasya < 0) sunLongAtAmavasya += 360;
+
+  let amavasyaRashiIdx = Math.floor(sunLongAtAmavasya / 30);
+  let lunarMonth = AMANTA_MONTHS[amavasyaRashiIdx];
+
+  let paksha, tName;
+  if (tithiNum <= 15) {
+    paksha = 'Shukla';
+    tName = (tithiNum < 15) ? TITHI_NAMES[tithiNum - 1] : 'Purnima';
+  } else {
+    paksha = 'Krishna';
+    let tNum = tithiNum - 15;
+    tName = (tNum < 15) ? TITHI_NAMES[tNum - 1] : 'Amavasya';
+  }
+
+  return `${lunarMonth} ${paksha} ${tName}`;
+}
+
 /**
  * Flexible Date String Parsing with Day-First Priority (DD/MM/YYYY)
  */
@@ -288,18 +351,16 @@ function parseDateString(dateStr) {
     let p3 = parseInt(parts[2], 10);
 
     if (!isNaN(p1) && !isNaN(p2) && !isNaN(p3)) {
-      // YYYY/MM/DD or YYYY-MM-DD
       if (p1 >= 1800 && p2 >= 1 && p2 <= 12 && p3 >= 1 && p3 <= 31) {
         return new Date(p1, p2 - 1, p3);
       }
-      // DD/MM/YYYY or DD-MM-YYYY (Indian standard Kundali format)
       if (p1 >= 1 && p1 <= 31 && p2 >= 1 && p2 <= 12 && p3 >= 1800) {
         return new Date(p3, p2 - 1, p1);
       }
     }
   }
 
-  // 2. Check textual month names e.g. "18 June 1985" or "18 Jun 1985"
+  // 2. Check textual month names e.g. "18 June 1985"
   const monthMap = {
     jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
     jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
@@ -314,7 +375,6 @@ function parseDateString(dateStr) {
     }
   }
 
-  // 3. Fallback to standard JS Date parsing
   let parsed = new Date(cleanStr);
   if (!isNaN(parsed.getTime())) return parsed;
 
@@ -322,7 +382,7 @@ function parseDateString(dateStr) {
 }
 
 /**
- * Parses XML content for Name and Date of Birth
+ * Parses XML content for Name, Date of Birth, and Tithi
  */
 function parseXmlContent(content, filename) {
   let parser = new DOMParser();
@@ -333,6 +393,14 @@ function parseXmlContent(content, filename) {
   let lastName = null;
   let dobRaw = null;
   let dobDate = null;
+  let jdnVal = null;
+  let xmlTithi = null;
+
+  // Check direct tithi element
+  let tithiElem = xmlDoc.querySelector("tithi, Tithi, birth_tithi");
+  if (tithiElem && tithiElem.textContent) {
+    xmlTithi = tithiElem.textContent.trim();
+  }
 
   // 1. Check BirthInfo tag structure (Parashara's Light)
   let birthInfo = xmlDoc.querySelector("BirthInfo");
@@ -354,6 +422,7 @@ function parseXmlContent(content, filename) {
       if (jdnDate) {
         dobDate = jdnDate;
         dobRaw = rawBd;
+        jdnVal = parseFloat(rawBd);
       }
     }
   }
@@ -368,7 +437,6 @@ function parseXmlContent(content, filename) {
       let elem = allElements[i];
       let tagName = elem.tagName.toLowerCase();
 
-      // Check text content
       let text = elem.textContent ? elem.textContent.trim() : "";
       if (text) {
         if (!name && nameTags.includes(tagName)) name = text;
@@ -377,7 +445,6 @@ function parseXmlContent(content, filename) {
         else if (tagName === "lastname" && !lastName) lastName = text;
       }
 
-      // Check attributes
       for (let j = 0; j < elem.attributes.length; j++) {
         let attr = elem.attributes[j];
         let attrName = attr.name.toLowerCase();
@@ -392,7 +459,6 @@ function parseXmlContent(content, filename) {
       name = ((firstName || "") + " " + (lastName || "")).trim();
     }
 
-    // Check separate day/month/year tags
     if (!dobRaw && !dobDate) {
       let dayElem = xmlDoc.querySelector("day, Day, birth_day, bday");
       let monthElem = xmlDoc.querySelector("month, Month, birth_month, bmonth");
@@ -418,7 +484,6 @@ function parseXmlContent(content, filename) {
     }
   }
 
-  // Fallback Name from cleaned filename if missing
   if (!name) {
     let baseName = filename.replace(/\.xml$/i, "");
     let cleaned = baseName.replace(/[_]/g, " ");
@@ -428,19 +493,29 @@ function parseXmlContent(content, filename) {
     name = cleaned || baseName;
   }
 
-  // Parse DOB string if JDN wasn't used
   if (!dobDate && dobRaw) {
     let jdnDate = julianDayToGregorian(dobRaw);
-    if (jdnDate) dobDate = jdnDate;
-    else dobDate = parseDateString(dobRaw);
+    if (jdnDate) {
+      dobDate = jdnDate;
+      jdnVal = parseFloat(dobRaw);
+    } else {
+      dobDate = parseDateString(dobRaw);
+    }
   }
 
   if (!dobDate || isNaN(dobDate.getTime())) return null;
+
+  if (jdnVal === null) {
+    jdnVal = gregorianToJdn(dobDate);
+  }
+
+  let tithiStr = xmlTithi || calculateSouthIndianTithi(jdnVal);
 
   return {
     name: name,
     dobRaw: dobRaw,
     dobDate: dobDate,
+    tithi: tithiStr,
     filename: filename
   };
 }
@@ -478,12 +553,10 @@ document.getElementById('folderInput').addEventListener('change', async function
  * Group, Sort, and Render Birthday Tables
  */
 function renderResults(totalXmlCount, records) {
-  // Update stats banner
   document.getElementById('statsBanner').style.display = 'flex';
   document.getElementById('totalXmlCount').textContent = `Processed XML Files: ${totalXmlCount}`;
   document.getElementById('extractedCount').textContent = `Extracted DOB Records: ${records.length}`;
 
-  // Group records by month (0-indexed 0 = Jan, 11 = Dec)
   const grouped = {};
   for (let i = 0; i < 12; i++) grouped[i] = [];
 
@@ -492,7 +565,6 @@ function renderResults(totalXmlCount, records) {
     grouped[monthIdx].push(r);
   });
 
-  // Sort each month's records by day, then year
   for (let i = 0; i < 12; i++) {
     grouped[i].sort((a, b) => {
       if (a.dobDate.getDate() !== b.dobDate.getDate()) {
@@ -502,7 +574,6 @@ function renderResults(totalXmlCount, records) {
     });
   }
 
-  // Render Navigation Grid
   const navGrid = document.getElementById('navGrid');
   navGrid.innerHTML = '';
   document.getElementById('navContainer').style.display = 'block';
@@ -522,7 +593,6 @@ function renderResults(totalXmlCount, records) {
     navGrid.appendChild(itemDiv);
   }
 
-  // Render Month Tables
   const container = document.getElementById('tablesContainer');
   container.innerHTML = '';
 
@@ -548,10 +618,11 @@ function renderResults(totalXmlCount, records) {
     table.innerHTML = `
       <thead>
         <tr>
-          <th style="width: 50px;">#</th>
+          <th style="width: 40px;">#</th>
           <th>Name</th>
-          <th style="width: 160px;">Date of Birth</th>
-          <th style="width: 140px;">Day of Week</th>
+          <th style="width: 140px;">Date of Birth</th>
+          <th style="width: 120px;">Day of Week</th>
+          <th style="width: 200px;">South Indian Month & Tithi</th>
           <th>Source File</th>
         </tr>
       </thead>
@@ -569,6 +640,7 @@ function renderResults(totalXmlCount, records) {
               <td><b>${escapeHtml(r.name)}</b></td>
               <td>${formattedDob}</td>
               <td>${dayOfWeek}</td>
+              <td><b>${escapeHtml(r.tithi)}</b></td>
               <td>${escapeHtml(r.filename)}</td>
             </tr>
           `;

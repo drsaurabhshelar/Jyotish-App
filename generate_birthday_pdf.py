@@ -45,23 +45,23 @@ MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ]
 
-# South Indian (Amanta) Lunar Month mapping relative to Sun's Sidereal Rashi:
-# Index 0: Sun in Dhanu -> Pausha
-# Index 1: Sun in Makara -> Magha
-# Index 2: Sun in Kumbha -> Phalguna
-# Index 3: Sun in Meena -> Chaitra
-# Index 4: Sun in Mesha -> Vaishakha
-# Index 5: Sun in Vrishabha -> Jyeshtha
-# Index 6: Sun in Mithuna -> Ashadha
-# Index 7: Sun in Karka -> Shravana
-# Index 8: Sun in Simha -> Bhadrapada
-# Index 9: Sun in Kanya -> Ashvina
-# Index 10: Sun in Tula -> Kartika
-# Index 11: Sun in Vrishchika -> Margashirsha
-SOUTH_INDIAN_AMANTA_MONTHS = [
-    'Pausha', 'Magha', 'Phalguna', 'Chaitra',
+# Amanta (South Indian / Amavasyant) month names based on Sun Sidereal Rashi at PRECEDING Amavasya:
+# 0: Mesha -> Vaishakha
+# 1: Vrishabha -> Jyeshtha
+# 2: Mithuna -> Ashadha
+# 3: Karka -> Shravana
+# 4: Simha -> Bhadrapada
+# 5: Kanya -> Ashvina
+# 6: Tula -> Kartika
+# 7: Vrishchika -> Margashirsha
+# 8: Dhanu -> Pausha
+# 9: Makara -> Magha
+# 10: Kumbha -> Phalguna
+# 11: Meena -> Chaitra
+AMANTA_MONTHS = [
     'Vaishakha', 'Jyeshtha', 'Ashadha', 'Shravana',
-    'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha'
+    'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha',
+    'Pausha', 'Magha', 'Phalguna', 'Chaitra'
 ]
 
 TITHI_NAMES = [
@@ -144,9 +144,11 @@ def calculate_south_indian_tithi(jd_ut):
             diff = (moon_long - sun_long) % 360
             tithi_num = int(diff // 12) + 1
 
-            sun_rashi_idx = int(sun_long // 30)
-            month_idx = (sun_rashi_idx - 8 + 12) % 12
-            lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[month_idx]
+            days_since_amavasya = diff / 12.19074
+            sun_long_at_prev_amavasya = (sun_long - days_since_amavasya * 0.985647) % 360
+            prev_amavasya_sun_rashi = int(sun_long_at_prev_amavasya // 30)
+
+            lunar_month = AMANTA_MONTHS[prev_amavasya_sun_rashi]
 
             if tithi_num <= 15:
                 paksha = 'Shukla'
@@ -160,19 +162,33 @@ def calculate_south_indian_tithi(jd_ut):
         except Exception:
             pass
 
-    # Mathematical approximation fallback
+    # Mathematical approximation fallback with Keplerian equation terms
     d = jd_sunrise - 2451545.0
-    sun_long = (280.460 + 0.9856474 * d - 23.85) % 360
-    if sun_long < 0: sun_long += 360
-    moon_long = (218.316 + 13.176396 * d - 23.85) % 360
-    if moon_long < 0: moon_long += 360
+    l_m = (218.316 + 13.176396 * d) % 360
+    l_s = (280.460 + 0.9856474 * d) % 360
 
-    diff = (moon_long - sun_long) % 360
+    m_m = (134.963 + 13.064993 * d) * (math.pi / 180.0)
+    m_s = (357.529 + 0.98560025 * d) * (math.pi / 180.0)
+    elong_mean = (l_m - l_s) * (math.pi / 180.0)
+
+    moon_true = l_m + 6.289 * math.sin(m_m) - 1.274 * math.sin(m_m - 2 * elong_mean) + 0.658 * math.sin(2 * elong_mean)
+    sun_true = l_s + 1.915 * math.sin(m_s) + 0.020 * math.sin(2 * m_s)
+
+    ayanamsha = 23.85 + (d / 36525.0) * 1.396
+    sun_sid = (sun_true - ayanamsha) % 360
+    moon_sid = (moon_true - ayanamsha) % 360
+
+    diff = (moon_sid - sun_sid) % 360
+    if diff < 0: diff += 360
+
     tithi_num = int(diff // 12) + 1
 
-    sun_rashi_idx = int(sun_long // 30)
-    month_idx = (sun_rashi_idx - 8 + 12) % 12
-    lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[month_idx]
+    days_since_amavasya = diff / 12.19074
+    sun_long_at_prev_amavasya = (sun_sid - days_since_amavasya * 0.985647) % 360
+    if sun_long_at_prev_amavasya < 0: sun_long_at_prev_amavasya += 360
+
+    prev_amavasya_sun_rashi = int(sun_long_at_prev_amavasya // 30)
+    lunar_month = AMANTA_MONTHS[prev_amavasya_sun_rashi]
 
     if tithi_num <= 15:
         paksha = 'Shukla'

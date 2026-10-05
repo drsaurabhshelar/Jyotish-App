@@ -3,7 +3,7 @@
 generate_birthday_pdf.py
 
 Searches a specified directory (default "Kundalis") strictly for XML files (ignoring .grp, .pdf, etc.),
-extracts names, Dates of Birth (DOB), and calculates South Indian Amanta Month & Tithi using astronomical calculations / Swiss Ephemeris,
+extracts names, Dates of Birth (DOB), and calculates South Indian Amanta Month & Tithi at Sunrise using astronomical calculations / Swiss Ephemeris,
 sorts them in ascending order from January to December (and by day/year),
 and generates a PDF birthday report grouped by month with clickable month navigation links on the first page.
 """
@@ -45,10 +45,23 @@ MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ]
 
+# South Indian (Amanta) Lunar Month mapping relative to Sun's Sidereal Rashi:
+# Index 0: Sun in Dhanu -> Pausha
+# Index 1: Sun in Makara -> Magha
+# Index 2: Sun in Kumbha -> Phalguna
+# Index 3: Sun in Meena -> Chaitra
+# Index 4: Sun in Mesha -> Vaishakha
+# Index 5: Sun in Vrishabha -> Jyeshtha
+# Index 6: Sun in Mithuna -> Ashadha
+# Index 7: Sun in Karka -> Shravana
+# Index 8: Sun in Simha -> Bhadrapada
+# Index 9: Sun in Kanya -> Ashvina
+# Index 10: Sun in Tula -> Kartika
+# Index 11: Sun in Vrishchika -> Margashirsha
 SOUTH_INDIAN_AMANTA_MONTHS = [
+    'Pausha', 'Magha', 'Phalguna', 'Chaitra',
     'Vaishakha', 'Jyeshtha', 'Ashadha', 'Shravana',
-    'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha',
-    'Pausha', 'Magha', 'Phalguna', 'Chaitra'
+    'Bhadrapada', 'Ashvina', 'Kartika', 'Margashirsha'
 ]
 
 TITHI_NAMES = [
@@ -114,14 +127,17 @@ def gregorian_to_jdn(dt):
 
 def calculate_south_indian_tithi(jd_ut):
     """
-    Calculates South Indian Amanta Month & Tithi from JDN using Swiss Ephemeris or Keplerian approx.
-    Returns string like 'Pausha Shukla Shasthi'.
+    Calculates South Indian Amanta Month & Tithi at Sunrise from JDN using Swiss Ephemeris or Keplerian approx.
+    Returns string like 'Pausha Shukla Panchami'.
     """
+    # Tithi in Panchang is determined at Sunrise (~6:30 AM IST / 1:00 AM UTC)
+    jd_sunrise = math.floor(jd_ut - 0.5) + 0.5 + (1.0 / 24.0)
+
     if HAS_SWISSEPH:
         try:
             swe.set_sid_mode(swe.SIDM_LAHIRI)
-            s_res, _ = swe.calc_ut(jd_ut, swe.SUN, swe.FLG_SIDEREAL)
-            m_res, _ = swe.calc_ut(jd_ut, swe.MOON, swe.FLG_SIDEREAL)
+            s_res, _ = swe.calc_ut(jd_sunrise, swe.SUN, swe.FLG_SIDEREAL)
+            m_res, _ = swe.calc_ut(jd_sunrise, swe.MOON, swe.FLG_SIDEREAL)
             sun_long = s_res[0] % 360
             moon_long = m_res[0] % 360
 
@@ -129,7 +145,8 @@ def calculate_south_indian_tithi(jd_ut):
             tithi_num = int(diff // 12) + 1
 
             sun_rashi_idx = int(sun_long // 30)
-            lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[sun_rashi_idx]
+            month_idx = (sun_rashi_idx - 8 + 12) % 12
+            lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[month_idx]
 
             if tithi_num <= 15:
                 paksha = 'Shukla'
@@ -144,7 +161,7 @@ def calculate_south_indian_tithi(jd_ut):
             pass
 
     # Mathematical approximation fallback
-    d = jd_ut - 2451545.0
+    d = jd_sunrise - 2451545.0
     sun_long = (280.460 + 0.9856474 * d - 23.85) % 360
     if sun_long < 0: sun_long += 360
     moon_long = (218.316 + 13.176396 * d - 23.85) % 360
@@ -154,7 +171,8 @@ def calculate_south_indian_tithi(jd_ut):
     tithi_num = int(diff // 12) + 1
 
     sun_rashi_idx = int(sun_long // 30)
-    lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[sun_rashi_idx]
+    month_idx = (sun_rashi_idx - 8 + 12) % 12
+    lunar_month = SOUTH_INDIAN_AMANTA_MONTHS[month_idx]
 
     if tithi_num <= 15:
         paksha = 'Shukla'

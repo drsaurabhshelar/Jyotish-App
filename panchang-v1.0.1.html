@@ -98,7 +98,7 @@
     font-size: 14px;
   }
 
-  input[type="file"], input[type="text"], input[type="number"], select, color {
+  input[type="file"], input[type="text"], input[type="number"], select, input[type="color"] {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--border-color);
@@ -268,7 +268,7 @@
 <div class="container">
   <header>
     <h1>Birthday Wishes Poster Generator (8K)</h1>
-    <p class="subtitle">Select XML Kundali folder & Poster Template Image to generate high-resolution &lt;Name&gt;.jpg wishes</p>
+    <p class="subtitle">Select XML Kundali folder & Poster Template Image to generate high-resolution &lt;Name&gt;.jpg wishes with Sunrise Tithi</p>
   </header>
 
   <div class="grid-layout">
@@ -311,7 +311,7 @@
               <tr>
                 <th>Preview</th>
                 <th>Name</th>
-                <th>Tithi</th>
+                <th>Sunrise Tithi (Hindi)</th>
                 <th>Gemstone</th>
               </tr>
             </thead>
@@ -370,7 +370,7 @@
 
         <!-- Tithi Overlay Controls -->
         <fieldset style="border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; margin-bottom: 12px;">
-          <legend style="font-weight: bold; color: var(--accent);">Tithi Overlay</legend>
+          <legend style="font-weight: bold; color: var(--accent);">Sunrise Tithi Overlay</legend>
           <div class="control-row">
             <div>
               <label>X Position (%):</label>
@@ -473,6 +473,19 @@
   // Top-level JavaScript variable as per guidelines
   const KUNDALIS_FOLDER = "Kundalis";
 
+  // Devanagari Hindi Panchang Master Data
+  const AMANTA_MONTHS_HINDI = [
+    'वैशाख', 'ज्येष्ठ', 'आषाढ़', 'श्रावण',
+    'भाद्रपद', 'आश्विन', 'कार्तिक', 'मार्गशीर्ष',
+    'पौष', 'माघ', 'फाल्गुन', 'चैत्र'
+  ];
+
+  const TITHI_NAMES_HINDI = [
+    'प्रतिपदा', 'द्वितीया', 'तृतीया', 'चतुर्थी', 'पंचमी',
+    'षष्ठी', 'सप्तमी', 'अष्टमी', 'नवमी', 'दशमी',
+    'एकादशी', 'द्वादशी', 'त्रयोदशी', 'चतुर्दशी', 'पूर्णिमा'
+  ];
+
   // State variables
   let parsedRecords = [];
   let templateImage = new Image();
@@ -574,7 +587,7 @@
         const text = await file.text();
         const record = parseKundaliXml(text, file.name);
         parsedRecords.push(record);
-        log(`Parsed [${i+1}/${xmlFiles.length}]: ${record.name}`, 'success');
+        log(`Parsed [${i+1}/${xmlFiles.length}]: ${record.name} (${record.tithi})`, 'success');
       } catch (err) {
         log(`Error parsing ${file.name}: ${err.message}`, 'error');
       }
@@ -587,7 +600,7 @@
     }
   });
 
-  // Strict XML Parser extracting Name, Tithi, Gemstone
+  // Strict XML Parser extracting Name, Sunrise Tithi, Gemstone
   function parseKundaliXml(xmlString, fileName) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, "text/xml");
@@ -597,36 +610,40 @@
                getXmlAttrValue(xmlDoc, ['native_name', 'name']) ||
                fileName.replace(/\.xml$/i, '');
 
-    // Check for FirstName + LastName structure
     const firstName = getXmlTagText(xmlDoc, ['FirstName', 'first_name']);
     const lastName = getXmlTagText(xmlDoc, ['LastName', 'last_name']);
     if (firstName && lastName) {
       name = `${firstName} ${lastName}`.trim();
     }
 
-    // 2. Extract Tithi
-    let tithi = getXmlTagText(xmlDoc, ['tithi', 'Tithi', 'TithiName', 'tithi_name']) || '';
+    // 2. Sunrise Tithi Calculation
+    let xmlTithi = getXmlTagText(xmlDoc, ['tithi', 'Tithi', 'TithiName', 'tithi_name']);
+    let calculatedSunriseTithi = '';
 
-    // If tithi is missing in XML, check for DOB/Julian Date and estimate Panchang Tithi or default
-    if (!tithi) {
-      const dob = getXmlTagText(xmlDoc, ['dob', 'date_of_birth', 'BirthDate', 'birthdate', 'birth_date']);
-      if (dob) {
-        tithi = estimateTithiFromDate(dob);
-      } else {
-        tithi = 'शुक्ल पक्ष एकादशी'; // Standard Hindi Panchang fallback
+    const dobRaw = getXmlTagText(xmlDoc, ['dob', 'date_of_birth', 'BirthDate', 'birthdate', 'birth_date']);
+    if (dobRaw) {
+      const jdnVal = parseJdnOrDateToJdn(dobRaw);
+      if (jdnVal) {
+        calculatedSunriseTithi = calculateSunriseTithi(jdnVal);
       }
+    }
+
+    // Prioritize calculated Sunrise Tithi for astronomical accuracy, then XML tithi, then fallback
+    let finalTithi = calculatedSunriseTithi || xmlTithi;
+    if (!finalTithi) {
+      finalTithi = 'पौष शुक्ल पंचमी';
     }
 
     // 3. Extract Gemstone
     let gemstone = getXmlTagText(xmlDoc, ['gemstone', 'Gemstone', 'gem', 'Gem', 'ratna', 'Ratna', 'lucky_gemstone', 'LuckyGemstone']) || '';
     if (!gemstone) {
-      gemstone = 'Yellow Sapphire (पुखराज)'; // Standard fallback gemstone
+      gemstone = 'Yellow Sapphire (पुखराज)';
     }
 
     return {
       fileName,
       name: name.trim(),
-      tithi: tithi.trim(),
+      tithi: finalTithi.trim(),
       gemstone: gemstone.trim()
     };
   }
@@ -652,12 +669,96 @@
     return null;
   }
 
-  function estimateTithiFromDate(dateStr) {
-    // Simple fallback helper for dates / JDN
-    if (dateStr.includes('244') || !isNaN(parseFloat(dateStr))) {
-      return 'वैशाख शुक्ल नवमी';
+  // Parses raw string (JDN number like 2446255.87 or date string DD/MM/YYYY) into Julian Day Number
+  function parseJdnOrDateToJdn(str) {
+    const trimmed = str.trim();
+    const num = parseFloat(trimmed);
+    if (!isNaN(num) && num > 2000000 && num < 3000000) {
+      return num;
     }
-    return 'पौष शुक्ल पंचमी';
+
+    // Match DD/MM/YYYY or YYYY-MM-DD
+    const dmy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if (dmy) {
+      const day = parseInt(dmy[1], 10);
+      const month = parseInt(dmy[2], 10);
+      const year = parseInt(dmy[3], 10);
+      return gregorianToJdn(year, month, day);
+    }
+
+    const ymd = trimmed.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+    if (ymd) {
+      const year = parseInt(ymd[1], 10);
+      const month = parseInt(ymd[2], 10);
+      const day = parseInt(ymd[3], 10);
+      return gregorianToJdn(year, month, day);
+    }
+
+    return null;
+  }
+
+  function gregorianToJdn(year, month, day) {
+    let y = year;
+    let m = month;
+    if (m <= 2) {
+      y -= 1;
+      m += 12;
+    }
+    const a = Math.floor(y / 100);
+    const b = 2 - a + Math.floor(a / 4);
+    return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524.5;
+  }
+
+  // Astronomical South Indian Amanta Month & Tithi calculated specifically at Sunrise (~6:30 AM IST)
+  function calculateSunriseTithi(jdUt) {
+    // Tithi in Hindu Panchang is determined at Sunrise of the day (~6:30 AM IST / 1:00 AM UTC)
+    const jdSunrise = Math.floor(jdUt - 0.5) + 0.5 + (1.0 / 24.0);
+    const d = jdSunrise - 2451545.0;
+
+    // Keplerian Solar and Lunar orbits
+    const l_m = (218.316 + 13.176396 * d) % 360;
+    const l_s = (280.460 + 0.9856474 * d) % 360;
+
+    const m_m = (134.963 + 13.064993 * d) * (Math.PI / 180.0);
+    const m_s = (357.529 + 0.98560025 * d) * (Math.PI / 180.0);
+    const elong_mean = (l_m - l_s) * (Math.PI / 180.0);
+
+    const moon_true = l_m + 6.289 * Math.sin(m_m) - 1.274 * Math.sin(m_m - 2 * elong_mean) + 0.658 * Math.sin(2 * elong_mean);
+    const sun_true = l_s + 1.915 * Math.sin(m_s) + 0.020 * Math.sin(2 * m_s);
+
+    const ayanamsha = 23.85 + (d / 36525.0) * 1.396;
+    let sun_sid = (sun_true - ayanamsha) % 360;
+    let moon_sid = (moon_true - ayanamsha) % 360;
+
+    if (sun_sid < 0) sun_sid += 360;
+    if (moon_sid < 0) moon_sid += 360;
+
+    let diff = (moon_sid - sun_sid) % 360;
+    if (diff < 0) diff += 360;
+
+    const tithiNum = Math.floor(diff / 12) + 1;
+
+    // Prev Amavasya Sun Rashi for South Indian Amanta Month
+    const daysSinceAmavasya = diff / 12.19074;
+    let sunLongAtPrevAmavasya = (sun_sid - daysSinceAmavasya * 0.985647) % 360;
+    if (sunLongAtPrevAmavasya < 0) sunLongAtPrevAmavasya += 360;
+
+    const prevAmavasyaRashi = Math.floor(sunLongAtPrevAmavasya / 30);
+    const lunarMonth = AMANTA_MONTHS_HINDI[prevAmavasyaRashi];
+
+    let paksha = '';
+    let tithiName = '';
+
+    if (tithiNum <= 15) {
+      paksha = 'शुक्ल';
+      tithiName = (tithiNum === 15) ? 'पूर्णिमा' : TITHI_NAMES_HINDI[tithiNum - 1];
+    } else {
+      paksha = 'कृष्ण';
+      const tNum = tithiNum - 15;
+      tithiName = (tNum === 15) ? 'अमावस्या' : TITHI_NAMES_HINDI[tNum - 1];
+    }
+
+    return `${lunarMonth} ${paksha} ${tithiName}`;
   }
 
   // Render Records Table
@@ -736,7 +837,7 @@
     renderPreviewCanvas();
   }
 
-  // Canvas Rendering
+  // Canvas Rendering with High-Quality Devanagari & Outline Stroke
   function renderPreviewCanvas() {
     if (!templateLoaded) {
       initBlankCanvas();
@@ -747,6 +848,9 @@
     const h = templateImage.naturalHeight || 1080;
     previewCanvas.width = w;
     previewCanvas.height = h;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     // Draw background template image
     ctx.drawImage(templateImage, 0, 0, w, h);
@@ -759,7 +863,7 @@
     };
 
     // Render Name
-    renderTextOverlay({
+    renderTextOverlay(ctx, {
       text: record.name,
       xPct: parseFloat(document.getElementById('nameX').value),
       yPct: parseFloat(document.getElementById('nameY').value),
@@ -769,8 +873,8 @@
       canvasW: w, canvasH: h
     });
 
-    // Render Tithi
-    renderTextOverlay({
+    // Render Sunrise Tithi
+    renderTextOverlay(ctx, {
       text: record.tithi,
       xPct: parseFloat(document.getElementById('tithiX').value),
       yPct: parseFloat(document.getElementById('tithiY').value),
@@ -781,7 +885,7 @@
     });
 
     // Render Gemstone
-    renderTextOverlay({
+    renderTextOverlay(ctx, {
       text: record.gemstone,
       xPct: parseFloat(document.getElementById('gemstoneX').value),
       yPct: parseFloat(document.getElementById('gemstoneY').value),
@@ -792,24 +896,28 @@
     });
   }
 
-  function renderTextOverlay(opts) {
+  function renderTextOverlay(context, opts) {
     const x = (opts.xPct / 100) * opts.canvasW;
     const y = (opts.yPct / 100) * opts.canvasH;
 
-    ctx.save();
-    ctx.font = `${opts.fontWeight} ${opts.fontSize}px sans-serif`;
-    ctx.fillStyle = opts.color;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    context.save();
+    context.font = `${opts.fontWeight} ${opts.fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", "Segoe UI Devanagari", Arial, sans-serif`;
+    context.fillStyle = opts.color;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
 
-    // Text shadow for readability
-    ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
-    ctx.shadowBlur = 6;
-    ctx.shadowOffsetX = 2;
-    ctx.shadowOffsetY = 2;
+    // Subtle white/dark contrasting stroke for readability on JPG export
+    context.strokeStyle = "#FFFFFF";
+    context.lineWidth = Math.max(2, Math.round(opts.fontSize * 0.08));
+    context.strokeText(opts.text, x, y);
 
-    ctx.fillText(opts.text, x, y);
-    ctx.restore();
+    context.shadowColor = "rgba(0, 0, 0, 0.4)";
+    context.shadowBlur = Math.round(6 * (opts.canvasW / 1920));
+    context.shadowOffsetX = Math.round(2 * (opts.canvasW / 1920));
+    context.shadowOffsetY = Math.round(2 * (opts.canvasW / 1920));
+
+    context.fillText(opts.text, x, y);
+    context.restore();
   }
 
   // Interactive Drag & Drop on Canvas
@@ -822,7 +930,6 @@
     const tithiY = parseFloat(document.getElementById('tithiY').value);
     const gemstoneY = parseFloat(document.getElementById('gemstoneY').value);
 
-    // Identify nearest overlay by Y coordinate distance
     const distName = Math.abs(mouseY - nameY);
     const distTithi = Math.abs(mouseY - tithiY);
     const distGem = Math.abs(mouseY - gemstoneY);
@@ -871,6 +978,11 @@
       return;
     }
 
+    // Ensure fonts are fully ready before drawing on high-res canvas
+    if (document.fonts) {
+      await document.fonts.ready;
+    }
+
     const resChoice = document.getElementById('resolutionSelect').value;
     let targetWidth = templateImage.naturalWidth || 1920;
     let targetHeight = templateImage.naturalHeight || 1080;
@@ -898,11 +1010,13 @@
     hdCanvas.width = targetWidth;
     hdCanvas.height = targetHeight;
     const hdCtx = hdCanvas.getContext('2d');
+    hdCtx.imageSmoothingEnabled = true;
+    hdCtx.imageSmoothingQuality = 'high';
 
     // Scale font sizes proportionally to 8K target resolution
     const scaleFactor = targetWidth / (previewCanvas.width || 1920);
 
-    const generatedFiles = []; // Array of { filename, blob }
+    const generatedFiles = [];
 
     // Check if File System Access API is supported (modern Chrome/Edge)
     let dirHandle = null;
@@ -926,7 +1040,7 @@
       hdCtx.drawImage(templateImage, 0, 0, targetWidth, targetHeight);
 
       // Render Name on 8K Canvas
-      renderHdTextOverlay(hdCtx, {
+      renderTextOverlay(hdCtx, {
         text: rec.name,
         xPct: parseFloat(document.getElementById('nameX').value),
         yPct: parseFloat(document.getElementById('nameY').value),
@@ -936,8 +1050,8 @@
         canvasW: targetWidth, canvasH: targetHeight
       });
 
-      // Render Tithi on 8K Canvas
-      renderHdTextOverlay(hdCtx, {
+      // Render Sunrise Tithi on 8K Canvas
+      renderTextOverlay(hdCtx, {
         text: rec.tithi,
         xPct: parseFloat(document.getElementById('tithiX').value),
         yPct: parseFloat(document.getElementById('tithiY').value),
@@ -948,7 +1062,7 @@
       });
 
       // Render Gemstone on 8K Canvas
-      renderHdTextOverlay(hdCtx, {
+      renderTextOverlay(hdCtx, {
         text: rec.gemstone,
         xPct: parseFloat(document.getElementById('gemstoneX').value),
         yPct: parseFloat(document.getElementById('gemstoneY').value),
@@ -959,9 +1073,8 @@
       });
 
       // Convert HD Canvas to JPEG Blob
-      const blob = await new Promise(resolve => hdCanvas.toBlob(resolve, 'image/jpeg', 0.95));
+      const blob = await new Promise(resolve => hdCanvas.toBlob(resolve, 'image/jpeg', 0.98));
 
-      // Sanitize name for filename
       const safeFilename = `${rec.name.replace(/[/\\?%*:|"<>]/g, '_')}.jpg`;
 
       if (dirHandle) {
@@ -975,7 +1088,6 @@
           log(`Error writing file ${safeFilename}: ${err.message}`, 'error');
         }
       } else {
-        // Collect for batch ZIP download
         const arrayBuffer = await blob.arrayBuffer();
         generatedFiles.push({
           name: safeFilename,
@@ -983,7 +1095,6 @@
         });
       }
 
-      // Small tick delay for smooth UI update
       await new Promise(r => setTimeout(r, 50));
     }
 
@@ -1005,25 +1116,6 @@
     log('All birthday wishes posters successfully created in 8K!', 'success');
   }
 
-  function renderHdTextOverlay(ctx, opts) {
-    const x = (opts.xPct / 100) * opts.canvasW;
-    const y = (opts.yPct / 100) * opts.canvasH;
-
-    ctx.save();
-    ctx.font = `${opts.fontWeight} ${opts.fontSize}px sans-serif`;
-    ctx.fillStyle = opts.color;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
-    ctx.shadowBlur = Math.round(12 * (opts.canvasW / 1920));
-    ctx.shadowOffsetX = Math.round(4 * (opts.canvasW / 1920));
-    ctx.shadowOffsetY = Math.round(4 * (opts.canvasW / 1920));
-
-    ctx.fillText(opts.text, x, y);
-    ctx.restore();
-  }
-
   // Pure JavaScript Lightweight Zip Builder (Zero Dependencies, Offline Portable)
   function createUncompressedZip(files) {
     let zipParts = [];
@@ -1035,47 +1127,45 @@
       const fileData = file.data;
       const crc32Val = calculateCrc32(fileData);
 
-      // Local File Header (30 bytes + filename)
       const lfh = new Uint8Array(30 + fileNameBytes.length);
       const lfhView = new DataView(lfh.buffer);
 
-      lfhView.setUint32(0, 0x04034b50, true); // Local file header signature
-      lfhView.setUint16(4, 20, true);         // Version needed to extract
-      lfhView.setUint16(6, 0, true);          // General purpose bit flag
-      lfhView.setUint16(8, 0, true);          // Compression method (0 = Store)
-      lfhView.setUint16(10, 0, true);         // File last modification time
-      lfhView.setUint16(12, 0, true);         // File last modification date
-      lfhView.setUint32(14, crc32Val, true);  // CRC-32
-      lfhView.setUint32(18, fileData.length, true); // Compressed size
-      lfhView.setUint32(22, fileData.length, true); // Uncompressed size
-      lfhView.setUint16(26, fileNameBytes.length, true); // File name length
-      lfhView.setUint16(28, 0, true);         // Extra field length
+      lfhView.setUint32(0, 0x04034b50, true);
+      lfhView.setUint16(4, 20, true);
+      lfhView.setUint16(6, 0, true);
+      lfhView.setUint16(8, 0, true);
+      lfhView.setUint16(10, 0, true);
+      lfhView.setUint16(12, 0, true);
+      lfhView.setUint32(14, crc32Val, true);
+      lfhView.setUint32(18, fileData.length, true);
+      lfhView.setUint32(22, fileData.length, true);
+      lfhView.setUint16(26, fileNameBytes.length, true);
+      lfhView.setUint16(28, 0, true);
       lfh.set(fileNameBytes, 30);
 
       zipParts.push(lfh);
       zipParts.push(fileData);
 
-      // Central Directory Header
       const cdh = new Uint8Array(46 + fileNameBytes.length);
       const cdhView = new DataView(cdh.buffer);
 
-      cdhView.setUint32(0, 0x02014b50, true); // Central directory header signature
-      cdhView.setUint16(4, 20, true);         // Version made by
-      cdhView.setUint16(6, 20, true);         // Version needed to extract
-      cdhView.setUint16(8, 0, true);          // General purpose bit flag
-      cdhView.setUint16(10, 0, true);         // Compression method (0 = Store)
-      cdhView.setUint16(12, 0, true);         // Mod time
-      cdhView.setUint16(14, 0, true);         // Mod date
-      cdhView.setUint32(16, crc32Val, true);  // CRC-32
-      cdhView.setUint32(20, fileData.length, true); // Compressed size
-      cdhView.setUint32(24, fileData.length, true); // Uncompressed size
-      cdhView.setUint16(28, fileNameBytes.length, true); // File name length
-      cdhView.setUint16(30, 0, true);         // Extra field length
-      cdhView.setUint16(32, 0, true);         // File comment length
-      cdhView.setUint16(34, 0, true);         // Disk number start
-      cdhView.setUint16(36, 0, true);         // Internal file attributes
-      cdhView.setUint32(38, 0, true);         // External file attributes
-      cdhView.setUint32(42, offset, true);    // Relative offset of local header
+      cdhView.setUint32(0, 0x02014b50, true);
+      cdhView.setUint16(4, 20, true);
+      cdhView.setUint16(6, 20, true);
+      cdhView.setUint16(8, 0, true);
+      cdhView.setUint16(10, 0, true);
+      cdhView.setUint16(12, 0, true);
+      cdhView.setUint16(14, 0, true);
+      cdhView.setUint32(16, crc32Val, true);
+      cdhView.setUint32(20, fileData.length, true);
+      cdhView.setUint32(24, fileData.length, true);
+      cdhView.setUint16(28, fileNameBytes.length, true);
+      cdhView.setUint16(30, 0, true);
+      cdhView.setUint16(32, 0, true);
+      cdhView.setUint16(34, 0, true);
+      cdhView.setUint16(36, 0, true);
+      cdhView.setUint32(38, 0, true);
+      cdhView.setUint32(42, offset, true);
       cdh.set(fileNameBytes, 46);
 
       cdEntries.push(cdh);
@@ -1089,18 +1179,17 @@
       cdSize += cdh.length;
     }
 
-    // End of Central Directory Record (22 bytes)
     const eocd = new Uint8Array(22);
     const eocdView = new DataView(eocd.buffer);
 
-    eocdView.setUint32(0, 0x06054b50, true); // EOCD signature
-    eocdView.setUint16(4, 0, true);          // Disk number
-    eocdView.setUint16(6, 0, true);          // Disk with CD
-    eocdView.setUint16(8, files.length, true); // Entries on this disk
-    eocdView.setUint16(10, files.length, true); // Total entries
-    eocdView.setUint32(12, cdSize, true);    // Size of central directory
-    eocdView.setUint32(16, cdOffset, true);  // Offset of central directory
-    eocdView.setUint16(20, 0, true);         // Comment length
+    eocdView.setUint32(0, 0x06054b50, true);
+    eocdView.setUint16(4, 0, true);
+    eocdView.setUint16(6, 0, true);
+    eocdView.setUint16(8, files.length, true);
+    eocdView.setUint16(10, files.length, true);
+    eocdView.setUint32(12, cdSize, true);
+    eocdView.setUint32(16, cdOffset, true);
+    eocdView.setUint16(20, 0, true);
 
     zipParts.push(eocd);
 

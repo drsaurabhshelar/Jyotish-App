@@ -7,6 +7,8 @@
 <style>
   body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
   }
   .tab {
     overflow: hidden;
@@ -37,7 +39,7 @@
   }
   iframe {
     width: 100%;
-    height: 500px; /* Adjust as needed */
+    height: 850px;
     border: none;
   }
 </style>
@@ -45,44 +47,38 @@
 <body>
 
 <h2>Master Tab Interface</h2>
-<p>Click on the buttons inside the tabbed menu:</p>
+<p style="padding-left: 12px;">Click on the buttons inside the tabbed menu:</p>
 
 <div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'Tab1')" id="defaultOpen">Tab 1</button>
+  <button class="tablinks" onclick="openTab(event, 'Panchang')" id="defaultOpen">Panchang Poster Generator (v1.0.0)</button>
   <button class="tablinks" onclick="openTab(event, 'Tab2')">Tab 2</button>
   <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
   <button class="tablinks" onclick="openTab(event, 'Tab4')">Tab 4</button>
   <button class="tablinks" onclick="openTab(event, 'Tab5')">Tab 5</button>
 </div>
 
-<div id="Tab1" class="tabcontent">
-  <h3>Tab 1</h3>
-  <!-- Paste content of HTML 1 here, or use an iframe like below -->
-  <!-- <iframe src="file1.html"></iframe> -->
-  <p>Content for HTML 1 goes here.</p>
+<div id="Panchang" class="tabcontent">
+  <h3>Panchang Poster Generator</h3>
+  <iframe src="panchang-v1.0.0.html"></iframe>
 </div>
 
 <div id="Tab2" class="tabcontent">
   <h3>Tab 2</h3>
-  <!-- Paste content of HTML 2 here -->
   <p>Content for HTML 2 goes here.</p>
 </div>
 
 <div id="Tab3" class="tabcontent">
   <h3>Tab 3</h3>
-  <!-- Paste content of HTML 3 here -->
   <p>Content for HTML 3 goes here.</p>
 </div>
 
 <div id="Tab4" class="tabcontent">
   <h3>Tab 4</h3>
-  <!-- Paste content of HTML 4 here -->
   <p>Content for HTML 4 goes here.</p>
 </div>
 
 <div id="Tab5" class="tabcontent">
   <h3>Tab 5</h3>
-  <!-- Paste content of HTML 5 here -->
   <p>Content for HTML 5 goes here.</p>
 </div>
 

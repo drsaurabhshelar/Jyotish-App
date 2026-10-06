@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id              String                @id @default(uuid())
+  whatsappNumber  String                @unique
+  fullName        String?
+  dateOfBirth     String?
+  birthTime       String?
+  birthPlace      String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  conversation    ConversationState?
+  consultations   ConsultationRequest[]
+}
+
+model ConversationState {
+  id            String    @id @default(uuid())
+  customerId    String    @unique
+  customer      Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  state         String    @default("NEW")
+  lastMessageId String?
+  dataJson      String?   @default("{}")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ConsultationRequest {
+  id           String      @id @default(uuid())
+  customerId   String
+  customer     Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  questionType String      // "1_QUESTION" or "MULTIPLE_QUESTIONS"
+  fee          Int         // Consultation fee in INR
+  status       String      @default("PENDING_PAYMENT") // PENDING_PAYMENT, PAYMENT_SUCCESSFUL, PENDING_SCHEDULING, SCHEDULED, COMPLETED, CANCELLED
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  payments     Payment[]
+  appointment  Appointment?
+}
+
+model Payment {
+  id             String              @id @default(uuid())
+  consultationId String
+  consultation   ConsultationRequest @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  provider       String              @default("PHONEPE")
+  orderId        String              @unique
+  transactionId  String?             @unique
+  amount         Int
+  currency       String              @default("INR")
+  status         String              @default("PENDING") // PENDING, SUCCESS, FAILED
+  rawResponse    String?
+  paidAt         DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+}
+
+model Appointment {
+  id              String              @id @default(uuid())
+  consultationId  String              @unique
+  consultation    ConsultationRequest @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  status          String              @default("PENDING_SCHEDULING") // PENDING_SCHEDULING, SCHEDULED, COMPLETED, CANCELLED
+  appointmentDate String?
+  appointmentTime String?
+  notes           String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+model WebhookEvent {
+  id          String   @id @default(uuid())
+  eventId     String   @unique
+  source      String   // "WHATSAPP" or "PHONEPE"
+  payloadJson String
+  processed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SystemConfig {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}

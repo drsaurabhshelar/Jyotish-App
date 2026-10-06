@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - APP_BASE_URL=https://your-domain.com
+      - DATABASE_URL=file:./prod.db
+      - JWT_SECRET=change_this_to_a_secure_jwt_secret_in_production
+      - DEFAULT_CONSULTATION_FEE=1500
+      - WHATSAPP_VERIFY_TOKEN=your_whatsapp_verify_token
+      - WHATSAPP_ACCESS_TOKEN=your_whatsapp_access_token
+      - WHATSAPP_PHONE_NUMBER_ID=your_whatsapp_phone_number_id
+      - WHATSAPP_APP_SECRET=your_whatsapp_app_secret
+      - PHONEPE_MERCHANT_ID=your_phonepe_merchant_id
+      - PHONEPE_SALT_KEY=your_phonepe_salt_key
+      - PHONEPE_SALT_INDEX=1
+      - PHONEPE_HOST_URL=https://api.phonepe.com/apis/hermes
+      - PHONEPE_REDIRECT_URL=https://your-domain.com/payment/redirect
+      - PHONEPE_CALLBACK_URL=https://your-domain.com/webhook/phonepe
+      - PHONEPE_UPI_ID=aadiyogi.rises@ybl
+    volumes:
+      - app_data:/app/prisma
+    restart: always
+
+volumes:
+  app_data:

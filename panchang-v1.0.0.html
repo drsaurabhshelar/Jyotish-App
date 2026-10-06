@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panchang Poster Generator 8K (v1.0.0)</title>
+<style>
+  :root {
+    --primary-color: #4a154b;
+    --accent-color: #d97706;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --border-color: #cbd5e1;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1, h2, h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 1024px) {
+    .container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  input[type="file"], input[type="text"], input[type="number"], select, input[type="color"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+  }
+
+  .btn:hover {
+    background-color: #3b113c;
+  }
+
+  .btn-accent {
+    background-color: var(--accent-color);
+  }
+
+  .btn-accent:hover {
+    background-color: #b45309;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+
+  th, td {
+    border: 1px solid var(--border-color);
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f1f5f9;
+  }
+
+  .preview-canvas-container {
+    width: 100%;
+    overflow: auto;
+    text-align: center;
+    background: #e2e8f0;
+    border-radius: 4px;
+    padding: 10px;
+  }
+
+  canvas {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .flex-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+
+  .status-msg {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    display: none;
+  }
+  .status-msg.info {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  .status-msg.success {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+</style>
+</head>
+<body>
+
+<h1>Panchang Poster Generator (8K)</h1>
+<p>Upload XML Kundali files and a poster template image to overlay Name, Tithi, and Gemstone text in high 8K resolution.</p>
+
+<div class="container">
+  <!-- Controls Column -->
+  <div>
+    <div class="card">
+      <h2>1. Select Inputs</h2>
+
+      <div class="form-group">
+        <label for="folderInput">Select XML Kundalis Folder / Files:</label>
+        <input type="file" id="folderInput" webkitdirectory directory multiple accept=".xml">
+      </div>
+
+      <div class="form-group">
+        <label for="templateInput">Select Poster Template Image:</label>
+        <input type="file" id="templateInput" accept="image/*">
+      </div>
+
+      <button class="btn btn-accent" id="gemstoneBtn" onclick="processKundaliFiles()">Gemstone / Process XML Files</button>
+      <div id="statusMsg" class="status-msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>2. Overlay Positioning & Styling Controls</h2>
+      <p style="font-size: 13px; color: #64748b;">Adjust overlay positions (in % of poster width/height), font size, and color.</p>
+
+      <h3>Name Field</h3>
+      <div class="control-grid">
+        <div>
+          <label>X Position (%)</label>
+          <input type="number" id="nameX" value="50" min="0" max="100" step="0.5" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Y Position (%)</label>
+          <input type="number" id="nameY" value="40" min="0" max="100" step="0.5" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Font Size (px)</label>
+          <input type="number" id="nameSize" value="120" min="10" max="500" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Color</label>
+          <input type="color" id="nameColor" value="#ffffff" onchange="drawPreview()">
+        </div>
+      </div>
+
+      <h3 style="margin-top: 15px;">Tithi Field</h3>
+      <div class="control-grid">
+        <div>
+          <label>X Position (%)</label>
+          <input type="number" id="tithiX" value="50" min="0" max="100" step="0.5" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Y Position (%)</label>
+          <input type="number" id="tithiY" value="50" min="0" max="100" step="0.5" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Font Size (px)</label>
+          <input type="number" id="tithiSize" value="90" min="10" max="500" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Color</label>
+          <input type="color" id="tithiColor" value="#fbbf24" onchange="drawPreview()">
+        </div>
+      </div>
+
+      <h3 style="margin-top: 15px;">Gemstone Field</h3>
+      <div class="control-grid">
+        <div>
+          <label>X Position (%)</label>
+          <input type="number" id="gemstoneX" value="50" min="0" max="100" step="0.5" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Y Position (%)</label>
+          <input type="number" id="gemstoneY" value="60" min="0" max="100" step="0.5" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Font Size (px)</label>
+          <input type="number" id="gemstoneSize" value="90" min="10" max="500" onchange="drawPreview()">
+        </div>
+        <div>
+          <label>Color</label>
+          <input type="color" id="gemstoneColor" value="#38bdf8" onchange="drawPreview()">
+        </div>
+      </div>
+
+      <h3 style="margin-top: 15px;">Global Font & Alignment</h3>
+      <div class="control-grid">
+        <div>
+          <label>Font Family</label>
+          <select id="fontFamily" onchange="drawPreview()">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="'Courier New', monospace">Courier New</option>
+            <option value="sans-serif">System Sans-Serif</option>
+          </select>
+        </div>
+        <div>
+          <label>Text Align</label>
+          <select id="textAlign" onchange="drawPreview()">
+            <option value="center">Center</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Canvas Column -->
+  <div>
+    <div class="card">
+      <h2>Poster Preview</h2>
+      <div class="preview-canvas-container">
+        <canvas id="previewCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table & Submit Section -->
+  <div class="card full-width">
+    <h2>3. Parsed Kundali Details & Input Table</h2>
+    <p style="font-size: 14px; color: #64748b;">Review and edit names, birth dates, tithis, and gemstones before rendering 8K images.</p>
+
+    <div style="overflow-x: auto;">
+      <table id="kundaliTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>XML Filename</th>
+            <th>Name</th>
+            <th>Birth Date</th>
+            <th>Tithi (Devanagari)</th>
+            <th>Gemstone</th>
+            <th>Preview</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="7" style="text-align: center; color: #94a3b8;">No XML files loaded yet. Select a folder/files above and click "Gemstone".</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top: 20px;" class="flex-row">
+      <button class="btn btn-accent" id="submitBtn" onclick="generateAll8KImages()">Submit & Export All Images in 8K</button>
+      <div id="exportStatus" style="font-weight: 600;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Top level configurable variable
+var KUNDALIS_FOLDER = "Kundalis";
+
+// Global state
+var loadedRecords = [];
+var templateImg = null;
+var selectedRowIndex = 0;
+
+// Convert Julian Day Number to Gregorian YYYY-MM-DD
+function julianToGregorian(jd) {
+  jd = parseFloat(jd);
+  if (isNaN(jd)) return "";
+  var z = Math.floor(jd + 0.5);
+  var f = (jd + 0.5) - z;
+  var a = z;
+  if (z >= 2299161) {
+    var alpha = Math.floor((z - 1867216.25) / 36524.25);
+    a = z + 1 + alpha - Math.floor(alpha / 4);
+  }
+  var b = a + 1524;
+  var c = Math.floor((b - 122.1) / 365.25);
+  var d = Math.floor(365.25 * c);
+  var e = Math.floor((b - d) / 30.6001);
+  var day = Math.floor(b - d - Math.floor(30.6001 * e) + f);
+  var month = (e < 14) ? e - 1 : e - 13;
+  var year = (month > 2) ? c - 4716 : c - 4715;
+
+  var mStr = month < 10 ? '0' + month : '' + month;
+  var dStr = day < 10 ? '0' + day : '' + day;
+  return year + '-' + mStr + '-' + dStr;
+}
+
+// Handle Template Image Selection
+document.getElementById('templateInput').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (file) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+      templateImg = new Image();
+      templateImg.onload = function() {
+        showStatus("Template image loaded successfully (" + templateImg.width + "x" + templateImg.height + ")", "success");
+        drawPreview();
+      };
+      templateImg.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+function showStatus(msg, type) {
+  var el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = 'status-msg ' + (type || 'info');
+  el.style.display = 'block';
+}
+
+// Process XML Files when Gemstone button is clicked
+async function processKundaliFiles() {
+  var fileInput = document.getElementById('folderInput');
+  var files = Array.from(fileInput.files);
+
+  // Filter strictly for .xml files
+  var xmlFiles = files.filter(f => f.name.toLowerCase().endsWith('.xml'));
+
+  if (xmlFiles.length === 0) {
+    showStatus("No .xml files found in selected input. Please select a folder or files containing XML Kundali records.", "info");
+    return;
+  }
+
+  loadedRecords = [];
+  var parser = new DOMParser();
+
+  for (var i = 0; i < xmlFiles.length; i++) {
+    var file = xmlFiles[i];
+    var text = await file.text();
+    var xmlDoc = parser.parseFromString(text, "text/xml");
+
+    var name = xmlDoc.querySelector("Name")?.textContent ||
+               xmlDoc.querySelector("BirthInfo > Name")?.textContent || "Unknown";
+
+    var rawBirthDate = xmlDoc.querySelector("BirthDate")?.textContent ||
+                       xmlDoc.querySelector("DateString")?.textContent || "";
+
+    var birthDate = rawBirthDate;
+    if (rawBirthDate && !isNaN(rawBirthDate) && parseFloat(rawBirthDate) > 2000000) {
+      birthDate = julianToGregorian(rawBirthDate);
+    }
+
+    var tithi = xmlDoc.querySelector("Tithi")?.textContent || "शुक्ल एकादशी";
+    var gemstone = xmlDoc.querySelector("Gemstone")?.textContent || "";
+
+    loadedRecords.push({
+      fileName: file.name,
+      name: name,
+      birthDate: birthDate,
+      tithi: tithi,
+      gemstone: gemstone
+    });
+  }
+
+  renderTable();
+  showStatus("Successfully loaded and parsed " + loadedRecords.length + " XML files.", "success");
+  drawPreview();
+}
+
+function renderTable() {
+  var tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  if (loadedRecords.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8;">No XML files loaded yet.</td></tr>';
+    return;
+  }
+
+  loadedRecords.forEach((rec, idx) => {
+    var tr = document.createElement('tr');
+
+    tr.innerHTML = `
+      <td>${idx + 1}</td>
+      <td><strong>${escapeHtml(rec.fileName)}</strong></td>
+      <td><input type="text" value="${escapeHtml(rec.name)}" oninput="updateRecord(${idx}, 'name', this.value)"></td>
+      <td><input type="text" value="${escapeHtml(rec.birthDate)}" oninput="updateRecord(${idx}, 'birthDate', this.value)"></td>
+      <td><input type="text" value="${escapeHtml(rec.tithi)}" oninput="updateRecord(${idx}, 'tithi', this.value)"></td>
+      <td><input type="text" value="${escapeHtml(rec.gemstone)}" placeholder="Enter Gemstone..." oninput="updateRecord(${idx}, 'gemstone', this.value)"></td>
+      <td><button class="btn" style="padding: 4px 8px; font-size: 12px;" onclick="selectRecordForPreview(${idx})">Preview</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function updateRecord(idx, key, value) {
+  if (loadedRecords[idx]) {
+    loadedRecords[idx][key] = value;
+    if (selectedRowIndex === idx) {
+      drawPreview();
+    }
+  }
+}
+
+function selectRecordForPreview(idx) {
+  selectedRowIndex = idx;
+  drawPreview();
+}
+
+function drawPreview() {
+  var canvas = document.getElementById('previewCanvas');
+  var ctx = canvas.getContext('2d');
+
+  if (!templateImg) {
+    canvas.width = 800;
+    canvas.height = 450;
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '20px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Please select a Template Poster Image', canvas.width / 2, canvas.height / 2);
+    return;
+  }
+
+  // Set canvas dimension to match template image
+  canvas.width = templateImg.width;
+  canvas.height = templateImg.height;
+
+  // Draw background image
+  ctx.drawImage(templateImg, 0, 0);
+
+  var rec = loadedRecords[selectedRowIndex] || {
+    name: "Sample Name",
+    tithi: "शुक्ल एकादशी",
+    gemstone: "Manik (Ruby)"
+  };
+
+  renderTextOverlay(ctx, canvas.width, canvas.height, rec);
+}
+
+function renderTextOverlay(ctx, width, height, rec) {
+  var align = document.getElementById('textAlign').value;
+  var family = document.getElementById('fontFamily').value;
+
+  ctx.textAlign = align;
+
+  // Render Name
+  var nameX = (parseFloat(document.getElementById('nameX').value) / 100) * width;
+  var nameY = (parseFloat(document.getElementById('nameY').value) / 100) * height;
+  var nameSize = parseFloat(document.getElementById('nameSize').value);
+  var nameColor = document.getElementById('nameColor').value;
+
+  ctx.font = 'bold ' + nameSize + 'px ' + family;
+  ctx.fillStyle = nameColor;
+  ctx.fillText(rec.name || '', nameX, nameY);
+
+  // Render Tithi
+  var tithiX = (parseFloat(document.getElementById('tithiX').value) / 100) * width;
+  var tithiY = (parseFloat(document.getElementById('tithiY').value) / 100) * height;
+  var tithiSize = parseFloat(document.getElementById('tithiSize').value);
+  var tithiColor = document.getElementById('tithiColor').value;
+
+  ctx.font = tithiSize + 'px ' + family;
+  ctx.fillStyle = tithiColor;
+  ctx.fillText(rec.tithi || '', tithiX, tithiY);
+
+  // Render Gemstone
+  var gemstoneX = (parseFloat(document.getElementById('gemstoneX').value) / 100) * width;
+  var gemstoneY = (parseFloat(document.getElementById('gemstoneY').value) / 100) * height;
+  var gemstoneSize = parseFloat(document.getElementById('gemstoneSize').value);
+  var gemstoneColor = document.getElementById('gemstoneColor').value;
+
+  ctx.font = 'bold ' + gemstoneSize + 'px ' + family;
+  ctx.fillStyle = gemstoneColor;
+  ctx.fillText(rec.gemstone ? "Gemstone: " + rec.gemstone : '', gemstoneX, gemstoneY);
+}
+
+// Generate high resolution 8K images for all loaded records
+function generateAll8KImages() {
+  if (!templateImg) {
+    alert("Please select a template poster image first.");
+    return;
+  }
+
+  if (loadedRecords.length === 0) {
+    alert("No Kundali records loaded to export.");
+    return;
+  }
+
+  var exportStatus = document.getElementById('exportStatus');
+  exportStatus.style.color = '#0284c7';
+  exportStatus.textContent = "Generating 8K images...";
+
+  // 8K width target standard = 7680px
+  var targetWidth = 7680;
+  var aspectRatio = templateImg.height / templateImg.width;
+  var targetHeight = Math.round(targetWidth * aspectRatio);
+
+  var exportCanvas = document.createElement('canvas');
+  exportCanvas.width = targetWidth;
+  exportCanvas.height = targetHeight;
+  var ctx = exportCanvas.getContext('2d');
+
+  var scaleFactor = targetWidth / templateImg.width;
+
+  loadedRecords.forEach((rec, idx) => {
+    ctx.clearRect(0, 0, targetWidth, targetHeight);
+    ctx.drawImage(templateImg, 0, 0, targetWidth, targetHeight);
+
+    var align = document.getElementById('textAlign').value;
+    var family = document.getElementById('fontFamily').value;
+    ctx.textAlign = align;
+
+    // Render Name
+    var nameX = (parseFloat(document.getElementById('nameX').value) / 100) * targetWidth;
+    var nameY = (parseFloat(document.getElementById('nameY').value) / 100) * targetHeight;
+    var nameSize = parseFloat(document.getElementById('nameSize').value) * scaleFactor;
+    ctx.font = 'bold ' + nameSize + 'px ' + family;
+    ctx.fillStyle = document.getElementById('nameColor').value;
+    ctx.fillText(rec.name || '', nameX, nameY);
+
+    // Render Tithi
+    var tithiX = (parseFloat(document.getElementById('tithiX').value) / 100) * targetWidth;
+    var tithiY = (parseFloat(document.getElementById('tithiY').value) / 100) * targetHeight;
+    var tithiSize = parseFloat(document.getElementById('tithiSize').value) * scaleFactor;
+    ctx.font = tithiSize + 'px ' + family;
+    ctx.fillStyle = document.getElementById('tithiColor').value;
+    ctx.fillText(rec.tithi || '', tithiX, tithiY);
+
+    // Render Gemstone
+    var gemstoneX = (parseFloat(document.getElementById('gemstoneX').value) / 100) * targetWidth;
+    var gemstoneY = (parseFloat(document.getElementById('gemstoneY').value) / 100) * targetHeight;
+    var gemstoneSize = parseFloat(document.getElementById('gemstoneSize').value) * scaleFactor;
+    ctx.font = 'bold ' + gemstoneSize + 'px ' + family;
+    ctx.fillStyle = document.getElementById('gemstoneColor').value;
+    ctx.fillText(rec.gemstone ? "Gemstone: " + rec.gemstone : '', gemstoneX, gemstoneY);
+
+    // Trigger download
+    var dataUrl = exportCanvas.toDataURL('image/png');
+    var a = document.createElement('a');
+    var sanitizedName = (rec.name || 'person').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    a.download = `poster_8k_${sanitizedName}_${rec.fileName.replace('.xml', '')}.png`;
+    a.href = dataUrl;
+    a.click();
+  });
+
+  exportStatus.style.color = '#166534';
+  exportStatus.textContent = "Successfully exported " + loadedRecords.length + " 8K poster image(s)!";
+}
+
+// Initial draw
+drawPreview();
+</script>
+
+</body>
+</html>

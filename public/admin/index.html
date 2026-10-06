@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astrology Bot Admin Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f4f6f9; color: #333; line-height: 1.6; }
+    header { background-color: #1a252f; color: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.5rem; font-weight: 600; }
+    .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .hidden { display: none !important; }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    input, select, textarea, button { width: 100%; padding: 0.6rem 0.8rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+    button { background-color: #27ae60; color: white; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
+    button:hover { background-color: #219150; }
+    button.btn-secondary { background-color: #7f8c8d; }
+    button.btn-secondary:hover { background-color: #6c7a7d; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .stat-card { background: #f8f9fa; border-left: 4px solid #3498db; padding: 1rem; border-radius: 4px; }
+    .stat-card h3 { font-size: 0.85rem; color: #7f8c8d; text-transform: uppercase; }
+    .stat-card p { font-size: 1.5rem; font-weight: bold; color: #2c3e50; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { text-align: left; padding: 0.8rem; border-bottom: 1px solid #e1e8ed; font-size: 0.9rem; }
+    th { background-color: #f8f9fa; font-weight: 600; }
+    .badge { padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+    .badge-success { background: #d4edda; color: #155724; }
+    .badge-warning { background: #fff3cd; color: #856404; }
+    .badge-danger { background: #f8d7da; color: #721c24; }
+    .badge-info { background: #d1ecf1; color: #0c5460; }
+    .filters { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .filters > div { flex: 1; min-width: 180px; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 2rem; border-radius: 8px; width: 100%; max-width: 500px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Astrology Consultation Bot - Admin Panel</h1>
+    <div id="userInfo" class="hidden">
+      <span>Logged in as Admin</span> |
+      <a href="#" id="logoutBtn" style="color:#e74c3c; text-decoration:none; font-weight:bold;">Logout</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Login Form -->
+    <div id="loginCard" class="card" style="max-width: 400px; margin: 4rem auto;">
+      <h2 style="margin-bottom: 1rem; text-align: center;">Admin Login</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" required value="admin">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit">Sign In</button>
+        <p id="loginError" style="color:red; font-size:0.85rem; margin-top:0.5rem;" class="hidden"></p>
+      </form>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+      <!-- Stats Cards -->
+      <div class="grid" style="margin-bottom: 1.5rem;">
+        <div class="stat-card">
+          <h3>Total Requests</h3>
+          <p id="statTotalRequests">0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: #2ecc71;">
+          <h3>Paid Consultations</h3>
+          <p id="statSuccessfulPayments">0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: #f39c12;">
+          <h3>Pending Scheduling</h3>
+          <p id="statPendingAppointments">0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: #9b59b6;">
+          <h3>Total Revenue</h3>
+          <p id="statTotalRevenue">₹0</p>
+        </div>
+      </div>
+
+      <!-- Config Card -->
+      <div class="card">
+        <h3>Consultation Fee Configuration</h3>
+        <form id="feeForm" style="display: flex; gap: 1rem; align-items: flex-end; max-width: 400px; margin-top: 0.5rem;">
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label for="consultationFee">Current Fee (INR)</label>
+            <input type="number" id="consultationFee" min="1" required>
+          </div>
+          <button type="submit" style="width: auto;">Update Fee</button>
+        </form>
+      </div>
+
+      <!-- Consultations List & Search -->
+      <div class="card">
+        <h3>Consultation Requests</h3>
+
+        <div class="filters" style="margin-top: 1rem;">
+          <div>
+            <label for="searchQuery">Search (Name / Number)</label>
+            <input type="text" id="searchQuery" placeholder="Search customer...">
+          </div>
+          <div>
+            <label for="filterPayment">Payment Status</label>
+            <select id="filterPayment">
+              <option value="">All Payments</option>
+              <option value="SUCCESS">Success</option>
+              <option value="PENDING">Pending</option>
+              <option value="FAILED">Failed</option>
+            </select>
+          </div>
+          <div>
+            <label for="filterAppointment">Appointment Status</label>
+            <select id="filterAppointment">
+              <option value="">All Appointments</option>
+              <option value="PENDING_SCHEDULING">Pending Scheduling</option>
+              <option value="SCHEDULED">Scheduled</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>WhatsApp Number</th>
+              <th>Birth Details</th>
+              <th>Fee</th>
+              <th>Payment Status</th>
+              <th>Transaction ID</th>
+              <th>Appointment Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="consultationsTableBody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Appointment Modal -->
+  <div id="scheduleModal" class="modal hidden">
+    <div class="modal-content">
+      <h3 style="margin-bottom: 1rem;">Schedule Appointment</h3>
+      <form id="scheduleForm">
+        <input type="hidden" id="modalConsultationId">
+        <div class="form-group">
+          <label for="appointmentDate">Appointment Date</label>
+          <input type="text" id="appointmentDate" placeholder="e.g. 15/10/2024" required>
+        </div>
+        <div class="form-group">
+          <label for="appointmentTime">Appointment Time</label>
+          <input type="text" id="appointmentTime" placeholder="e.g. 04:00 PM" required>
+        </div>
+        <div class="form-group">
+          <label for="appointmentNotes">Notes (Optional)</label>
+          <textarea id="appointmentNotes" rows="2"></textarea>
+        </div>
+        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+          <input type="checkbox" id="sendWhatsAppNotice" checked style="width: auto;">
+          <label for="sendWhatsAppNotice" style="margin-bottom: 0;">Send WhatsApp confirmation to customer</label>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button type="submit">Confirm & Schedule</button>
+          <button type="button" class="btn-secondary" id="closeModalBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let token = localStorage.getItem('adminToken') || '';
+
+    const loginCard = document.getElementById('loginCard');
+    const dashboard = document.getElementById('dashboard');
+    const userInfo = document.getElementById('userInfo');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+
+    const statTotalRequests = document.getElementById('statTotalRequests');
+    const statSuccessfulPayments = document.getElementById('statSuccessfulPayments');
+    const statPendingAppointments = document.getElementById('statPendingAppointments');
+    const statTotalRevenue = document.getElementById('statTotalRevenue');
+
+    const consultationFeeInput = document.getElementById('consultationFee');
+    const feeForm = document.getElementById('feeForm');
+
+    const searchQuery = document.getElementById('searchQuery');
+    const filterPayment = document.getElementById('filterPayment');
+    const filterAppointment = document.getElementById('filterAppointment');
+    const consultationsTableBody = document.getElementById('consultationsTableBody');
+
+    const scheduleModal = document.getElementById('scheduleModal');
+    const scheduleForm = document.getElementById('scheduleForm');
+    const modalConsultationId = document.getElementById('modalConsultationId');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    if (token) {
+      showDashboard();
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.classList.add('hidden');
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          token = data.token;
+          localStorage.setItem('adminToken', token);
+          showDashboard();
+        } else {
+          loginError.innerText = data.error || 'Login failed';
+          loginError.classList.remove('hidden');
+        }
+      } catch (err) {
+        loginError.innerText = 'Server error during login';
+        loginError.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      token = '';
+      localStorage.removeItem('adminToken');
+      location.reload();
+    });
+
+    function showDashboard() {
+      loginCard.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      userInfo.classList.remove('hidden');
+      loadStats();
+      loadFeeConfig();
+      loadConsultations();
+    }
+
+    async function authFetch(url, options = {}) {
+      options.headers = options.headers || {};
+      options.headers['Authorization'] = 'Bearer ' + token;
+      const res = await fetch(url, options);
+      if (res.status === 401) {
+        localStorage.removeItem('adminToken');
+        location.reload();
+      }
+      return res;
+    }
+
+    async function loadStats() {
+      const res = await authFetch('/api/admin/stats');
+      if (res.ok) {
+        const data = await res.json();
+        statTotalRequests.innerText = data.totalRequests;
+        statSuccessfulPayments.innerText = data.successfulPayments;
+        statPendingAppointments.innerText = data.pendingAppointments;
+        statTotalRevenue.innerText = '₹' + data.totalRevenue.toLocaleString('en-IN');
+      }
+    }
+
+    async function loadFeeConfig() {
+      const res = await authFetch('/api/admin/config/fee');
+      if (res.ok) {
+        const data = await res.json();
+        consultationFeeInput.value = data.fee;
+      }
+    }
+
+    feeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fee = consultationFeeInput.value;
+      const res = await authFetch('/api/admin/config/fee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fee })
+      });
+      if (res.ok) {
+        alert('Consultation fee updated successfully!');
+      }
+    });
+
+    let debounceTimer;
+    searchQuery.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(loadConsultations, 300);
+    });
+    filterPayment.addEventListener('change', loadConsultations);
+    filterAppointment.addEventListener('change', loadConsultations);
+
+    async function loadConsultations() {
+      const query = new URLSearchParams({
+        search: searchQuery.value,
+        paymentStatus: filterPayment.value,
+        appointmentStatus: filterAppointment.value
+      });
+
+      const res = await authFetch('/api/admin/consultations?' + query.toString());
+      if (res.ok) {
+        const data = await res.json();
+        renderConsultations(data.consultations);
+      }
+    }
+
+    function renderConsultations(consultations) {
+      consultationsTableBody.innerHTML = '';
+      if (!consultations || consultations.length === 0) {
+        consultationsTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No consultation requests found.</td></tr>';
+        return;
+      }
+
+      consultations.forEach(c => {
+        const latestPayment = c.payments && c.payments.length > 0 ? c.payments[c.payments.length - 1] : null;
+        const pStatus = latestPayment ? latestPayment.status : 'N/A';
+        const txnId = latestPayment ? (latestPayment.transactionId || latestPayment.orderId) : 'N/A';
+        const aStatus = c.appointment ? c.appointment.status : 'PENDING_SCHEDULING';
+
+        let pBadgeClass = 'badge-warning';
+        if (pStatus === 'SUCCESS') pBadgeClass = 'badge-success';
+        if (pStatus === 'FAILED') pBadgeClass = 'badge-danger';
+
+        let aBadgeClass = 'badge-warning';
+        if (aStatus === 'SCHEDULED') aBadgeClass = 'badge-info';
+        if (aStatus === 'COMPLETED') aBadgeClass = 'badge-success';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.customer.fullName || 'N/A'}</td>
+          <td>${c.customer.whatsappNumber || 'N/A'}</td>
+          <td>DOB: ${c.customer.dateOfBirth || '-'}<br>Time: ${c.customer.birthTime || '-'}<br>Place: ${c.customer.birthPlace || '-'}</td>
+          <td>₹${c.fee}</td>
+          <td><span class="badge ${pBadgeClass}">${pStatus}</span></td>
+          <td style="font-size:0.8rem; font-family:monospace;">${txnId}</td>
+          <td><span class="badge ${aBadgeClass}">${aStatus}</span></td>
+          <td>
+            <button class="btn-schedule" style="padding:0.3rem 0.6rem; font-size:0.8rem;" onclick="openScheduleModal('${c.id}')">Schedule</button>
+          </td>
+        `;
+        consultationsTableBody.appendChild(tr);
+      });
+    }
+
+    function openScheduleModal(consultationId) {
+      modalConsultationId.value = consultationId;
+      scheduleModal.classList.remove('hidden');
+    }
+
+    closeModalBtn.addEventListener('click', () => {
+      scheduleModal.classList.add('hidden');
+    });
+
+    scheduleForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const consultationId = modalConsultationId.value;
+      const appointmentDate = document.getElementById('appointmentDate').value;
+      const appointmentTime = document.getElementById('appointmentTime').value;
+      const notes = document.getElementById('appointmentNotes').value;
+      const sendWhatsAppNotice = document.getElementById('sendWhatsAppNotice').checked;
+
+      const res = await authFetch('/api/admin/appointments/schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ consultationId, appointmentDate, appointmentTime, notes, sendWhatsAppNotice })
+      });
+
+      if (res.ok) {
+        alert('Appointment scheduled successfully!');
+        scheduleModal.classList.add('hidden');
+        loadConsultations();
+        loadStats();
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to schedule appointment');
+      }
+    });
+  </script>
+</body>
+</html>

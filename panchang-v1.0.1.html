@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poster Birthday Wishes Generator 8K - panchang-v1.0.1</title>
+<style>
+  :root {
+    --primary: #1A365D;
+    --accent: #2B6CB0;
+    --accent-hover: #2C5282;
+    --bg-light: #F7FAFC;
+    --border-color: #E2E8F0;
+    --text-dark: #2D3748;
+    --text-muted: #718096;
+    --success: #38A169;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #EDF2F7;
+    color: var(--text-dark);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  }
+
+  header {
+    text-align: center;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+  }
+
+  h1 {
+    color: var(--primary);
+    margin: 0 0 10px 0;
+    font-size: 28px;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+  }
+
+  @media (max-width: 900px) {
+    .grid-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-top: 0;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  input[type="file"], input[type="text"], input[type="number"], select, color {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #FFF;
+    font-size: 14px;
+  }
+
+  .control-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .control-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  button.btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: 100%;
+  }
+
+  button.btn:hover {
+    background: var(--accent-hover);
+  }
+
+  button.btn-success {
+    background: var(--success);
+  }
+
+  button.btn-success:hover {
+    background: #2F855A;
+  }
+
+  /* Table styling */
+  .table-container {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 13px;
+  }
+
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  th {
+    background: #E2E8F0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  td input[type="text"] {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  /* Canvas Preview Container */
+  .preview-wrapper {
+    position: relative;
+    width: 100%;
+    background: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 350px;
+  }
+
+  canvas#previewCanvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    cursor: crosshair;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #E2E8F0;
+    color: var(--text-dark);
+  }
+
+  .progress-container {
+    display: none;
+    margin-top: 15px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #E2E8F0;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--success);
+    transition: width 0.2s ease;
+  }
+
+  .log-box {
+    margin-top: 10px;
+    background: #1A202C;
+    color: #A0AEC0;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 12px;
+    height: 100px;
+    overflow-y: auto;
+  }
+
+  .log-line {
+    margin: 2px 0;
+  }
+  .log-line.success { color: #68D391; }
+  .log-line.error { color: #FC8181; }
+
+  .preset-btns {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .btn-sm {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    background: #CBD5E0;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-sm:hover { background: #A0AEC0; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Birthday Wishes Poster Generator (8K)</h1>
+    <p class="subtitle">Select XML Kundali folder & Poster Template Image to generate high-resolution &lt;Name&gt;.jpg wishes</p>
+  </header>
+
+  <div class="grid-layout">
+    <!-- Left Column: Inputs & Controls -->
+    <div>
+      <!-- Step 1: Select Inputs -->
+      <div class="card">
+        <div class="card-title">1. Select Files & Folders</div>
+
+        <div class="form-group">
+          <label for="xmlFolderInput">Select Kundali XML Folder:</label>
+          <input type="file" id="xmlFolderInput" webkitdirectory directory multiple accept=".xml">
+          <small style="color: var(--text-muted);">Parses strictly .xml files from folder (e.g. Kundalis/)</small>
+        </div>
+
+        <div class="form-group">
+          <label for="templateImageInput">Select Poster Template Image:</label>
+          <input type="file" id="templateImageInput" accept="image/*">
+        </div>
+
+        <div class="form-group">
+          <label for="resolutionSelect">Output Resolution:</label>
+          <select id="resolutionSelect">
+            <option value="8K" selected>8K Ultra HD (7680 px wide)</option>
+            <option value="4K">4K Ultra HD (3840 px wide)</option>
+            <option value="ORIGINAL">Original Template Resolution</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 2: Parsed Persons Table -->
+      <div class="card">
+        <div class="card-title">
+          2. Extracted Records
+          <span class="badge" id="recordCountBadge">0 Records</span>
+        </div>
+        <div class="table-container">
+          <table id="recordsTable">
+            <thead>
+              <tr>
+                <th>Preview</th>
+                <th>Name</th>
+                <th>Tithi</th>
+                <th>Gemstone</th>
+              </tr>
+            </thead>
+            <tbody id="recordsTableBody">
+              <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                  No XML files loaded. Select XML folder above.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Step 3: Text Styling & Position Controls -->
+      <div class="card">
+        <div class="card-title">3. Customize Text Overlay Positions & Style</div>
+
+        <div class="preset-btns">
+          <button class="btn-sm" onclick="applyPreset('center')">Center Preset</button>
+          <button class="btn-sm" onclick="applyPreset('topHeader')">Top Header Preset</button>
+          <button class="btn-sm" onclick="applyPreset('bottomFooter')">Bottom Footer Preset</button>
+        </div>
+
+        <!-- Name Overlay Controls -->
+        <fieldset style="border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; margin-bottom: 12px;">
+          <legend style="font-weight: bold; color: var(--accent);">Name Overlay</legend>
+          <div class="control-row">
+            <div>
+              <label>X Position (%):</label>
+              <input type="number" id="nameX" value="50" min="0" max="100" step="1">
+            </div>
+            <div>
+              <label>Y Position (%):</label>
+              <input type="number" id="nameY" value="30" min="0" max="100" step="1">
+            </div>
+          </div>
+          <div class="control-row-3" style="margin-top: 8px;">
+            <div>
+              <label>Font Size (px):</label>
+              <input type="number" id="nameFontSize" value="64" min="10" max="200">
+            </div>
+            <div>
+              <label>Color:</label>
+              <input type="color" id="nameColor" value="#8B0000">
+            </div>
+            <div>
+              <label>Font Weight:</label>
+              <select id="nameFontWeight">
+                <option value="bold" selected>Bold</option>
+                <option value="normal">Normal</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Tithi Overlay Controls -->
+        <fieldset style="border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; margin-bottom: 12px;">
+          <legend style="font-weight: bold; color: var(--accent);">Tithi Overlay</legend>
+          <div class="control-row">
+            <div>
+              <label>X Position (%):</label>
+              <input type="number" id="tithiX" value="50" min="0" max="100" step="1">
+            </div>
+            <div>
+              <label>Y Position (%):</label>
+              <input type="number" id="tithiY" value="50" min="0" max="100" step="1">
+            </div>
+          </div>
+          <div class="control-row-3" style="margin-top: 8px;">
+            <div>
+              <label>Font Size (px):</label>
+              <input type="number" id="tithiFontSize" value="48" min="10" max="200">
+            </div>
+            <div>
+              <label>Color:</label>
+              <input type="color" id="tithiColor" value="#B8860B">
+            </div>
+            <div>
+              <label>Font Weight:</label>
+              <select id="tithiFontWeight">
+                <option value="bold" selected>Bold</option>
+                <option value="normal">Normal</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Gemstone Overlay Controls -->
+        <fieldset style="border: 1px solid var(--border-color); border-radius: 6px; padding: 10px;">
+          <legend style="font-weight: bold; color: var(--accent);">Gemstone Overlay</legend>
+          <div class="control-row">
+            <div>
+              <label>X Position (%):</label>
+              <input type="number" id="gemstoneX" value="50" min="0" max="100" step="1">
+            </div>
+            <div>
+              <label>Y Position (%):</label>
+              <input type="number" id="gemstoneY" value="70" min="0" max="100" step="1">
+            </div>
+          </div>
+          <div class="control-row-3" style="margin-top: 8px;">
+            <div>
+              <label>Font Size (px):</label>
+              <input type="number" id="gemstoneFontSize" value="42" min="10" max="200">
+            </div>
+            <div>
+              <label>Color:</label>
+              <input type="color" id="gemstoneColor" value="#1A365D">
+            </div>
+            <div>
+              <label>Font Weight:</label>
+              <select id="gemstoneFontWeight">
+                <option value="bold" selected>Bold</option>
+                <option value="normal">Normal</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <!-- Right Column: Live Preview & Generator Action -->
+    <div>
+      <div class="card">
+        <div class="card-title">Poster Live Preview</div>
+        <div class="preview-wrapper">
+          <canvas id="previewCanvas" width="1920" height="1080"></canvas>
+        </div>
+        <small style="color: var(--text-muted); display: block; margin-top: 8px; text-align: center;">
+          Tip: You can click and drag on the canvas to position text elements!
+        </small>
+      </div>
+
+      <div class="card">
+        <div class="card-title">4. Generate 8K Wishes</div>
+        <button class="btn btn-success" id="submitBtn" onclick="generateAllWishes()">
+          Submit & Generate All Birthday Wishes (.jpg)
+        </button>
+
+        <div class="progress-container" id="progressContainer">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div style="font-size: 13px; text-align: center; margin-top: 6px; font-weight: bold;" id="progressText">
+            Processing...
+          </div>
+        </div>
+
+        <div class="log-box" id="logBox">
+          <div class="log-line">Ready. Select XML folder and poster template to begin.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Top-level JavaScript variable as per guidelines
+  const KUNDALIS_FOLDER = "Kundalis";
+
+  // State variables
+  let parsedRecords = [];
+  let templateImage = new Image();
+  let templateLoaded = false;
+  let activePreviewRecordIndex = 0;
+  let activeDragTarget = null;
+
+  // DOM Elements
+  const xmlFolderInput = document.getElementById('xmlFolderInput');
+  const templateImageInput = document.getElementById('templateImageInput');
+  const recordsTableBody = document.getElementById('recordsTableBody');
+  const recordCountBadge = document.getElementById('recordCountBadge');
+  const previewCanvas = document.getElementById('previewCanvas');
+  const ctx = previewCanvas.getContext('2d');
+  const logBox = document.getElementById('logBox');
+
+  // Input listeners for controls
+  const controlIds = [
+    'nameX', 'nameY', 'nameFontSize', 'nameColor', 'nameFontWeight',
+    'tithiX', 'tithiY', 'tithiFontSize', 'tithiColor', 'tithiFontWeight',
+    'gemstoneX', 'gemstoneY', 'gemstoneFontSize', 'gemstoneColor', 'gemstoneFontWeight'
+  ];
+
+  controlIds.forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      renderPreviewCanvas();
+    });
+  });
+
+  // Load default fallback canvas placeholder
+  initBlankCanvas();
+
+  function initBlankCanvas() {
+    previewCanvas.width = 1920;
+    previewCanvas.height = 1080;
+    ctx.fillStyle = "#FAF3E0";
+    ctx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+
+    ctx.strokeStyle = "#B8860B";
+    ctx.lineWidth = 10;
+    ctx.strokeRect(30, 30, previewCanvas.width - 60, previewCanvas.height - 60);
+
+    ctx.fillStyle = "#1A365D";
+    ctx.font = "bold 40px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Select Poster Template Image Above", previewCanvas.width / 2, previewCanvas.height / 2 - 20);
+    ctx.font = "28px sans-serif";
+    ctx.fillStyle = "#718096";
+    ctx.fillText("(Preview will update automatically)", previewCanvas.width / 2, previewCanvas.height / 2 + 30);
+  }
+
+  // Helper log function
+  function log(msg, type = 'info') {
+    const div = document.createElement('div');
+    div.className = `log-line ${type}`;
+    div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    logBox.appendChild(div);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  // Handle Template Image Selection
+  templateImageInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      templateImage = new Image();
+      templateImage.onload = () => {
+        templateLoaded = true;
+        previewCanvas.width = templateImage.naturalWidth || 1920;
+        previewCanvas.height = templateImage.naturalHeight || 1080;
+        log(`Loaded template image: ${file.name} (${previewCanvas.width}x${previewCanvas.height})`, 'success');
+        renderPreviewCanvas();
+      };
+      templateImage.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Handle XML Folder Selection
+  xmlFolderInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+    // Strictly filter for .xml files as per requirements
+    const xmlFiles = files.filter(f => f.name.toLowerCase().endsWith('.xml'));
+
+    if (xmlFiles.length === 0) {
+      log('No .xml files found in selected directory.', 'error');
+      alert('No XML files found in selected directory! Please select a directory containing XML files.');
+      return;
+    }
+
+    log(`Found ${xmlFiles.length} XML file(s). Parsing...`, 'info');
+    parsedRecords = [];
+
+    for (let i = 0; i < xmlFiles.length; i++) {
+      const file = xmlFiles[i];
+      try {
+        const text = await file.text();
+        const record = parseKundaliXml(text, file.name);
+        parsedRecords.push(record);
+        log(`Parsed [${i+1}/${xmlFiles.length}]: ${record.name}`, 'success');
+      } catch (err) {
+        log(`Error parsing ${file.name}: ${err.message}`, 'error');
+      }
+    }
+
+    updateRecordsTable();
+    if (parsedRecords.length > 0) {
+      activePreviewRecordIndex = 0;
+      renderPreviewCanvas();
+    }
+  });
+
+  // Strict XML Parser extracting Name, Tithi, Gemstone
+  function parseKundaliXml(xmlString, fileName) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+    // 1. Extract Name
+    let name = getXmlTagText(xmlDoc, ['name', 'person_name', 'full_name', 'FirstName', 'Name', 'native_name', 'Name1']) ||
+               getXmlAttrValue(xmlDoc, ['native_name', 'name']) ||
+               fileName.replace(/\.xml$/i, '');
+
+    // Check for FirstName + LastName structure
+    const firstName = getXmlTagText(xmlDoc, ['FirstName', 'first_name']);
+    const lastName = getXmlTagText(xmlDoc, ['LastName', 'last_name']);
+    if (firstName && lastName) {
+      name = `${firstName} ${lastName}`.trim();
+    }
+
+    // 2. Extract Tithi
+    let tithi = getXmlTagText(xmlDoc, ['tithi', 'Tithi', 'TithiName', 'tithi_name']) || '';
+
+    // If tithi is missing in XML, check for DOB/Julian Date and estimate Panchang Tithi or default
+    if (!tithi) {
+      const dob = getXmlTagText(xmlDoc, ['dob', 'date_of_birth', 'BirthDate', 'birthdate', 'birth_date']);
+      if (dob) {
+        tithi = estimateTithiFromDate(dob);
+      } else {
+        tithi = 'शुक्ल पक्ष एकादशी'; // Standard Hindi Panchang fallback
+      }
+    }
+
+    // 3. Extract Gemstone
+    let gemstone = getXmlTagText(xmlDoc, ['gemstone', 'Gemstone', 'gem', 'Gem', 'ratna', 'Ratna', 'lucky_gemstone', 'LuckyGemstone']) || '';
+    if (!gemstone) {
+      gemstone = 'Yellow Sapphire (पुखराज)'; // Standard fallback gemstone
+    }
+
+    return {
+      fileName,
+      name: name.trim(),
+      tithi: tithi.trim(),
+      gemstone: gemstone.trim()
+    };
+  }
+
+  function getXmlTagText(xmlDoc, tagNames) {
+    for (const tag of tagNames) {
+      const el = xmlDoc.getElementsByTagName(tag)[0];
+      if (el && el.textContent) {
+        return el.textContent.trim();
+      }
+    }
+    return null;
+  }
+
+  function getXmlAttrValue(xmlDoc, attrNames) {
+    const root = xmlDoc.documentElement;
+    if (!root) return null;
+    for (const attr of attrNames) {
+      if (root.hasAttribute(attr)) {
+        return root.getAttribute(attr).trim();
+      }
+    }
+    return null;
+  }
+
+  function estimateTithiFromDate(dateStr) {
+    // Simple fallback helper for dates / JDN
+    if (dateStr.includes('244') || !isNaN(parseFloat(dateStr))) {
+      return 'वैशाख शुक्ल नवमी';
+    }
+    return 'पौष शुक्ल पंचमी';
+  }
+
+  // Render Records Table
+  function updateRecordsTable() {
+    recordCountBadge.textContent = `${parsedRecords.length} Record(s)`;
+    recordsTableBody.innerHTML = '';
+
+    if (parsedRecords.length === 0) {
+      recordsTableBody.innerHTML = `
+        <tr>
+          <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">
+            No XML files loaded. Select XML folder above.
+          </td>
+        </tr>`;
+      return;
+    }
+
+    parsedRecords.forEach((rec, idx) => {
+      const tr = document.createElement('tr');
+      tr.style.cursor = 'pointer';
+      if (idx === activePreviewRecordIndex) {
+        tr.style.background = '#EBF8FF';
+      }
+
+      tr.innerHTML = `
+        <td><button class="btn-sm" onclick="selectPreviewRecord(${idx})">Preview</button></td>
+        <td><input type="text" value="${escapeHtml(rec.name)}" onchange="updateRecordField(${idx}, 'name', this.value)"></td>
+        <td><input type="text" value="${escapeHtml(rec.tithi)}" onchange="updateRecordField(${idx}, 'tithi', this.value)"></td>
+        <td><input type="text" value="${escapeHtml(rec.gemstone)}" onchange="updateRecordField(${idx}, 'gemstone', this.value)"></td>
+      `;
+      recordsTableBody.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(str) {
+    return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function selectPreviewRecord(idx) {
+    activePreviewRecordIndex = idx;
+    updateRecordsTable();
+    renderPreviewCanvas();
+  }
+
+  function updateRecordField(idx, field, value) {
+    parsedRecords[idx][field] = value;
+    if (idx === activePreviewRecordIndex) {
+      renderPreviewCanvas();
+    }
+  }
+
+  // Apply Position Presets
+  function applyPreset(preset) {
+    if (preset === 'center') {
+      document.getElementById('nameX').value = 50;
+      document.getElementById('nameY').value = 35;
+      document.getElementById('tithiX').value = 50;
+      document.getElementById('tithiY').value = 55;
+      document.getElementById('gemstoneX').value = 50;
+      document.getElementById('gemstoneY').value = 75;
+    } else if (preset === 'topHeader') {
+      document.getElementById('nameX').value = 50;
+      document.getElementById('nameY').value = 15;
+      document.getElementById('tithiX').value = 50;
+      document.getElementById('tithiY').value = 25;
+      document.getElementById('gemstoneX').value = 50;
+      document.getElementById('gemstoneY').value = 35;
+    } else if (preset === 'bottomFooter') {
+      document.getElementById('nameX').value = 50;
+      document.getElementById('nameY').value = 65;
+      document.getElementById('tithiX').value = 50;
+      document.getElementById('tithiY').value = 78;
+      document.getElementById('gemstoneX').value = 50;
+      document.getElementById('gemstoneY').value = 88;
+    }
+    renderPreviewCanvas();
+  }
+
+  // Canvas Rendering
+  function renderPreviewCanvas() {
+    if (!templateLoaded) {
+      initBlankCanvas();
+      return;
+    }
+
+    const w = templateImage.naturalWidth || 1920;
+    const h = templateImage.naturalHeight || 1080;
+    previewCanvas.width = w;
+    previewCanvas.height = h;
+
+    // Draw background template image
+    ctx.drawImage(templateImage, 0, 0, w, h);
+
+    // Get current record data or sample placeholder
+    const record = parsedRecords[activePreviewRecordIndex] || {
+      name: "Aarav Sharma",
+      tithi: "श्रावण शुक्ल एकादशी",
+      gemstone: "Yellow Sapphire (पुखराज)"
+    };
+
+    // Render Name
+    renderTextOverlay({
+      text: record.name,
+      xPct: parseFloat(document.getElementById('nameX').value),
+      yPct: parseFloat(document.getElementById('nameY').value),
+      fontSize: parseFloat(document.getElementById('nameFontSize').value),
+      color: document.getElementById('nameColor').value,
+      fontWeight: document.getElementById('nameFontWeight').value,
+      canvasW: w, canvasH: h
+    });
+
+    // Render Tithi
+    renderTextOverlay({
+      text: record.tithi,
+      xPct: parseFloat(document.getElementById('tithiX').value),
+      yPct: parseFloat(document.getElementById('tithiY').value),
+      fontSize: parseFloat(document.getElementById('tithiFontSize').value),
+      color: document.getElementById('tithiColor').value,
+      fontWeight: document.getElementById('tithiFontWeight').value,
+      canvasW: w, canvasH: h
+    });
+
+    // Render Gemstone
+    renderTextOverlay({
+      text: record.gemstone,
+      xPct: parseFloat(document.getElementById('gemstoneX').value),
+      yPct: parseFloat(document.getElementById('gemstoneY').value),
+      fontSize: parseFloat(document.getElementById('gemstoneFontSize').value),
+      color: document.getElementById('gemstoneColor').value,
+      fontWeight: document.getElementById('gemstoneFontWeight').value,
+      canvasW: w, canvasH: h
+    });
+  }
+
+  function renderTextOverlay(opts) {
+    const x = (opts.xPct / 100) * opts.canvasW;
+    const y = (opts.yPct / 100) * opts.canvasH;
+
+    ctx.save();
+    ctx.font = `${opts.fontWeight} ${opts.fontSize}px sans-serif`;
+    ctx.fillStyle = opts.color;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Text shadow for readability
+    ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+
+    ctx.fillText(opts.text, x, y);
+    ctx.restore();
+  }
+
+  // Interactive Drag & Drop on Canvas
+  previewCanvas.addEventListener('mousedown', (e) => {
+    const rect = previewCanvas.getBoundingClientRect();
+    const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+    const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+
+    const nameY = parseFloat(document.getElementById('nameY').value);
+    const tithiY = parseFloat(document.getElementById('tithiY').value);
+    const gemstoneY = parseFloat(document.getElementById('gemstoneY').value);
+
+    // Identify nearest overlay by Y coordinate distance
+    const distName = Math.abs(mouseY - nameY);
+    const distTithi = Math.abs(mouseY - tithiY);
+    const distGem = Math.abs(mouseY - gemstoneY);
+
+    if (distName <= distTithi && distName <= distGem) {
+      activeDragTarget = 'name';
+    } else if (distTithi <= distName && distTithi <= distGem) {
+      activeDragTarget = 'tithi';
+    } else {
+      activeDragTarget = 'gemstone';
+    }
+
+    updateDragPosition(mouseX, mouseY);
+  });
+
+  previewCanvas.addEventListener('mousemove', (e) => {
+    if (!activeDragTarget) return;
+    const rect = previewCanvas.getBoundingClientRect();
+    const mouseX = ((e.clientX - rect.left) / rect.width) * 100;
+    const mouseY = ((e.clientY - rect.top) / rect.height) * 100;
+    updateDragPosition(mouseX, mouseY);
+  });
+
+  window.addEventListener('mouseup', () => {
+    activeDragTarget = null;
+  });
+
+  function updateDragPosition(xPct, yPct) {
+    if (!activeDragTarget) return;
+    const boundedX = Math.max(0, Math.min(100, Math.round(xPct)));
+    const boundedY = Math.max(0, Math.min(100, Math.round(yPct)));
+
+    document.getElementById(`${activeDragTarget}X`).value = boundedX;
+    document.getElementById(`${activeDragTarget}Y`).value = boundedY;
+    renderPreviewCanvas();
+  }
+
+  // 8K High Resolution Render & Export Function
+  async function generateAllWishes() {
+    if (parsedRecords.length === 0) {
+      alert("Please select a Kundali XML folder first!");
+      return;
+    }
+    if (!templateLoaded) {
+      alert("Please select a Poster Template Image first!");
+      return;
+    }
+
+    const resChoice = document.getElementById('resolutionSelect').value;
+    let targetWidth = templateImage.naturalWidth || 1920;
+    let targetHeight = templateImage.naturalHeight || 1080;
+
+    if (resChoice === '8K') {
+      targetWidth = 7680; // Standard 8K UHD Width
+      targetHeight = Math.round((templateImage.naturalHeight / templateImage.naturalWidth) * 7680);
+    } else if (resChoice === '4K') {
+      targetWidth = 3840; // 4K UHD Width
+      targetHeight = Math.round((templateImage.naturalHeight / templateImage.naturalWidth) * 3840);
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
+    submitBtn.disabled = true;
+    progressContainer.style.display = 'block';
+
+    log(`Starting 8K generation for ${parsedRecords.length} person(s)... Target resolution: ${targetWidth}x${targetHeight} px`, 'info');
+
+    // High resolution offscreen canvas
+    const hdCanvas = document.createElement('canvas');
+    hdCanvas.width = targetWidth;
+    hdCanvas.height = targetHeight;
+    const hdCtx = hdCanvas.getContext('2d');
+
+    // Scale font sizes proportionally to 8K target resolution
+    const scaleFactor = targetWidth / (previewCanvas.width || 1920);
+
+    const generatedFiles = []; // Array of { filename, blob }
+
+    // Check if File System Access API is supported (modern Chrome/Edge)
+    let dirHandle = null;
+    if ('showDirectoryPicker' in window) {
+      try {
+        log('Prompting for output folder location (e.g. "birthday wishes")...', 'info');
+        dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+      } catch (err) {
+        log('Directory picker cancelled or not granted. Will download Zip archive instead.', 'info');
+      }
+    }
+
+    for (let i = 0; i < parsedRecords.length; i++) {
+      const rec = parsedRecords[i];
+      const pct = Math.round(((i + 1) / parsedRecords.length) * 100);
+      progressFill.style.width = `${pct}%`;
+      progressText.textContent = `Generating ${i + 1} of ${parsedRecords.length}: ${rec.name}.jpg (${pct}%)`;
+
+      // Clear & Draw template background on 8K canvas
+      hdCtx.clearRect(0, 0, targetWidth, targetHeight);
+      hdCtx.drawImage(templateImage, 0, 0, targetWidth, targetHeight);
+
+      // Render Name on 8K Canvas
+      renderHdTextOverlay(hdCtx, {
+        text: rec.name,
+        xPct: parseFloat(document.getElementById('nameX').value),
+        yPct: parseFloat(document.getElementById('nameY').value),
+        fontSize: parseFloat(document.getElementById('nameFontSize').value) * scaleFactor,
+        color: document.getElementById('nameColor').value,
+        fontWeight: document.getElementById('nameFontWeight').value,
+        canvasW: targetWidth, canvasH: targetHeight
+      });
+
+      // Render Tithi on 8K Canvas
+      renderHdTextOverlay(hdCtx, {
+        text: rec.tithi,
+        xPct: parseFloat(document.getElementById('tithiX').value),
+        yPct: parseFloat(document.getElementById('tithiY').value),
+        fontSize: parseFloat(document.getElementById('tithiFontSize').value) * scaleFactor,
+        color: document.getElementById('tithiColor').value,
+        fontWeight: document.getElementById('tithiFontWeight').value,
+        canvasW: targetWidth, canvasH: targetHeight
+      });
+
+      // Render Gemstone on 8K Canvas
+      renderHdTextOverlay(hdCtx, {
+        text: rec.gemstone,
+        xPct: parseFloat(document.getElementById('gemstoneX').value),
+        yPct: parseFloat(document.getElementById('gemstoneY').value),
+        fontSize: parseFloat(document.getElementById('gemstoneFontSize').value) * scaleFactor,
+        color: document.getElementById('gemstoneColor').value,
+        fontWeight: document.getElementById('gemstoneFontWeight').value,
+        canvasW: targetWidth, canvasH: targetHeight
+      });
+
+      // Convert HD Canvas to JPEG Blob
+      const blob = await new Promise(resolve => hdCanvas.toBlob(resolve, 'image/jpeg', 0.95));
+
+      // Sanitize name for filename
+      const safeFilename = `${rec.name.replace(/[/\\?%*:|"<>]/g, '_')}.jpg`;
+
+      if (dirHandle) {
+        try {
+          const fileHandle = await dirHandle.getFileHandle(safeFilename, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          log(`Saved directly to directory: ${safeFilename}`, 'success');
+        } catch (err) {
+          log(`Error writing file ${safeFilename}: ${err.message}`, 'error');
+        }
+      } else {
+        // Collect for batch ZIP download
+        const arrayBuffer = await blob.arrayBuffer();
+        generatedFiles.push({
+          name: safeFilename,
+          data: new Uint8Array(arrayBuffer)
+        });
+      }
+
+      // Small tick delay for smooth UI update
+      await new Promise(r => setTimeout(r, 50));
+    }
+
+    if (!dirHandle && generatedFiles.length > 0) {
+      log('Creating ZIP archive containing all 8K .jpg files...', 'info');
+      const zipBlob = createUncompressedZip(generatedFiles);
+      const downloadUrl = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = 'birthday_wishes_8k.zip';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      log('Downloaded birthday_wishes_8k.zip containing all 8K JPG posters!', 'success');
+    }
+
+    progressText.textContent = 'Completed successfully!';
+    submitBtn.disabled = false;
+    log('All birthday wishes posters successfully created in 8K!', 'success');
+  }
+
+  function renderHdTextOverlay(ctx, opts) {
+    const x = (opts.xPct / 100) * opts.canvasW;
+    const y = (opts.yPct / 100) * opts.canvasH;
+
+    ctx.save();
+    ctx.font = `${opts.fontWeight} ${opts.fontSize}px sans-serif`;
+    ctx.fillStyle = opts.color;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+    ctx.shadowBlur = Math.round(12 * (opts.canvasW / 1920));
+    ctx.shadowOffsetX = Math.round(4 * (opts.canvasW / 1920));
+    ctx.shadowOffsetY = Math.round(4 * (opts.canvasW / 1920));
+
+    ctx.fillText(opts.text, x, y);
+    ctx.restore();
+  }
+
+  // Pure JavaScript Lightweight Zip Builder (Zero Dependencies, Offline Portable)
+  function createUncompressedZip(files) {
+    let zipParts = [];
+    let cdEntries = [];
+    let offset = 0;
+
+    for (const file of files) {
+      const fileNameBytes = new TextEncoder().encode(file.name);
+      const fileData = file.data;
+      const crc32Val = calculateCrc32(fileData);
+
+      // Local File Header (30 bytes + filename)
+      const lfh = new Uint8Array(30 + fileNameBytes.length);
+      const lfhView = new DataView(lfh.buffer);
+
+      lfhView.setUint32(0, 0x04034b50, true); // Local file header signature
+      lfhView.setUint16(4, 20, true);         // Version needed to extract
+      lfhView.setUint16(6, 0, true);          // General purpose bit flag
+      lfhView.setUint16(8, 0, true);          // Compression method (0 = Store)
+      lfhView.setUint16(10, 0, true);         // File last modification time
+      lfhView.setUint16(12, 0, true);         // File last modification date
+      lfhView.setUint32(14, crc32Val, true);  // CRC-32
+      lfhView.setUint32(18, fileData.length, true); // Compressed size
+      lfhView.setUint32(22, fileData.length, true); // Uncompressed size
+      lfhView.setUint16(26, fileNameBytes.length, true); // File name length
+      lfhView.setUint16(28, 0, true);         // Extra field length
+      lfh.set(fileNameBytes, 30);
+
+      zipParts.push(lfh);
+      zipParts.push(fileData);
+
+      // Central Directory Header
+      const cdh = new Uint8Array(46 + fileNameBytes.length);
+      const cdhView = new DataView(cdh.buffer);
+
+      cdhView.setUint32(0, 0x02014b50, true); // Central directory header signature
+      cdhView.setUint16(4, 20, true);         // Version made by
+      cdhView.setUint16(6, 20, true);         // Version needed to extract
+      cdhView.setUint16(8, 0, true);          // General purpose bit flag
+      cdhView.setUint16(10, 0, true);         // Compression method (0 = Store)
+      cdhView.setUint16(12, 0, true);         // Mod time
+      cdhView.setUint16(14, 0, true);         // Mod date
+      cdhView.setUint32(16, crc32Val, true);  // CRC-32
+      cdhView.setUint32(20, fileData.length, true); // Compressed size
+      cdhView.setUint32(24, fileData.length, true); // Uncompressed size
+      cdhView.setUint16(28, fileNameBytes.length, true); // File name length
+      cdhView.setUint16(30, 0, true);         // Extra field length
+      cdhView.setUint16(32, 0, true);         // File comment length
+      cdhView.setUint16(34, 0, true);         // Disk number start
+      cdhView.setUint16(36, 0, true);         // Internal file attributes
+      cdhView.setUint32(38, 0, true);         // External file attributes
+      cdhView.setUint32(42, offset, true);    // Relative offset of local header
+      cdh.set(fileNameBytes, 46);
+
+      cdEntries.push(cdh);
+      offset += lfh.length + fileData.length;
+    }
+
+    const cdOffset = offset;
+    let cdSize = 0;
+    for (const cdh of cdEntries) {
+      zipParts.push(cdh);
+      cdSize += cdh.length;
+    }
+
+    // End of Central Directory Record (22 bytes)
+    const eocd = new Uint8Array(22);
+    const eocdView = new DataView(eocd.buffer);
+
+    eocdView.setUint32(0, 0x06054b50, true); // EOCD signature
+    eocdView.setUint16(4, 0, true);          // Disk number
+    eocdView.setUint16(6, 0, true);          // Disk with CD
+    eocdView.setUint16(8, files.length, true); // Entries on this disk
+    eocdView.setUint16(10, files.length, true); // Total entries
+    eocdView.setUint32(12, cdSize, true);    // Size of central directory
+    eocdView.setUint32(16, cdOffset, true);  // Offset of central directory
+    eocdView.setUint16(20, 0, true);         // Comment length
+
+    zipParts.push(eocd);
+
+    return new Blob(zipParts, { type: 'application/zip' });
+  }
+
+  function calculateCrc32(data) {
+    let crcTable = window._crcTable;
+    if (!crcTable) {
+      crcTable = new Uint32Array(256);
+      for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let k = 0; k < 8; k++) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        crcTable[i] = c;
+      }
+      window._crcTable = crcTable;
+    }
+
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < data.length; i++) {
+      crc = (crc >>> 8) ^ crcTable[(crc ^ data[i]) & 0xFF];
+    }
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+</script>
+</body>
+</html>

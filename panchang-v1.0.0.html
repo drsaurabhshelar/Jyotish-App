@@ -23,7 +23,7 @@
   }
 
   .container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     background: #FFFFFF;
     padding: 30px;
@@ -232,19 +232,6 @@ const MONTH_NAMES = [
 
 const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-// South Indian Amanta (Amavasyant) month names in Hindi / Devanagari based on Sun Sidereal Rashi:
-// 0: Mesha -> वैशाख
-// 1: Vrishabha -> ज्येष्ठ
-// 2: Mithuna -> आषाढ़
-// 3: Karka -> श्रावण
-// 4: Simha -> भाद्रपद
-// 5: Kanya -> आश्विन
-// 6: Tula -> कार्तिक
-// 7: Vrishchika -> मार्गशीर्ष
-// 8: Dhanu -> पौष
-// 9: Makara -> माघ
-// 10: Kumbha -> फाल्गुन
-// 11: Meena -> चैत्र
 const AMANTA_MONTHS_HINDI = [
   'वैशाख', 'ज्येष्ठ', 'आषाढ़', 'श्रावण',
   'भाद्रपद', 'आश्विन', 'कार्तिक', 'मार्गशीर्ष',
@@ -311,10 +298,9 @@ function gregorianToJdn(dateObj) {
 }
 
 /**
- * Calculates strict Amanta (South Indian) Month & Tithi at Sunrise in Hindi / Devanagari from JDN
+ * Calculates strict Amanta (South Indian) Month & Tithi at Sunrise from JDN with Keplerian equation terms
  */
 function calculateSouthIndianSunriseTithiHindi(jdNum) {
-  // In Hindu Panchang, Tithi is determined at local Sunrise (~6:30 AM IST / 1:00 AM UTC)
   let jdSunrise = Math.floor(jdNum - 0.5) + 0.5 + (1.0 / 24.0);
 
   let d = jdSunrise - 2451545.0;
@@ -371,6 +357,44 @@ function calculateSouthIndianSunriseTithiHindi(jdNum) {
 }
 
 /**
+ * Calculates the Gregorian Date in the current year (2026) when the given Tithi occurs
+ */
+function calculateCurrentYearTithiDate(tithiStr, currentYear = 2026) {
+  if (!tithiStr) return "N/A";
+
+  let startDate = new Date(currentYear - 1, 10, 1); // 1 Nov of prev year
+  let bestDate = null;
+  let minDiff = 99999;
+
+  for (let i = 0; i < 480; i++) {
+    let testDt = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+    let testJdn = gregorianToJdn(testDt);
+    let calcTithi = calculateSouthIndianSunriseTithiHindi(testJdn);
+
+    if (calcTithi === tithiStr) {
+      if (testDt.getFullYear() === currentYear) {
+        return formatDateFormatted(testDt);
+      }
+      let midYr = new Date(currentYear, 6, 1);
+      let diff = Math.abs((testDt - midYr) / (1000 * 60 * 60 * 24));
+      if (diff < minDiff) {
+        minDiff = diff;
+        bestDate = testDt;
+      }
+    }
+  }
+
+  return bestDate ? formatDateFormatted(bestDate) : "N/A";
+}
+
+function formatDateFormatted(dt) {
+  let day = String(dt.getDate()).padStart(2, '0');
+  let monthStr = MONTH_NAMES[dt.getMonth()].substring(0, 3);
+  let year = dt.getFullYear();
+  return `${day} ${monthStr} ${year}`;
+}
+
+/**
  * Flexible Date String Parsing with Day-First Priority (DD/MM/YYYY)
  */
 function parseDateString(dateStr) {
@@ -417,7 +441,7 @@ function parseDateString(dateStr) {
 }
 
 /**
- * Parses XML content for Name, Date of Birth, and Tithi
+ * Parses XML content for Name, Date of Birth, Tithi, and Current Year Tithi Date
  */
 function parseXmlContent(content, filename) {
   let parser = new DOMParser();
@@ -541,12 +565,14 @@ function parseXmlContent(content, filename) {
   }
 
   let tithiStr = xmlTithi || calculateSouthIndianSunriseTithiHindi(jdnVal);
+  let currentYearTithiDate = calculateCurrentYearTithiDate(tithiStr, 2026);
 
   return {
     name: name,
     dobRaw: dobRaw,
     dobDate: dobDate,
     tithi: tithiStr,
+    tithiDateCurrentYear: currentYearTithiDate,
     filename: filename
   };
 }
@@ -648,11 +674,12 @@ function renderResults(totalXmlCount, records) {
     table.innerHTML = `
       <thead>
         <tr>
-          <th style="width: 40px;">#</th>
+          <th style="width: 35px;">#</th>
           <th>Name</th>
-          <th style="width: 140px;">Date of Birth</th>
-          <th style="width: 120px;">Day of Week</th>
-          <th style="width: 200px;">South Indian Month & Tithi</th>
+          <th style="width: 130px;">Date of Birth</th>
+          <th style="width: 110px;">Day of Week</th>
+          <th style="width: 180px;">South Indian Month & Tithi</th>
+          <th style="width: 150px;">Date as per Tithi (Current Year)</th>
           <th>Source File</th>
         </tr>
       </thead>
@@ -671,6 +698,7 @@ function renderResults(totalXmlCount, records) {
               <td>${formattedDob}</td>
               <td>${dayOfWeek}</td>
               <td>${escapeHtml(r.tithi)}</td>
+              <td><b>${escapeHtml(r.tithiDateCurrentYear)}</b></td>
               <td>${escapeHtml(r.filename)}</td>
             </tr>
           `;

@@ -3,7 +3,8 @@
 generate_birthday_pdf.py
 
 Searches a specified directory (default "Kundalis") strictly for XML files (ignoring .grp, .pdf, etc.),
-extracts names, Dates of Birth (DOB), and calculates South Indian Amanta Month & Tithi at Sunrise in Hindi / Devanagari using astronomical calculations / Swiss Ephemeris,
+extracts names, Dates of Birth (DOB), and calculates South Indian Amanta Month & Tithi at Sunrise in Hindi / Devanagari,
+calculates the corresponding Gregorian date in the current year (2026) as per Tithi,
 sorts them in ascending order from January to December (and by day/year),
 and generates a PDF birthday report grouped by month with clickable month navigation links on the first page.
 """
@@ -15,7 +16,7 @@ import math
 import glob
 import argparse
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from collections import defaultdict
 from dateutil import parser as date_parser
 
@@ -99,10 +100,10 @@ def julian_day_to_gregorian(jd_value):
         return None
 
 def gregorian_to_jdn(dt):
-    """Converts a datetime object to Julian Day Number (JDN)."""
+    """Converts a datetime or date object to Julian Day Number (JDN)."""
     year = dt.year
     month = dt.month
-    day = dt.day + (dt.hour + dt.minute/60.0 + dt.second/3600.0) / 24.0
+    day = dt.day + getattr(dt, 'hour', 0) / 24.0
 
     if month <= 2:
         year -= 1
@@ -188,6 +189,31 @@ def calculate_south_indian_tithi(jd_ut):
 
     return f"{lunar_month} {paksha} {t_name}"
 
+def calculate_current_year_tithi_date(tithi_str, current_year=2026):
+    """Calculates the Gregorian Date in current_year (2026) corresponding to the given Amanta Tithi."""
+    if not tithi_str:
+        return "N/A"
+
+    start_date = date(current_year - 1, 11, 1)
+    best_dt = None
+    min_diff = 99999
+
+    for i in range(480):
+        test_dt = start_date + timedelta(days=i)
+        test_jdn = gregorian_to_jdn(test_dt)
+        calc_tithi = calculate_south_indian_tithi(test_jdn)
+
+        if calc_tithi == tithi_str:
+            if test_dt.year == current_year:
+                return test_dt.strftime("%d %b %Y")
+            mid_yr = date(current_year, 7, 1)
+            diff_days = abs((test_dt - mid_yr).days)
+            if diff_days < min_diff:
+                min_diff = diff_days
+                best_dt = test_dt
+
+    return best_dt.strftime("%d %b %Y") if best_dt else "N/A"
+
 def find_xml_files(folder_path):
     """Finds all XML files in the given directory recursively."""
     if not os.path.exists(folder_path):
@@ -219,7 +245,7 @@ def read_file_content(filepath):
         return None
 
 def parse_xml_for_dob_and_name(filepath):
-    """Parses an XML file to extract name, date of birth, and Tithi."""
+    """Parses an XML file to extract name, date of birth, Tithi, and current year Tithi date."""
     content = read_file_content(filepath)
     if not content or not content.strip():
         print(f"Warning: File '{filepath}' is empty or unreadable.", file=sys.stderr)
@@ -359,12 +385,14 @@ def parse_xml_for_dob_and_name(filepath):
         jdn_val = gregorian_to_jdn(dob_date)
 
     tithi_str = xml_tithi or calculate_south_indian_tithi(jdn_val)
+    tithi_date_2026 = calculate_current_year_tithi_date(tithi_str, 2026)
 
     return {
         "name": name,
         "dob_str": dob_raw or dob_date.strftime("%d/%m/%Y"),
         "dob_date": dob_date,
         "tithi": tithi_str,
+        "tithi_date_2026": tithi_date_2026,
         "file": os.path.basename(filepath)
     }
 
@@ -409,8 +437,8 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
     doc = SimpleDocTemplate(
         output_pdf_path,
         pagesize=letter,
-        rightMargin=20,
-        leftMargin=20,
+        rightMargin=15,
+        leftMargin=15,
         topMargin=30,
         bottomMargin=30
     )
@@ -485,8 +513,8 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
         'TableHeader',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=9,
-        leading=11,
+        fontSize=8,
+        leading=10,
         textColor=colors.white
     )
 
@@ -565,6 +593,7 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
                 Paragraph("<b>Date of Birth</b>", table_header_style),
                 Paragraph("<b>Day of Week</b>", table_header_style),
                 Paragraph("<b>South Indian Month & Tithi</b>", table_header_style),
+                Paragraph("<b>Date as per Tithi (Current Year)</b>", table_header_style),
                 Paragraph("<b>Source File</b>", table_header_style)
             ]
         ]
@@ -580,10 +609,11 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
                 Paragraph(formatted_dob, table_cell_style),
                 Paragraph(day_of_week, table_cell_style),
                 Paragraph(rec["tithi"], table_cell_style),
+                Paragraph(f"<b>{rec['tithi_date_2026']}</b>", table_cell_style),
                 Paragraph(rec["file"], table_cell_style)
             ])
 
-        col_widths = [0.35 * inch, 1.8 * inch, 1.1 * inch, 1.0 * inch, 1.8 * inch, 1.55 * inch]
+        col_widths = [0.3 * inch, 1.5 * inch, 0.95 * inch, 0.85 * inch, 1.5 * inch, 1.3 * inch, 1.2 * inch]
         t = Table(table_data, colWidths=col_widths)
         t.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2B6CB0')),

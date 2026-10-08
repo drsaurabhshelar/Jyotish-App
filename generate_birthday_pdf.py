@@ -114,12 +114,8 @@ def gregorian_to_jdn(dt):
     jd = math.floor(365.25 * (year + 4716)) + math.floor(30.6001 * (month + 1)) + day + b - 1524.5
     return jd
 
-def calculate_south_indian_tithi(jd_ut):
-    """
-    Calculates South Indian Amanta Month & Tithi at Sunrise in Hindi from JDN using Swiss Ephemeris or Keplerian approx.
-    Returns string like 'पौष शुक्ल पंचमी'.
-    """
-    # Tithi in Panchang is determined at Sunrise (~6:30 AM IST / 1:00 AM UTC)
+def get_high_precision_tithi_details(jd_ut):
+    """Calculates high precision Moon elongation, Amanta month, and Tithi details."""
     jd_sunrise = math.floor(jd_ut - 0.5) + 0.5 + (1.0 / 24.0)
 
     if HAS_SWISSEPH:
@@ -147,11 +143,18 @@ def calculate_south_indian_tithi(jd_ut):
                 t_num = tithi_num - 15
                 t_name = TITHI_NAMES_HINDI[t_num - 1] if t_num < 15 else 'अमावस्या'
 
-            return f"{lunar_month} {paksha} {t_name}"
+            return {
+                'full_str': f"{lunar_month} {paksha} {t_name}",
+                'lunar_month': lunar_month,
+                'paksha': paksha,
+                't_name': t_name,
+                'tithi_num': tithi_num,
+                'rashi_idx': prev_amavasya_sun_rashi
+            }
         except Exception:
             pass
 
-    # High precision mathematical approximation fallback with Chapront lunar perturbation terms
+    # Mathematical approximation fallback with Chapront lunar perturbation terms
     d = jd_sunrise - 2451545.0
     T = d / 36525.0
 
@@ -216,32 +219,73 @@ def calculate_south_indian_tithi(jd_ut):
         t_num = tithi_num - 15
         t_name = TITHI_NAMES_HINDI[t_num - 1] if t_num < 15 else 'अमावस्या'
 
-    return f"{lunar_month} {paksha} {t_name}"
+    return {
+        'full_str': f"{lunar_month} {paksha} {t_name}",
+        'lunar_month': lunar_month,
+        'paksha': paksha,
+        't_name': t_name,
+        'tithi_num': tithi_num,
+        'rashi_idx': prev_amavasya_sun_rashi
+    }
+
+def calculate_south_indian_tithi(jd_ut):
+    """Calculates South Indian Amanta Month & Tithi at Sunrise."""
+    return get_high_precision_tithi_details(jd_ut)['full_str']
 
 def calculate_current_year_tithi_date(tithi_str, current_year=2026):
     """Calculates the Gregorian Date in current_year (2026) corresponding to the given Amanta Tithi."""
     if not tithi_str:
         return "N/A"
 
-    start_date = date(current_year - 1, 11, 1)
-    best_dt = None
-    min_diff = 99999
+    parts = tithi_str.strip().split()
+    if len(parts) != 3:
+        return "N/A"
 
-    for i in range(480):
-        test_dt = start_date + timedelta(days=i)
+    target_month_hindi, target_paksha_hindi, target_tithi_hindi = parts[0], parts[1], parts[2]
+
+    if target_paksha_hindi == 'शुक्ल':
+        target_num = 15 if target_tithi_hindi == 'पूर्णिमा' else TITHI_NAMES_HINDI.index(target_tithi_hindi) + 1
+    else:
+        target_num = 30 if target_tithi_hindi == 'अमावस्या' else TITHI_NAMES_HINDI.index(target_tithi_hindi) + 16
+
+    target_month_idx = AMANTA_MONTHS_HINDI.index(target_month_hindi)
+
+    # 1. First scan all days inside current_year
+    start_dt = date(current_year, 1, 1)
+    exact_matches = []
+    month_matches = []
+
+    for i in range(365):
+        test_dt = start_dt + timedelta(days=i)
         test_jdn = gregorian_to_jdn(test_dt)
-        calc_tithi = calculate_south_indian_tithi(test_jdn)
+        details = get_high_precision_tithi_details(test_jdn)
 
-        if calc_tithi == tithi_str:
-            if test_dt.year == current_year:
-                return test_dt.strftime("%d %b %Y")
+        if details['rashi_idx'] == target_month_idx:
+            diff_num = abs(details['tithi_num'] - target_num)
+            month_matches.append((test_dt, diff_num, details['tithi_num']))
+            if details['tithi_num'] == target_num:
+                exact_matches.append(test_dt)
+
+    if exact_matches:
+        return exact_matches[0].strftime("%d %b %Y")
+    elif month_matches:
+        month_matches.sort(key=lambda x: x[1])
+        return month_matches[0][0].strftime("%d %b %Y")
+    else:
+        # Fallback scan extended window
+        ext_start = date(current_year - 1, 11, 1)
+        ext_matches = []
+        for i in range(450):
+            test_dt = ext_start + timedelta(days=i)
+            test_jdn = gregorian_to_jdn(test_dt)
+            details = get_high_precision_tithi_details(test_jdn)
+            if details['full_str'] == tithi_str:
+                ext_matches.append(test_dt)
+        if ext_matches:
             mid_yr = date(current_year, 7, 1)
-            diff_days = abs((test_dt - mid_yr).days)
-            if diff_days < min_diff:
-                min_diff = diff_days
-                best_dt = test_dt
-
-    return best_dt.strftime("%d %b %Y") if best_dt else "N/A"
+            ext_matches.sort(key=lambda d: abs((d - mid_yr).days))
+            return ext_matches[0].strftime("%d %b %Y")
+        return "N/A"
 
 def find_xml_files(folder_path):
     """Finds all XML files in the given directory recursively."""

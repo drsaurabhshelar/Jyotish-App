@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kundali Birthday Calendar - panchang-v1.0.0</title>
+<title>Kundali Birthday Calendar - birthdates_v1.0.0</title>
 <style>
   :root {
     --primary: #1A365D;
@@ -232,6 +232,19 @@ const MONTH_NAMES = [
 
 const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+// South Indian Amanta (Amavasyant) month names in Hindi / Devanagari based on Sun Sidereal Rashi:
+// 0: Mesha -> वैशाख
+// 1: Vrishabha -> ज्येष्ठ
+// 2: Mithuna -> आषाढ़
+// 3: Karka -> श्रावण
+// 4: Simha -> भाद्रपद
+// 5: Kanya -> आश्विन
+// 6: Tula -> कार्तिक
+// 7: Vrishchika -> मार्गशीर्ष
+// 8: Dhanu -> पौष
+// 9: Makara -> माघ
+// 10: Kumbha -> फाल्गुन
+// 11: Meena -> चैत्र
 const AMANTA_MONTHS_HINDI = [
   'वैशाख', 'ज्येष्ठ', 'आषाढ़', 'श्रावण',
   'भाद्रपद', 'आश्विन', 'कार्तिक', 'मार्गशीर्ष',
@@ -300,13 +313,13 @@ function gregorianToJdn(dateObj) {
 /**
  * High Precision Analytical Calculation of South Indian Amanta Month & Tithi at Sunrise
  */
-function calculateSouthIndianSunriseTithiHindi(jdNum) {
+function getHighPrecisionTithiDetails(jdNum) {
   let jdSunrise = Math.floor(jdNum - 0.5) + 0.5 + (1.0 / 24.0);
 
   let d = jdSunrise - 2451545.0;
   let T = d / 36525.0;
 
-  // Sun mean longitude & anomaly
+  // Mean longitudes
   let L0 = 280.46646 + 36000.76983 * T;
   let M0 = 357.52911 + 35999.05029 * T;
 
@@ -356,7 +369,7 @@ function calculateSouthIndianSunriseTithiHindi(jdNum) {
 
   let tithiNum = Math.floor(diff / 12) + 1;
 
-  // Calculate Sun Rashi at PRECEDING Amavasya (New Moon)
+  // Calculate Sun Rashi at the PRECEDING Amavasya (New Moon)
   let daysSinceAmavasya = diff / 12.19074;
   let sunLongAtPrevAmavasya = (sunSid - daysSinceAmavasya * 0.985647) % 360;
   if (sunLongAtPrevAmavasya < 0) sunLongAtPrevAmavasya += 360;
@@ -374,7 +387,20 @@ function calculateSouthIndianSunriseTithiHindi(jdNum) {
     tName = (tNum < 15) ? TITHI_NAMES_HINDI[tNum - 1] : 'अमावस्या';
   }
 
-  return `${lunarMonth} ${paksha} ${tName}`;
+  let fullStr = `${lunarMonth} ${paksha} ${tName}`;
+
+  return {
+    fullStr: fullStr,
+    lunarMonth: lunarMonth,
+    paksha: paksha,
+    tName: tName,
+    tithiNum: tithiNum,
+    rashiIdx: prevAmavasyaSunRashi
+  };
+}
+
+function calculateSouthIndianSunriseTithiHindi(jdNum) {
+  return getHighPrecisionTithiDetails(jdNum).fullStr;
 }
 
 /**
@@ -383,29 +409,68 @@ function calculateSouthIndianSunriseTithiHindi(jdNum) {
 function calculateCurrentYearTithiDate(tithiStr, currentYear = 2026) {
   if (!tithiStr) return "N/A";
 
-  let startDate = new Date(currentYear - 1, 10, 1); // 1 Nov of prev year
-  let bestDate = null;
-  let minDiff = 99999;
+  let parts = tithiStr.trim().split(/\s+/);
+  if (parts.length !== 3) return "N/A";
 
-  for (let i = 0; i < 480; i++) {
-    let testDt = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+  let targetMonth = parts[0];
+  let targetPaksha = parts[1];
+  let targetTithiName = parts[2];
+
+  let targetNum;
+  if (targetPaksha === 'शुक्ल') {
+    targetNum = (targetTithiName === 'पूर्णिमा') ? 15 : TITHI_NAMES_HINDI.indexOf(targetTithiName) + 1;
+  } else {
+    targetNum = (targetTithiName === 'अमावस्या') ? 30 : TITHI_NAMES_HINDI.indexOf(targetTithiName) + 16;
+  }
+
+  let targetMonthIdx = AMANTA_MONTHS_HINDI.indexOf(targetMonth);
+
+  // 1. First scan all days inside currentYear (Jan 1 to Dec 31)
+  let startDt = new Date(currentYear, 0, 1);
+  let exactMatches = [];
+  let monthMatches = [];
+
+  for (let i = 0; i < 365; i++) {
+    let testDt = new Date(startDt.getFullYear(), startDt.getMonth(), startDt.getDate() + i);
     let testJdn = gregorianToJdn(testDt);
-    let calcTithi = calculateSouthIndianSunriseTithiHindi(testJdn);
+    let details = getHighPrecisionTithiDetails(testJdn);
 
-    if (calcTithi === tithiStr) {
-      if (testDt.getFullYear() === currentYear) {
-        return formatDateFormatted(testDt);
-      }
-      let midYr = new Date(currentYear, 6, 1);
-      let diff = Math.abs((testDt - midYr) / (1000 * 60 * 60 * 24));
-      if (diff < minDiff) {
-        minDiff = diff;
-        bestDate = testDt;
+    if (details.rashiIdx === targetMonthIdx) {
+      let diffNum = Math.abs(details.tithiNum - targetNum);
+      monthMatches.push({ date: testDt, diff: diffNum, tithiNum: details.tithiNum });
+      if (details.tithiNum === targetNum) {
+        exactMatches.push(testDt);
       }
     }
   }
 
-  return bestDate ? formatDateFormatted(bestDate) : "N/A";
+  if (exactMatches.length > 0) {
+    return formatDateFormatted(exactMatches[0]);
+  } else if (monthMatches.length > 0) {
+    // Select closest tithi match inside the same Amanta month
+    monthMatches.sort((a, b) => a.diff - b.diff);
+    return formatDateFormatted(monthMatches[0].date);
+  } else {
+    // 2. Fallback scan window across adjacent year boundary
+    let extStart = new Date(currentYear - 1, 10, 1);
+    let extMatches = [];
+    for (let i = 0; i < 450; i++) {
+      let testDt = new Date(extStart.getFullYear(), extStart.getMonth(), extStart.getDate() + i);
+      let testJdn = gregorianToJdn(testDt);
+      let details = getHighPrecisionTithiDetails(testJdn);
+      if (details.fullStr === tithiStr) {
+        extMatches.push(testDt);
+      }
+    }
+
+    if (extMatches.length > 0) {
+      let midYr = new Date(currentYear, 6, 1);
+      extMatches.sort((a, b) => Math.abs(a - midYr) - Math.abs(b - midYr));
+      return formatDateFormatted(extMatches[0]);
+    }
+
+    return "N/A";
+  }
 }
 
 function formatDateFormatted(dt) {

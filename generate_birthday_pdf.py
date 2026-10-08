@@ -609,7 +609,7 @@ def create_pdf(grouped_records, output_pdf_path="birthdays.pdf"):
                 Paragraph(formatted_dob, table_cell_style),
                 Paragraph(day_of_week, table_cell_style),
                 Paragraph(rec["tithi"], table_cell_style),
-                Paragraph(f"<b>{rec['tithi_date_2026']}</b>", table_cell_style),
+                Paragraph(rec["tithi_date_2026"], table_cell_style),
                 Paragraph(rec["file"], table_cell_style)
             ])
 

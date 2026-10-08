@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kundali Birthday Calendar - panchang-v1.0.0</title>
+<style>
+  :root {
+    --primary: #1A365D;
+    --accent: #2B6CB0;
+    --bg-light: #F7FAFC;
+    --border-color: #E2E8F0;
+    --text-dark: #2D3748;
+    --text-muted: #718096;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #F8FAFC;
+    color: var(--text-dark);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  header {
+    text-align: center;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+  }
+
+  h1 {
+    color: var(--primary);
+    margin: 0 0 10px 0;
+    font-size: 26px;
+  }
+
+  .meta-info {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* Upload Section */
+  .upload-card {
+    background: var(--bg-light);
+    border: 2px dashed var(--accent);
+    border-radius: 6px;
+    padding: 25px;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .upload-card p {
+    margin: 0 0 15px 0;
+    font-size: 15px;
+    color: var(--text-dark);
+  }
+
+  .btn {
+    background-color: var(--accent);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.2s;
+    display: inline-block;
+  }
+
+  .btn:hover {
+    background-color: #1C4ED8;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  /* Quick Jump Nav Grid */
+  .nav-container {
+    margin-bottom: 30px;
+  }
+
+  .nav-title {
+    text-align: center;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .nav-item {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  .nav-item a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .nav-item a:hover {
+    text-decoration: underline;
+  }
+
+  .nav-item.empty {
+    color: #A0AEC0;
+  }
+
+  /* Month Table Sections */
+  .month-section {
+    margin-bottom: 30px;
+  }
+
+  .month-title {
+    color: var(--accent);
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    margin-top: 15px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+
+  th {
+    background-color: var(--accent);
+    color: white;
+    text-align: left;
+    padding: 10px;
+    font-weight: bold;
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  tr:nth-child(even) {
+    background-color: var(--bg-light);
+  }
+
+  tr:hover {
+    background-color: #EDF2F7;
+  }
+
+  .no-records {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 20px;
+    font-style: italic;
+  }
+
+  /* Stats Banner */
+  .stats-banner {
+    display: flex;
+    justify-content: space-between;
+    background: #EBF8FF;
+    border-left: 4px solid var(--accent);
+    padding: 12px 20px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #2B6CB0;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Birthday Calendar & Directory</h1>
+    <div class="meta-info">Kundali XML Date of Birth & Panchang Tithi Extractor &nbsp;|&nbsp; Version 1.0.0</div>
+  </header>
+
+  <!-- Upload Section -->
+  <div class="upload-card">
+    <p>Select your <b>Kundalis folder</b> or XML files to generate the birthday directory table:</p>
+    <label class="btn" for="folderInput">📂 Select Folder / XML Files</label>
+    <input type="file" id="folderInput" webkitdirectory multiple accept=".xml">
+  </div>
+
+  <!-- Stats Banner -->
+  <div id="statsBanner" class="stats-banner" style="display: none;">
+    <span id="totalXmlCount">Processed XML Files: 0</span>
+    <span id="extractedCount">Extracted DOB Records: 0</span>
+  </div>
+
+  <!-- Quick Jump Navigation -->
+  <div id="navContainer" class="nav-container" style="display: none;">
+    <div class="nav-title">Quick Jump to Month</div>
+    <div id="navGrid" class="nav-grid"></div>
+  </div>
+
+  <!-- Birthday Month Tables Container -->
+  <div id="tablesContainer">
+    <div class="no-records">Please select a Kundalis folder or XML files above to parse birthdays.</div>
+  </div>
+</div>
+
+<script>
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+const AMANTA_MONTHS_HINDI = [
+  'वैशाख', 'ज्येष्ठ', 'आषाढ़', 'श्रावण',
+  'भाद्रपद', 'आश्विन', 'कार्तिक', 'मार्गशीर्ष',
+  'पौष', 'माघ', 'फाल्गुन', 'चैत्र'
+];
+
+const TITHI_NAMES_HINDI = [
+  'प्रतिपदा', 'द्वितीया', 'तृतीया', 'चतुर्थी', 'पंचमी',
+  'षष्ठी', 'सप्तमी', 'अष्टमी', 'नवमी', 'दशमी',
+  'एकादशी', 'द्वादशी', 'त्रयोदशी', 'चतुर्दशी', 'पूर्णिमा'
+];
+
+// Regex patterns for fallback date matching
+const DATE_REGEX_PATTERNS = [
+  /\b(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.](19|20)\d\d\b/, // DD/MM/YYYY
+  /\b(19|20)\d\d[\/\-\.](0?[1-9]|1[012])[\/\-\.](0?[1-9]|[12][0-9]|3[01])\b/, // YYYY/MM/DD
+  /\b(0?[1-9]|[12][0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(19|20)\d\d\b/i, // DD Mon YYYY
+  /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(0?[1-9]|[12][0-9]|3[01])[\s,]+(19|20)\d\d\b/i // Mon DD, YYYY
+];
+
+/**
+ * Converts Julian Day Number (JDN) to Gregorian Date (JS Date object)
+ */
+function julianDayToGregorian(jdVal) {
+  const jdNum = parseFloat(jdVal);
+  if (isNaN(jdNum) || jdNum < 2000000 || jdNum > 3000000) return null;
+
+  let jd = jdNum + 0.5;
+  let z = Math.floor(jd);
+  let f = jd - z;
+  let a = z;
+  if (z >= 2299161) {
+    let alpha = Math.floor((z - 1867216.25) / 36524.25);
+    a = z + 1 + alpha - Math.floor(alpha / 4);
+  }
+  let b = a + 1524;
+  let c = Math.floor((b - 122.1) / 365.25);
+  let d = Math.floor(365.25 * c);
+  let e = Math.floor((b - d) / 30.6001);
+  let day = b - d - Math.floor(30.6001 * e) + f;
+  let month = (e < 14) ? (e - 1) : (e - 13);
+  let year = (month > 2) ? (c - 4716) : (c - 4715);
+
+  let dayInt = Math.floor(day);
+  if (dayInt < 1 || dayInt > 31 || month < 1 || month > 12) return null;
+
+  return new Date(year, month - 1, dayInt);
+}
+
+function gregorianToJdn(dateObj) {
+  let year = dateObj.getFullYear();
+  let month = dateObj.getMonth() + 1;
+  let day = dateObj.getDate() + 0.5;
+
+  if (month <= 2) {
+    year -= 1;
+    month += 12;
+  }
+
+  let a = Math.floor(year / 100);
+  let b = 2 - a + Math.floor(a / 4);
+  let jd = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5;
+  return jd;
+}
+
+/**
+ * Calculates strict Amanta (South Indian) Month & Tithi at Sunrise from JDN with Keplerian equation terms
+ */
+function calculateSouthIndianSunriseTithiHindi(jdNum) {
+  let jdSunrise = Math.floor(jdNum - 0.5) + 0.5 + (1.0 / 24.0);
+
+  let d = jdSunrise - 2451545.0;
+
+  // Mean longitudes
+  let lM = (218.316 + 13.176396 * d) % 360;
+  if (lM < 0) lM += 360;
+
+  let lS = (280.460 + 0.9856474 * d) % 360;
+  if (lS < 0) lS += 360;
+
+  // Mean anomalies
+  let mM = (134.963 + 13.064993 * d) * (Math.PI / 180.0);
+  let mS = (357.529 + 0.98560025 * d) * (Math.PI / 180.0);
+  let elongMean = (lM - lS) * (Math.PI / 180.0);
+
+  // Corrected true longitudes
+  let moonTrue = lM + 6.289 * Math.sin(mM) - 1.274 * Math.sin(mM - 2 * elongMean) + 0.658 * Math.sin(2 * elongMean);
+  let sunTrue = lS + 1.915 * Math.sin(mS) + 0.020 * Math.sin(2 * mS);
+
+  // Lahiri Ayanamsha (~23.85° at J2000)
+  let ayanamsha = 23.85 + (d / 36525.0) * 1.396;
+
+  let sunSid = (sunTrue - ayanamsha) % 360;
+  if (sunSid < 0) sunSid += 360;
+
+  let moonSid = (moonTrue - ayanamsha) % 360;
+  if (moonSid < 0) moonSid += 360;
+
+  let diff = (moonSid - sunSid) % 360;
+  if (diff < 0) diff += 360;
+
+  let tithiNum = Math.floor(diff / 12) + 1;
+
+  // Calculate Sun Rashi at the PRECEDING Amavasya (New Moon)
+  let daysSinceAmavasya = diff / 12.19074;
+  let sunLongAtPrevAmavasya = (sunSid - daysSinceAmavasya * 0.985647) % 360;
+  if (sunLongAtPrevAmavasya < 0) sunLongAtPrevAmavasya += 360;
+
+  let prevAmavasyaSunRashi = Math.floor(sunLongAtPrevAmavasya / 30);
+  let lunarMonth = AMANTA_MONTHS_HINDI[prevAmavasyaSunRashi];
+
+  let paksha, tName;
+  if (tithiNum <= 15) {
+    paksha = 'शुक्ल';
+    tName = (tithiNum < 15) ? TITHI_NAMES_HINDI[tithiNum - 1] : 'पूर्णिमा';
+  } else {
+    paksha = 'कृष्ण';
+    let tNum = tithiNum - 15;
+    tName = (tNum < 15) ? TITHI_NAMES_HINDI[tNum - 1] : 'अमावस्या';
+  }
+
+  return `${lunarMonth} ${paksha} ${tName}`;
+}
+
+/**
+ * Calculates the Gregorian Date in the current year (2026) when the given Tithi occurs
+ */
+function calculateCurrentYearTithiDate(tithiStr, currentYear = 2026) {
+  if (!tithiStr) return "N/A";
+
+  let startDate = new Date(currentYear - 1, 10, 1); // 1 Nov of prev year
+  let bestDate = null;
+  let minDiff = 99999;
+
+  for (let i = 0; i < 480; i++) {
+    let testDt = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+    let testJdn = gregorianToJdn(testDt);
+    let calcTithi = calculateSouthIndianSunriseTithiHindi(testJdn);
+
+    if (calcTithi === tithiStr) {
+      if (testDt.getFullYear() === currentYear) {
+        return formatDateFormatted(testDt);
+      }
+      let midYr = new Date(currentYear, 6, 1);
+      let diff = Math.abs((testDt - midYr) / (1000 * 60 * 60 * 24));
+      if (diff < minDiff) {
+        minDiff = diff;
+        bestDate = testDt;
+      }
+    }
+  }
+
+  return bestDate ? formatDateFormatted(bestDate) : "N/A";
+}
+
+function formatDateFormatted(dt) {
+  let day = String(dt.getDate()).padStart(2, '0');
+  let monthStr = MONTH_NAMES[dt.getMonth()].substring(0, 3);
+  let year = dt.getFullYear();
+  return `${day} ${monthStr} ${year}`;
+}
+
+/**
+ * Flexible Date String Parsing with Day-First Priority (DD/MM/YYYY)
+ */
+function parseDateString(dateStr) {
+  if (!dateStr) return null;
+  let cleanStr = dateStr.trim();
+  if (cleanStr.includes(" ") && (cleanStr.includes(":") || cleanStr.includes("T"))) {
+    cleanStr = cleanStr.split(" ")[0];
+  }
+
+  let parts = cleanStr.split(/[\/\-\.]/);
+  if (parts.length === 3) {
+    let p1 = parseInt(parts[0], 10);
+    let p2 = parseInt(parts[1], 10);
+    let p3 = parseInt(parts[2], 10);
+
+    if (!isNaN(p1) && !isNaN(p2) && !isNaN(p3)) {
+      if (p1 >= 1800 && p2 >= 1 && p2 <= 12 && p3 >= 1 && p3 <= 31) {
+        return new Date(p1, p2 - 1, p3);
+      }
+      if (p1 >= 1 && p1 <= 31 && p2 >= 1 && p2 <= 12 && p3 >= 1800) {
+        return new Date(p3, p2 - 1, p1);
+      }
+    }
+  }
+
+  const monthMap = {
+    jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+    jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+  };
+  let textMatch = cleanStr.match(/^(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})$/);
+  if (textMatch) {
+    let d = parseInt(textMatch[1], 10);
+    let mStr = textMatch[2].toLowerCase().substring(0, 3);
+    let y = parseInt(textMatch[3], 10);
+    if (mStr in monthMap && d >= 1 && d <= 31 && y >= 1800) {
+      return new Date(y, monthMap[mStr], d);
+    }
+  }
+
+  let parsed = new Date(cleanStr);
+  if (!isNaN(parsed.getTime())) return parsed;
+
+  return null;
+}
+
+/**
+ * Parses XML content for Name, Date of Birth, Tithi, and Current Year Tithi Date
+ */
+function parseXmlContent(content, filename) {
+  let parser = new DOMParser();
+  let xmlDoc = parser.parseFromString(content, "text/xml");
+
+  let name = null;
+  let firstName = null;
+  let lastName = null;
+  let dobRaw = null;
+  let dobDate = null;
+  let jdnVal = null;
+  let xmlTithi = null;
+
+  let tithiElem = xmlDoc.querySelector("tithi, Tithi, birth_tithi");
+  if (tithiElem && tithiElem.textContent) {
+    xmlTithi = tithiElem.textContent.trim();
+  }
+
+  let birthInfo = xmlDoc.querySelector("BirthInfo");
+  if (birthInfo) {
+    let fnElem = birthInfo.querySelector("FirstName");
+    let lnElem = birthInfo.querySelector("LastName");
+    let bdElem = birthInfo.querySelector("BirthDate");
+
+    if (fnElem && fnElem.textContent) firstName = fnElem.textContent.trim();
+    if (lnElem && lnElem.textContent) lastName = lnElem.textContent.trim();
+
+    if (firstName && lastName) name = firstName + " " + lastName;
+    else if (firstName) name = firstName;
+    else if (lastName) name = lastName;
+
+    if (bdElem && bdElem.textContent) {
+      let rawBd = bdElem.textContent.trim();
+      let jdnDate = julianDayToGregorian(rawBd);
+      if (jdnDate) {
+        dobDate = jdnDate;
+        dobRaw = rawBd;
+        jdnVal = parseFloat(rawBd);
+      }
+    }
+  }
+
+  if (!name || !dobDate) {
+    const nameTags = ["name", "native_name", "person_name", "full_name", "jataka_name", "first_name", "title", "native", "client_name"];
+    const dobTags = ["dob", "date_of_birth", "birthdate", "birth_date", "dateofbirth", "date", "birth_date_time", "bdate"];
+
+    let allElements = xmlDoc.getElementsByTagName("*");
+    for (let i = 0; i < allElements.length; i++) {
+      let elem = allElements[i];
+      let tagName = elem.tagName.toLowerCase();
+
+      let text = elem.textContent ? elem.textContent.trim() : "";
+      if (text) {
+        if (!name && nameTags.includes(tagName)) name = text;
+        else if (!dobRaw && dobTags.includes(tagName)) dobRaw = text;
+        else if (tagName === "firstname" && !firstName) firstName = text;
+        else if (tagName === "lastname" && !lastName) lastName = text;
+      }
+
+      for (let j = 0; j < elem.attributes.length; j++) {
+        let attr = elem.attributes[j];
+        let attrName = attr.name.toLowerCase();
+        let attrVal = attr.value.trim();
+
+        if (!name && nameTags.some(t => attrName.includes(t))) name = attrVal;
+        if (!dobRaw && dobTags.some(t => attrName.includes(t))) dobRaw = attrVal;
+      }
+    }
+
+    if (!name && (firstName || lastName)) {
+      name = ((firstName || "") + " " + (lastName || "")).trim();
+    }
+
+    if (!dobRaw && !dobDate) {
+      let dayElem = xmlDoc.querySelector("day, Day, birth_day, bday");
+      let monthElem = xmlDoc.querySelector("month, Month, birth_month, bmonth");
+      let yearElem = xmlDoc.querySelector("year, Year, birth_year, byear");
+
+      if (dayElem && monthElem && yearElem) {
+        let d = dayElem.textContent ? dayElem.textContent.trim() : "";
+        let m = monthElem.textContent ? monthElem.textContent.trim() : "";
+        let y = yearElem.textContent ? yearElem.textContent.trim() : "";
+        if (d && m && y) dobRaw = `${d}/${m}/${y}`;
+      }
+    }
+  }
+
+  if (!dobRaw && !dobDate) {
+    for (let pattern of DATE_REGEX_PATTERNS) {
+      let match = content.match(pattern);
+      if (match) {
+        dobRaw = match[0].trim();
+        break;
+      }
+    }
+  }
+
+  if (!name) {
+    let baseName = filename.replace(/\.xml$/i, "");
+    let cleaned = baseName.replace(/[_]/g, " ");
+    if (cleaned.toLowerCase().startsWith("kundali")) {
+      cleaned = cleaned.substring(7).trim();
+    }
+    name = cleaned || baseName;
+  }
+
+  if (!dobDate && dobRaw) {
+    let jdnDate = julianDayToGregorian(dobRaw);
+    if (jdnDate) {
+      dobDate = jdnDate;
+      jdnVal = parseFloat(dobRaw);
+    } else {
+      dobDate = parseDateString(dobRaw);
+    }
+  }
+
+  if (!dobDate || isNaN(dobDate.getTime())) return null;
+
+  if (jdnVal === null) {
+    jdnVal = gregorianToJdn(dobDate);
+  }
+
+  let tithiStr = xmlTithi || calculateSouthIndianSunriseTithiHindi(jdnVal);
+  let currentYearTithiDate = calculateCurrentYearTithiDate(tithiStr, 2026);
+
+  return {
+    name: name,
+    dobRaw: dobRaw,
+    dobDate: dobDate,
+    tithi: tithiStr,
+    tithiDateCurrentYear: currentYearTithiDate,
+    filename: filename
+  };
+}
+
+/**
+ * Handle Folder / File Selection Event
+ */
+document.getElementById('folderInput').addEventListener('change', async function(event) {
+  const files = Array.from(event.target.files);
+
+  const xmlFiles = files.filter(f => f.name.toLowerCase().endsWith('.xml'));
+
+  if (xmlFiles.length === 0) {
+    alert("No XML files found in the selected folder/files.");
+    return;
+  }
+
+  const records = [];
+
+  for (let file of xmlFiles) {
+    try {
+      let text = await file.text();
+      let rec = parseXmlContent(text, file.name);
+      if (rec) records.push(rec);
+    } catch (e) {
+      console.warn("Could not read XML file:", file.name, e);
+    }
+  }
+
+  renderResults(xmlFiles.length, records);
+});
+
+/**
+ * Group, Sort, and Render Birthday Tables
+ */
+function renderResults(totalXmlCount, records) {
+  document.getElementById('statsBanner').style.display = 'flex';
+  document.getElementById('totalXmlCount').textContent = `Processed XML Files: ${totalXmlCount}`;
+  document.getElementById('extractedCount').textContent = `Extracted DOB Records: ${records.length}`;
+
+  const grouped = {};
+  for (let i = 0; i < 12; i++) grouped[i] = [];
+
+  records.forEach(r => {
+    let monthIdx = r.dobDate.getMonth();
+    grouped[monthIdx].push(r);
+  });
+
+  for (let i = 0; i < 12; i++) {
+    grouped[i].sort((a, b) => {
+      if (a.dobDate.getDate() !== b.dobDate.getDate()) {
+        return a.dobDate.getDate() - b.dobDate.getDate();
+      }
+      return a.dobDate.getFullYear() - b.dobDate.getFullYear();
+    });
+  }
+
+  const navGrid = document.getElementById('navGrid');
+  navGrid.innerHTML = '';
+  document.getElementById('navContainer').style.display = 'block';
+
+  for (let i = 0; i < 12; i++) {
+    let mName = MONTH_NAMES[i];
+    let count = grouped[i].length;
+
+    let itemDiv = document.createElement('div');
+    itemDiv.className = `nav-item ${count === 0 ? 'empty' : ''}`;
+
+    if (count > 0) {
+      itemDiv.innerHTML = `<a href="#month-${mName.toLowerCase()}">${mName} (${count})</a>`;
+    } else {
+      itemDiv.textContent = `${mName} (0)`;
+    }
+    navGrid.appendChild(itemDiv);
+  }
+
+  const container = document.getElementById('tablesContainer');
+  container.innerHTML = '';
+
+  let hasData = false;
+
+  for (let i = 0; i < 12; i++) {
+    let mName = MONTH_NAMES[i];
+    let mRecords = grouped[i];
+
+    if (mRecords.length === 0) continue;
+    hasData = true;
+
+    let monthSection = document.createElement('div');
+    monthSection.className = 'month-section';
+
+    let title = document.createElement('div');
+    title.className = 'month-title';
+    title.id = `month-${mName.toLowerCase()}`;
+    title.textContent = mName;
+    monthSection.appendChild(title);
+
+    let table = document.createElement('table');
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th style="width: 35px;">#</th>
+          <th>Name</th>
+          <th style="width: 130px;">Date of Birth</th>
+          <th style="width: 110px;">Day of Week</th>
+          <th style="width: 180px;">South Indian Month & Tithi</th>
+          <th style="width: 150px;">Date as per Tithi (Current Year)</th>
+          <th>Source File</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${mRecords.map((r, idx) => {
+          let day = String(r.dobDate.getDate()).padStart(2, '0');
+          let monthStr = MONTH_NAMES[r.dobDate.getMonth()].substring(0, 3);
+          let year = r.dobDate.getFullYear();
+          let dayOfWeek = DAYS_OF_WEEK[r.dobDate.getDay()];
+          let formattedDob = `${day} ${monthStr} ${year}`;
+
+          return `
+            <tr>
+              <td>${idx + 1}</td>
+              <td><b>${escapeHtml(r.name)}</b></td>
+              <td>${formattedDob}</td>
+              <td>${dayOfWeek}</td>
+              <td>${escapeHtml(r.tithi)}</td>
+              <td>${escapeHtml(r.tithiDateCurrentYear)}</td>
+              <td>${escapeHtml(r.filename)}</td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    `;
+
+    monthSection.appendChild(table);
+    container.appendChild(monthSection);
+  }
+
+  if (!hasData) {
+    container.innerHTML = '<div class="no-records">No valid DOB records could be extracted from the XML files.</div>';
+  }
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+</script>
+
+</body>
+</html>

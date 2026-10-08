@@ -151,21 +151,50 @@ def calculate_south_indian_tithi(jd_ut):
         except Exception:
             pass
 
-    # Mathematical approximation fallback with Keplerian equation terms
+    # High precision mathematical approximation fallback with Chapront lunar perturbation terms
     d = jd_sunrise - 2451545.0
-    l_m = (218.316 + 13.176396 * d) % 360
-    l_s = (280.460 + 0.9856474 * d) % 360
+    T = d / 36525.0
 
-    m_m = (134.963 + 13.064993 * d) * (math.pi / 180.0)
-    m_s = (357.529 + 0.98560025 * d) * (math.pi / 180.0)
-    elong_mean = (l_m - l_s) * (math.pi / 180.0)
+    L0 = 280.46646 + 36000.76983 * T
+    M0 = 357.52911 + 35999.05029 * T
 
-    moon_true = l_m + 6.289 * math.sin(m_m) - 1.274 * math.sin(m_m - 2 * elong_mean) + 0.658 * math.sin(2 * elong_mean)
-    sun_true = l_s + 1.915 * math.sin(m_s) + 0.020 * math.sin(2 * m_s)
+    L1 = 218.3165 + 481267.8813 * T
+    M1 = 134.9634 + 477198.8676 * T
+    F1 = 93.2721 + 483202.0175 * T
+    D1 = 297.8502 + 445267.1114 * T
+
+    r = math.pi / 180.0
+    m0_r = M0 * r
+    m1_r = M1 * r
+    f1_r = F1 * r
+    d1_r = D1 * r
+
+    dl_m = (6.2887 * math.sin(m1_r)
+            + 1.2740 * math.sin(2 * d1_r - m1_r)
+            + 0.6583 * math.sin(2 * d1_r)
+            + 0.2136 * math.sin(2 * m1_r)
+            - 0.1851 * math.sin(m0_r)
+            - 0.1143 * math.sin(2 * f1_r)
+            + 0.0588 * math.sin(2 * d1_r - 2 * m1_r)
+            + 0.0571 * math.sin(2 * d1_r - m0_r - m1_r)
+            + 0.0533 * math.sin(2 * d1_r + m1_r)
+            + 0.0458 * math.sin(2 * d1_r - f1_r)
+            + 0.0410 * math.sin(m1_r - m0_r)
+            - 0.0347 * math.sin(d1_r)
+            - 0.0305 * math.sin(m1_r + m0_r)
+            + 0.0153 * math.sin(2 * d1_r - 2 * f1_r))
+
+    dl_s = (1.9146 * math.sin(m0_r) + 0.0199 * math.sin(2 * m0_r))
+
+    sun_true = (L0 + dl_s) % 360
+    moon_true = (L1 + dl_m) % 360
 
     ayanamsha = 23.85 + (d / 36525.0) * 1.396
     sun_sid = (sun_true - ayanamsha) % 360
+    if sun_sid < 0: sun_sid += 360
+
     moon_sid = (moon_true - ayanamsha) % 360
+    if moon_sid < 0: moon_sid += 360
 
     diff = (moon_sid - sun_sid) % 360
     if diff < 0: diff += 360

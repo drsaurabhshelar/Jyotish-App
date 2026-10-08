@@ -298,31 +298,52 @@ function gregorianToJdn(dateObj) {
 }
 
 /**
- * Calculates strict Amanta (South Indian) Month & Tithi at Sunrise from JDN with Keplerian equation terms
+ * High Precision Analytical Calculation of South Indian Amanta Month & Tithi at Sunrise
  */
 function calculateSouthIndianSunriseTithiHindi(jdNum) {
   let jdSunrise = Math.floor(jdNum - 0.5) + 0.5 + (1.0 / 24.0);
 
   let d = jdSunrise - 2451545.0;
+  let T = d / 36525.0;
 
-  // Mean longitudes
-  let lM = (218.316 + 13.176396 * d) % 360;
-  if (lM < 0) lM += 360;
+  // Sun mean longitude & anomaly
+  let L0 = 280.46646 + 36000.76983 * T;
+  let M0 = 357.52911 + 35999.05029 * T;
 
-  let lS = (280.460 + 0.9856474 * d) % 360;
-  if (lS < 0) lS += 360;
+  // Moon mean longitude, anomaly, argument of latitude, mean elongation
+  let L1 = 218.3165 + 481267.8813 * T;
+  let M1 = 134.9634 + 477198.8676 * T;
+  let F1 = 93.2721 + 483202.0175 * T;
+  let D1 = 297.8502 + 445267.1114 * T;
 
-  // Mean anomalies
-  let mM = (134.963 + 13.064993 * d) * (Math.PI / 180.0);
-  let mS = (357.529 + 0.98560025 * d) * (Math.PI / 180.0);
-  let elongMean = (lM - lS) * (Math.PI / 180.0);
+  let r = Math.PI / 180.0;
+  let m0R = M0 * r;
+  let m1R = M1 * r;
+  let f1R = F1 * r;
+  let d1R = D1 * r;
 
-  // Corrected true longitudes
-  let moonTrue = lM + 6.289 * Math.sin(mM) - 1.274 * Math.sin(mM - 2 * elongMean) + 0.658 * Math.sin(2 * elongMean);
-  let sunTrue = lS + 1.915 * Math.sin(mS) + 0.020 * Math.sin(2 * mS);
+  // High precision lunar longitude perturbation terms
+  let dlM = (6.2887 * Math.sin(m1R)
+          + 1.2740 * Math.sin(2 * d1R - m1R)
+          + 0.6583 * Math.sin(2 * d1R)
+          + 0.2136 * Math.sin(2 * m1R)
+          - 0.1851 * Math.sin(m0R)
+          - 0.1143 * Math.sin(2 * f1R)
+          + 0.0588 * Math.sin(2 * d1R - 2 * m1R)
+          + 0.0571 * Math.sin(2 * d1R - m0R - m1R)
+          + 0.0533 * Math.sin(2 * d1R + m1R)
+          + 0.0458 * Math.sin(2 * d1R - f1R)
+          + 0.0410 * Math.sin(m1R - m0R)
+          - 0.0347 * Math.sin(d1R)
+          - 0.0305 * Math.sin(m1R + m0R)
+          + 0.0153 * Math.sin(2 * d1R - 2 * f1R));
 
-  // Lahiri Ayanamsha (~23.85° at J2000)
-  let ayanamsha = 23.85 + (d / 36525.0) * 1.396;
+  let dlS = (1.9146 * Math.sin(m0R) + 0.0199 * Math.sin(2 * m0R));
+
+  let sunTrue = (L0 + dlS) % 360;
+  let moonTrue = (L1 + dlM) % 360;
+
+  let ayanamsha = 23.85 + 1.396 * T;
 
   let sunSid = (sunTrue - ayanamsha) % 360;
   if (sunSid < 0) sunSid += 360;
@@ -335,7 +356,7 @@ function calculateSouthIndianSunriseTithiHindi(jdNum) {
 
   let tithiNum = Math.floor(diff / 12) + 1;
 
-  // Calculate Sun Rashi at the PRECEDING Amavasya (New Moon)
+  // Calculate Sun Rashi at PRECEDING Amavasya (New Moon)
   let daysSinceAmavasya = diff / 12.19074;
   let sunLongAtPrevAmavasya = (sunSid - daysSinceAmavasya * 0.985647) % 360;
   if (sunLongAtPrevAmavasya < 0) sunLongAtPrevAmavasya += 360;

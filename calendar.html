@@ -5691,11 +5691,19 @@ window.closeCalendarModal = function() {
     let rinLenaProhibition = window.evaluateRinLenaProhibition(p);
     let isWednesday = p.date.getDay() === 3;
 
-    let newRulesHtml = '';
+    let jKhananHtml = '';
+    let visheshMuhurtaHtml = '';
+    let visheshVishaghatiHtml = '';
+    let vishaghatiHtml = '';
+    let diva15MuhurtasHtml = '';
+    let ratri15MuhurtasHtml = '';
+    let divaMuhurtaHtml = '';
+    let ratriMuhurtaHtml = '';
+    let nisiddhaKarmHtml = '';
 
     // 1. Jalashay Khanan
     if (jKhanan.isEligibleNakshatra || jKhanan.isShubh) {
-        newRulesHtml += `
+        jKhananHtml += `
         <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
             <h3 style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 13px; border-bottom: 1px solid #bfdbfe; padding-bottom: 5px;">
                 💧 जलाशय खनन
@@ -5719,7 +5727,7 @@ window.closeCalendarModal = function() {
 
     // 2. Dhan Dena / Rojgar
     if (dhanDena.isEligibleNakshatra || dhanDena.isShubh) {
-        newRulesHtml += `
+        visheshMuhurtaHtml += `
         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
             <h3 style="margin: 0 0 10px 0; color: #14532d; font-size: 13px; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px;">
                 💰 द्रव्य देना / रोजगार में लगाना
@@ -5742,7 +5750,7 @@ window.closeCalendarModal = function() {
 
     // 3. Rin Lena Prohibition
     if (rinLenaProhibition.length > 0) {
-        newRulesHtml += `
+        visheshMuhurtaHtml += `
         <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
             <h3 style="margin: 0 0 10px 0; color: #c53030; font-size: 13px; border-bottom: 1px solid #feb2b2; padding-bottom: 5px;">
                 ⚠️ ऋण लेने से बचें
@@ -5759,7 +5767,7 @@ window.closeCalendarModal = function() {
 
     // 4. Dhan Dena Prohibition (Wednesday)
     if (isWednesday) {
-        newRulesHtml += `
+        visheshMuhurtaHtml += `
         <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
             <h3 style="margin: 0 0 10px 0; color: #c53030; font-size: 13px; border-bottom: 1px solid #feb2b2; padding-bottom: 5px;">
                 ⚠️ धन देने से बचें
@@ -5771,7 +5779,7 @@ window.closeCalendarModal = function() {
         </div>`;
     }
 
-    restrictionModalHtml += newRulesHtml;
+    // newRulesHtml replaced
 
                 let smHtml = '';
                 if (p.specialMuhurta) {
@@ -5915,7 +5923,7 @@ restrictionModalHtml += smHtml;
             }
         }).join('');
 
-        restrictionModalHtml += `
+        nisiddhaKarmHtml += `
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
             <h3 style="color: var(--red-ashubh); margin-bottom: 10px;">इस तिथि में निषिद्ध कर्म</h3>
             ${itemsHtml}
@@ -6337,6 +6345,7 @@ restrictionModalHtml += smHtml;
                     font-weight: 700 !important;
                     margin-top: 0 !important;
                     margin-bottom: 10px !important;
+                    color: var(--primary-dark) !important;
                 }
                 .modal-scroll-container h3,
                 #calModalScrollContainer h3,
@@ -6426,211 +6435,66 @@ restrictionModalHtml += smHtml;
                     font-weight: 700 !important;
                 }
             </style>
-            <button style="position:absolute; top: 10px; right: 10px; background: var(--red-ashubh); color: #fff; border: none; font-size: 24px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.4); z-index: 9999; display: flex; align-items: center; justify-content: center;" onclick="document.getElementById('calModalBg').remove()">×</button>
-            <h2 style="margin-top:0; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;">${dateObj.toDateString()} Details</h2>
+            <button style="position:absolute; top: 10px; right: 10px; background: #e2e8f0; border:none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;" onclick="document.getElementById('calModalBg').remove()">×</button>
+            <h2 style="margin-top:0; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px;">${dateObj.toDateString()}</h2>
+
+            <!-- SECTION 1: Day Information -->
+            <div style="background: var(--bg-color); border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <h3 class="popup-section-heading" style="margin-top: 0;">आज का पंचांग एवं विस्तृत विवरण (Day Information)</h3>
+                ${popupDayInfoGrid([
+                    popupDayInfoField('मास (Month)', p.amantaMonthName),
+                    popupDayInfoField('पक्ष (Paksha)', p.paksha),
+                    popupDayInfoField('तिथि (Tithi)', p.tithiName),
+                    popupDayInfoField('तिथि स्वामी (Tithi Swami)', tSwami),
+                    popupDayInfoField('तिथि संज्ञा (Saṃjñā)', tSanjna),
+                    popupDayInfoField('सिद्ध तिथि (Siddha)', isSiddha ? 'Yes / हाँ' : 'No / नहीं', isSiddha ? 'var(--green-shubh)' : 'var(--text-main)'),
+                    popupDayInfoField('मृत तिथि (Mṛta)', isMrta ? 'Yes / हाँ' : 'No / नहीं', isMrta ? 'var(--red-ashubh)' : 'var(--text-main)'),
+                    popupDayInfoField('दग्ध नक्षत्र (Dagdha)', isDagdha ? 'Yes / हाँ' : 'No / नहीं', isDagdha ? 'var(--red-ashubh)' : 'var(--text-main)'),
+                    popupDayInfoField('नक्षत्र (Nakṣatra)', p.moonNakshatraName),
+                    popupDayInfoField('पद (Pada)', Math.floor((p.moonLongitude % (360/27)) / (360/108)) + 1)
+                ])}
+            </div>
+
+            <!-- SECTION 2: नक्षत्र का स्वरूप -->
             ${(() => {
-                let bd = window.calculateBhadra(p);
-                if (!bd || !bd.isActive) return '';
-
-                let startOfDayMs = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 0, 0, 0).getTime();
-                let endOfDayMs = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59).getTime();
-                if (bd.bhadraStart.getTime() > endOfDayMs || bd.bhadraEnd.getTime() < startOfDayMs) return '';
-
-                let bStartStr = bd.bhadraStart.toLocaleString();
-                let bEndStr = bd.bhadraEnd.toLocaleString();
-
-                let tDuration = bd.bhadraEnd.getTime() - bd.bhadraStart.getTime();
-                let mStartPct = ((bd.mukhaStart.getTime() - bd.bhadraStart.getTime()) / tDuration) * 100;
-                let mWidthPct = ((bd.mukhaEnd.getTime() - bd.mukhaStart.getTime()) / tDuration) * 100;
-                let pStartPct = ((bd.puchhaStart.getTime() - bd.bhadraStart.getTime()) / tDuration) * 100;
-                let pWidthPct = ((bd.puchhaEnd.getTime() - bd.puchhaStart.getTime()) / tDuration) * 100;
-
-                // Adjust if Bhadra crosses current day only
-                let mStartHtml = bd.mukhaStart.toLocaleTimeString();
-                let mEndHtml = bd.mukhaEnd.toLocaleTimeString();
-                let pStartHtml = bd.puchhaStart.toLocaleTimeString();
-                let pEndHtml = bd.puchhaEnd.toLocaleTimeString();
-
-                return `<div style="margin-bottom: 20px; padding: 15px; border: 2px solid var(--red-ashubh); border-radius: 8px; background: #fff5f5;">
-                    <h3 style="margin-top: 0; color: var(--red-ashubh);">🔴 भद्रा काल (Vishti Karana)</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; margin-bottom: 15px;">
-                        <div><strong>प्रारम्भ (Start):</strong> <br>${bStartStr}</div>
-                        <div><strong>समाप्ति (End):</strong> <br>${bEndStr}</div>
-                        <div><strong>तिथि:</strong> ${p.tithiName} (${p.paksha} ${bd.isPurvardha ? 'पूर्वाध' : 'उत्तरार्ध'})</div>
-                        <div><strong>चंद्र राशि:</strong> ${bd.moonRashi}</div>
-                    </div>
-
-                    <div style="margin-bottom: 15px; padding: 10px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;">
-                        <strong style="color:var(--text-main);">भद्रा निवास: ${bd.loka}</strong>
-                        <p style="margin: 5px 0 0 0; font-size: 12px; color: var(--text-muted);">
-                            भद्रा का निवास चंद्रमा की राशि के अनुसार निर्धारित होता है। जिस लोक में भद्रा का निवास होता है, उसी लोक में उसका शुभाशुभ फल माना जाता है। ${bd.loka.includes('Mrityu') ? '(मृत्युलोक में भद्रा अशुभ फल देती है)' : '(स्वर्ग/पाताल में भद्रा का फल पृथ्वी पर सामान्यतः कम प्रभावी या शुभ माना जाता है)'}
-                        </p>
-                    </div>
-
-                    <h4 style="margin: 15px 0 5px 0; color: var(--primary-dark);">⏱ भद्रा टाइमलाइन</h4>
-                    <div style="position: relative; height: 30px; background: #e2e8f0; border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #cbd5e0;">
-                        <!-- Full Bhadra is base background -->
-                        <!-- Mukha -->
-                        <div style="position: absolute; left: ${mStartPct}%; width: ${mWidthPct}%; height: 100%; background: var(--red-ashubh);" title="भद्रा मुख: ${mStartHtml} - ${mEndHtml}"></div>
-                        <!-- Puchha -->
-                        <div style="position: absolute; left: ${pStartPct}%; width: ${pWidthPct}%; height: 100%; background: var(--green-shubh);" title="भद्रा पुच्छ: ${pStartHtml} - ${pEndHtml}"></div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; margin-bottom: 15px;">
-                        <div style="padding: 8px; border-left: 3px solid var(--red-ashubh); background: #fff;">
-                            <strong style="color:var(--red-ashubh);">🔴 भद्रा मुख</strong><br>
-                            ${mStartHtml} – ${mEndHtml}<br>
-                            <span style="color:var(--text-muted);">भद्रा का मुख अशुभ होता है।</span>
-                        </div>
-                        <div style="padding: 8px; border-left: 3px solid var(--green-shubh); background: #fff;">
-                            <strong style="color:var(--green-shubh);">🟢 भद्रा पुच्छ</strong><br>
-                            ${pStartHtml} – ${pEndHtml}<br>
-                            <span style="color:var(--text-muted);">भद्रा की पुच्छ शुभ फलदायक होती है।</span>
-                        </div>
-                    </div>
-
-                    ${bd.isFavorableTime ? '<div style="margin-bottom: 15px; padding: 8px; background: #e6fffa; border: 1px solid #bbeeeb; border-radius: 4px; font-size:12px; color: #234e52;"><strong>दिन/रात अपवाद (Day/Night Rule):</strong> यह भद्रा काल परंपरागत नियमानुसार (दिन/रात एवं पूर्वार्ध/उत्तरार्ध के संयोग से) शुभ फलदायक/क्षीण प्रभाव वाला माना गया है।</div>' : ''}
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
-                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <strong style="color:var(--red-ashubh); display:block; border-bottom:1px solid #eee; padding-bottom:4px; margin-bottom:6px;">🚫 क्या न करें (Avoid)</strong>
-                            <ul style="margin:0; padding-left:15px; color:var(--text-main);">
-                                <li>विवाह</li>
-                                <li>मुंडन संस्कार</li>
-                                <li>गृह प्रवेश / गृहारंभ</li>
-                                <li>नया व्यवसाय आरंभ</li>
-                                <li>शुभ यात्रा</li>
-                                <li>अन्य प्रमुख मांगलिक कार्य</li>
-                            </ul>
-                        </div>
-                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <strong style="color:var(--green-shubh); display:block; border-bottom:1px solid #eee; padding-bottom:4px; margin-bottom:6px;">✅ क्या किया जा सकता है</strong>
-                            <span style="color:var(--text-muted); font-size:10px;">(परंपरागत रूप से वर्णित उग्र कार्य)</span>
-                            <ul style="margin:4px 0 0 0; padding-left:15px; color:var(--text-main);">
-                                <li>शत्रु पर आक्रमण / अस्त्र-शस्त्र</li>
-                                <li>ऑपरेशन (Medical)</li>
-                                <li>मुकदमा आरंभ करना</li>
-                                <li>आग जलाना / काटने-छेदन कार्य</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 15px; font-size: 11px; color: var(--text-muted); text-align: justify; border-top: 1px dashed #cbd5e0; padding-top: 8px;">
-                        <strong>📜 पारंपरिक नियम:</strong> भद्रा के समय शुभ एवं मांगलिक कार्यों का आरंभ परंपरागत रूप से वर्जित माना जाता है। दैनिक और नियमित कार्यों में इसका कोई दोष नहीं लगता। भद्रा मुख को छोड़कर, भद्रा पुच्छ में आवश्यक शुभ कार्य किये जा सकते हैं।
-                    </div>
-                </div>`;
-            })()}
-
-            ${(() => {
-                let apraptiCauses = window.getApraptiCauses(p.moonNakshatraName, dateObj.getDay(), p);
-                if (apraptiCauses.length === 0) return '';
-
-                return `
-                <div style="margin: 15px 0; padding:12px; background:#fff5f5; border-radius:6px; border:1px solid #feb2b2;">
-                    <h4 style="margin:0 0 10px 0; color: #c53030; border-bottom: 1px solid #feb2b2; padding-bottom: 5px; display:flex; align-items:center; gap:6px;">
-                        <span style="font-size: 13px;">⚠️</span> वस्तु/द्रव्य की अप्राप्ति का संकेत
-                    </h4>
-                    <div style="font-size: 13px; color: var(--text-main); line-height:1.6;">
-                        <strong>कारण:</strong>
-                        <ul style="margin: 4px 0 10px 0; padding-left: 20px; color: #c53030; font-weight:bold;">
-                            ${apraptiCauses.map(c => `<li>${c}</li>`).join('')}
-                        </ul>
-                        <strong>फल:</strong> इस समय किसी को दिया गया द्रव्य, धरोहर में रखा द्रव्य, ऋण दिया गया द्रव्य, गिरा हुआ या चोरी हुआ द्रव्य फिर किसी तरह न मिलने का संकेत है।
-                    </div>
-                </div>`;
-            })()}
-
-
-
-            <h3 style="color: var(--primary-color);">Day Information</h3>
-
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">मास (Amanta Month)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${p.amantaMonthName}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">तिथि (Tithi)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${p.tithiName}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">तिथि स्वामी (Tithi Swami)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${tSwami}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">तिथि संज्ञा (Tithi Saṃjñā)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${tSanjna}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">सिद्ध तिथि (Siddha Tithi)</span>
-                    <strong style="font-size: 13px; color: ${isSiddha ? 'var(--green-shubh)' : 'var(--text-main)'};">${isSiddha ? 'Yes / हाँ' : 'No / नहीं'}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">मृत संज्ञक (Mṛta Saṃjñaka)</span>
-                    <strong style="font-size: 13px; color: ${isMrta ? 'var(--red-ashubh)' : 'var(--text-main)'};">${isMrta ? 'Yes / हाँ' : 'No / नहीं'}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">दग्ध नक्षत्र (Dagdha Nakshatra)</span>
-                    <strong style="font-size: 13px; color: ${isDagdha ? 'var(--red-ashubh)' : 'var(--text-main)'};">${isDagdha ? 'Yes / हाँ' : 'No / नहीं'}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">नक्षत्र (Nakshatra)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${p.moonNakshatraName} <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">(Pada ${Math.floor((p.moonLongitude % (360/27)) / (360/108)) + 1})</span></strong>
-                </div>
-                            ${(() => {
                 let nData = window.NAKSHATRA_FORM_DATA[p.moonNakshatraName];
                 if (!nData) return '';
                 return `
-                <div style="grid-column: 1 / -1; margin-bottom: 15px; padding: 15px; border-radius: 8px; background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%); border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <h3 style="margin: 0 0 12px 0; font-size: 13px; color: #2d3748; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
-                        ✨ नक्षत्र का स्वरूप
-                    </h3>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
-
-                        <!-- Star Count -->
-                        <div style="display: flex; align-items: center; gap: 12px; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #edf2f7;">
-                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #fffbeb; display: flex; align-items: center; justify-content: center; font-size: 13px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);">
-                                ⭐
-                            </div>
-                            <div style="display: flex; flex-direction: column;">
-                                <span style="font-size: 11px; color: #718096; font-weight: bold;">ताराओं की संख्या</span>
-                                <strong style="font-size: 13px; color: #2d3748;">${nData.starCount} ताराएँ</strong>
-                            </div>
+                <div style="margin: 20px 0; padding: 15px; background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px;">
+                    <h3 class="popup-section-heading" style="margin-top:0; color: #c05621;">नक्षत्र का स्वरूप (Form & Nature of Nakshatra)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px;">
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #fbd38d;">
+                            <span class="popup-dayinfo-label">आकृति (Symbol/Form)</span>
+                            <strong style="font-size: 13px; color: #c05621;">${nData.form}</strong>
                         </div>
-
-                        <!-- Form / Symbol -->
-                        <div style="display: flex; align-items: center; gap: 12px; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #edf2f7;">
-                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #e6fffa; display: flex; align-items: center; justify-content: center; font-size: 13px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);">
-                                ${nData.visual}
-                            </div>
-                            <div style="display: flex; flex-direction: column;">
-                                <span style="font-size: 11px; color: #718096; font-weight: bold;">स्वरूप</span>
-                                <strong style="font-size: 12px; color: #2d3748;">${nData.form}</strong>
-                            </div>
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #fbd38d;">
+                            <span class="popup-dayinfo-label">तारे (Number of Stars)</span>
+                            <strong style="font-size: 13px; color: #c05621;">${nData.starCount}</strong>
                         </div>
-
+                    </div>
+                    <div style="background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #fbd38d; font-size: 12px; color: var(--text-main); line-height: 1.5;">
+                        <strong>दृश्य / पहचान (Visual Identification):</strong><br>
+                        ${nData.visual}
                     </div>
                 </div>`;
             })()}
 
-            <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">नक्षत्र स्वामी (Nakshatra Swami)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${NAKSHATRA_LORDS[p.moonNakshatraName] || 'Unknown'}</strong>
-                </div>
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">चन्द्र राशि (Moon Rashi)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${p.moonRashiName}</strong>
-                </div>
+            <!-- SECTION 3: नक्षत्र स्वामी (Nakshatra Swami) and चन्द्र राशि (Moon Rashi) -->
+            <div style="margin: 20px 0; padding: 15px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <h3 class="popup-section-heading" style="margin-top: 0;">नक्षत्र स्वामी एवं चन्द्र राशि</h3>
+                ${popupDayInfoGrid([
+                    popupDayInfoField('नक्षत्र स्वामी (Nakshatra Lord)', NAKSHATRA_LORDS[p.moonNakshatraName] || 'Unknown'),
+                    popupDayInfoField('चन्द्र राशि (Moon Sign)', p.moonRashiName)
+                ])}
             </div>
 
+            <!-- SECTION 4: नक्षत्र संज्ञा और अनुकूल कार्य -->
             ${(() => {
                 let nakshatraHindiName = NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex];
-                let sanjnaMatches = window.getNakshatraSanjna(p.moonNakshatraName, dateObj.getDay());
-                let specificActivities = window.getNakshatraSpecificActivities(nakshatraHindiName);
+                let sanjnaMatches = window.getNakshatraSanjna ? window.getNakshatraSanjna(p.moonNakshatraName, dateObj.getDay()) : [];
+                let specificActivities = window.getNakshatraSpecificActivities ? window.getNakshatraSpecificActivities(nakshatraHindiName) : [];
                 let todaysYogas = calculateDailyYogas(p);
-                let ornamentWeaponActs = window.getOrnamentWeaponActivities(p.moonNakshatraName, nakshatraHindiName, dateObj.getDay(), todaysYogas);
+                let ornamentWeaponActs = window.getOrnamentWeaponActivities ? window.getOrnamentWeaponActivities(p.moonNakshatraName, nakshatraHindiName, dateObj.getDay(), todaysYogas) : [];
                 if (sanjnaMatches.length === 0 && specificActivities.length === 0 && ornamentWeaponActs.length === 0) return '';
 
                 let fields = [popupDayInfoField('आज का नक्षत्र', nakshatraHindiName)];
@@ -6648,59 +6512,95 @@ restrictionModalHtml += smHtml;
                     let value = `${act.desc}<span class="popup-sub-label">शर्त (Condition): ${act.condition}</span>`;
                     fields.push(popupDayInfoField(act.title, value));
                 });
-                return `<div style="margin:20px 0; padding:10px; background:#f0f7ff; border-radius:6px; border:1px solid #cce4ff;">
-                    <h4 style="margin:0 0 10px 0; color:#3182ce; border-bottom:1px solid #cce4ff; padding-bottom:5px;">नक्षत्र संज्ञा और अनुकूल कार्य</h4>
+                return `<div style="margin:20px 0; padding:10px; background:#f0f7ff; border-radius:6px; border:1px solid #bae6fd;">
+                    <h4 class="popup-subheading" style="margin:0 0 8px 0; color:#0284c7;">नक्षत्र संज्ञा और अनुकूल कार्य</h4>
                     ${popupDayInfoGrid(fields)}
                 </div>`;
             })()}
 
+            <!-- SECTION 5: भद्रा काल (Vishti Karana) and Bhadra Timeline -->
+            ${(() => {
+                let bd = window.calculateBhadra(p);
+                if (!bd || !bd.isActive) return '';
+
+                let mStartHtml = bd.mukhaStart ? bd.mukhaStart.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : 'N/A';
+                let mEndHtml = bd.mukhaEnd ? bd.mukhaEnd.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : 'N/A';
+                let pStartHtml = bd.puchhaStart ? bd.puchhaStart.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : 'N/A';
+                let pEndHtml = bd.puchhaEnd ? bd.puchhaEnd.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : 'N/A';
+
+                return `
+                <div id="bhadraSection" style="background: #fff1f2; border: 1px solid #fecdd3; padding: 15px; border-radius: 8px; margin-bottom: 15px; scroll-margin-top: 20px;">
+                    <h3 style="margin: 0 0 10px 0; color: #be123c; font-size: 13px; border-bottom: 1px solid #fecdd3; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>⚠️ भद्रा काल (Vishti Karana)</span>
+                        <span style="font-size: 10px; background: #be123c; color: white; padding: 2px 6px; border-radius: 4px;">वर्जित काल</span>
+                    </h3>
+
+                    ${popupDayInfoGrid([
+                        popupDayInfoField('भद्रा स्थिति', 'सक्रिय (Active)', 'var(--red-ashubh)'),
+                        popupDayInfoField('भद्रा वास (Location)', bd.vasaName),
+                        popupDayInfoField('निवास स्थान (Residence)', bd.vasaLocation),
+                        popupDayInfoField('भद्रा फल (Effect)', bd.result, 'var(--red-ashubh)'),
+                        popupDayInfoField('प्रारंभ (Start)', bd.bhadraStart.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})),
+                        popupDayInfoField('समाप्ति (End)', bd.bhadraEnd.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}))
+                    ])}
+
+                    <div style="background: #ffffff; border: 1px solid #fecdd3; border-radius: 6px; padding: 10px; margin-top: 10px;">
+                        <h4 style="margin: 0 0 8px 0; color: #be123c; font-size: 12px;">🎯 विशेष अंग काल (Mukha & Puchha)</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+                            <div style="background: #fff5f5; padding: 8px; border-radius: 4px; border-left: 3px solid var(--red-ashubh);">
+                                <strong>भद्रा मुख (अति-वर्जित):</strong><br>
+                                ${mStartHtml} – ${mEndHtml}<br>
+                                <span style="font-size:11px; color: var(--red-ashubh);">कार्य नाश करता है।</span>
+                            </div>
+                            <div style="background: #f0fdf4; padding: 8px; border-radius: 4px; border-left: 3px solid var(--green-shubh);">
+                                <strong>भद्रा पुच्छ (शुभ/कार्य सिद्धि):</strong><br>
+                                ${pStartHtml} – ${pEndHtml}<br>
+                                <span style="font-size:11px; color: var(--green-shubh);">विशेष कार्यों में शुभ।</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${bd.isFavorableTime ? '<div style="margin-top: 10px; padding: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; color: var(--green-shubh); font-weight: bold; font-size: 12px;">✓ वर्तमान समय भद्रा काल से बाहर है या शुभ अंग काल में है।</div>' : ''}
+                </div>`;
+            })()}
+
+            <!-- SECTION 6: वस्त्र एवं आभूषण धारण विचार -->
             ${(() => {
                 let vastraRules = window.checkVastraAbhushanRules(p.moonNakshatraName, dateObj.getDay(), p.tithiNumber);
-                if (!vastraRules.hasRule) return '';
-
-                let vastraHtml = '<div style="margin: 20px 0; padding:10px; background:#fdf2f8; border-radius:6px; border:1px solid #fed7e2;">';
-                vastraHtml += '<h4 style="margin:0 0 10px 0; color: #b83280; border-bottom: 1px solid #fed7e2; padding-bottom: 5px;">वस्त्र एवं आभूषण धारण विचार</h4>';
-
+                if (!vastraRules || !vastraRules.hasRule) return '';
+                let vastraHtml = '<div style="margin: 20px 0; padding:10px; background:#fdf2f8; border-radius:6px; border:1px solid #fbcfe8;">';
+                vastraHtml += '<h4 class="popup-subheading" style="margin:0 0 10px 0; color: #b83280; border-bottom: 1px solid #fed7e2; padding-bottom: 5px;">👔 वस्त्र एवं आभूषण धारण विचार</h4>';
                 if (vastraRules.shubhWear) {
-                    vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 13px; color: var(--text-main);">
-                        <strong style="color: var(--green-shubh);">✅ शुभ योग:</strong> मूंगा, दाँत, शंख, सुवर्ण (सोने) के आभूषण और नवीन वस्त्र धारण करना शुभ है।
+                    vastraHtml += `<div style="background:#fff; border:1px solid #fbcfe8; border-radius:6px; padding:8px 10px; margin-bottom:8px;">
+                        <div style="font-weight:bold; color:var(--green-shubh); font-size:12px; margin-bottom:2px;">✅ धारण शुभ</div>
+                        <div style="font-size:12px; color:var(--text-main); line-height:1.4;">आज वस्त्र एवं आभूषण धारण करना शुभ फलदायी है।</div>
                     </div>`;
                 }
-
-                if (vastraRules.tuesdayRed) {
-                    vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 13px; color: var(--text-main);">
-                        <strong style="color: #48bb78;">👕 मंगलवार विशेष:</strong> आज मंगलवार के दिन लाल वस्त्र धारण करना चाहिए।
-                    </div>`;
-                }
-
-                if (vastraRules.sadhavaRestricted) {
-                    vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 13px; color: var(--text-main);">
-                        <strong style="color: var(--red-ashubh);">❌ सधवा स्त्री निषेध:</strong> आज (${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]} नक्षत्र) सधवा स्त्री नवीन वस्त्र-आभूषण आदि धारण न करे।
-                    </div>`;
-                }
-
-                if (vastraRules.shatabhishaRestricted) {
-                    vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 13px; color: var(--text-main); background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #fed7e2;">
-                        <strong style="color: var(--red-ashubh);">⚠️ कुछ आचार्यों के मतानुसार:</strong> शतभिषा नक्षत्र में सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण और स्नान न करे।<br>
-                        <strong style="color: #b83280; margin-top:4px; display:inline-block;">शांति उपाय:</strong> यदि भूलवश या अज्ञानतावश ऐसा हो जाए, तो दोष की शांति के लिए अपने पति का पूजन करें।
-                    </div>`;
-                }
-
                 vastraHtml += '</div>';
                 return vastraHtml;
             })()}
 
+            <!-- SECTION 7: खोई/चोरी हुई वस्तु — नक्षत्र लोचन -->
             ${(() => {
+                let apraptiCauses = window.getApraptiCauses ? window.getApraptiCauses(p.moonNakshatraName, dateObj.getDay(), p) : [];
+                let apraptiHtml = '';
+                if (apraptiCauses.length > 0) {
+                    apraptiHtml = `
+                    <div style="margin-top:10px; padding:8px; background:#fff5f5; border-radius:4px; border-left:3px solid var(--red-ashubh);">
+                        <strong style="color:var(--red-ashubh); font-size:12px;">⚠️ वस्तु अप्राप्ति / नाश योग:</strong>
+                        <ul style="margin: 4px 0 0 0; padding-left: 20px; font-size:11px; color:var(--text-main);">
+                            ${apraptiCauses.map(c => `<li>${c}</li>`).join('')}
+                        </ul>
+                    </div>`;
+                }
+
                 let nakshatraHindiName = NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex];
-                let lochan = window.getNakshatraLochan(nakshatraHindiName);
-                if (!lochan) return '';
-                return `<div style="margin:20px 0; padding:12px; background:#fffaf0; border-radius:6px; border:1px solid #fbd38d;">
-                    <h4 style="margin:0 0 10px 0; color:#c05621; border-bottom:1px solid #fbd38d; padding-bottom:5px; display:flex; align-items:center; gap:6px;">
-                        <span style="font-size: 13px;">🔎</span> खोई/चोरी हुई वस्तु — नक्षत्र लोचन
+                let lochan = window.getNakshatraLochan ? window.getNakshatraLochan(p.moonNakshatraName) : null;
+                if (!lochan) return apraptiHtml;
+                return `
+                <div style="margin: 20px 0; padding:10px; background:#fff7ed; border-radius:6px; border:1px solid #ffedd5;">
+                    <h4 class="popup-subheading" style="margin:0 0 8px 0; color:#c2410c;">
+                        🔍 खोई/चोरी हुई वस्तु — नक्षत्र लोचन
                     </h4>
                     ${popupDayInfoGrid([
                         popupDayInfoField('नक्षत्र', nakshatraHindiName),
@@ -6708,23 +6608,25 @@ restrictionModalHtml += smHtml;
                         popupDayInfoField('दिशा', lochan.direction),
                         popupDayInfoField('प्राप्ति संकेत', lochan.result)
                     ])}
+                    ${apraptiHtml}
                 </div>`;
             })()}
 
-
+            <!-- SECTION 8: चंद्र स्थिति (Moon Status): अशुभ/पीड़ित चंद्र (Afflicted Moon) -->
             ${(() => {
-                let sc = window.analyzeShubhaChandra(p);
+                let sc = window.analyzeShubhaChandra ? window.analyzeShubhaChandra(p) : null;
                 if(!sc) return '';
-                let shubhaColor = sc.isShubha ? 'var(--green-shubh)' : (sc.isAfflicted ? 'var(--red-ashubh)' : 'var(--amber-mixed)');
-                let shubhaText = sc.isShubha ? 'शुभ चंद्र (Shubha Chandra)' : (sc.isAfflicted ? 'अशुभ/पीड़ित चंद्र (Afflicted Moon)' : 'मिश्रित चंद्र (Mixed Moon)');
+                let shubhaColor = sc.isShubha ? 'var(--green-shubh)' : 'var(--red-ashubh)';
+                let shubhaText = sc.isShubha ? 'शुभ चंद्र (Shubha Chandra)' : 'अशुभ/पीड़ित चंद्र (Afflicted Moon)';
                 let details = '';
                 if(sc.reasons.length > 0) details += '<span class="popup-moon-detail">+ ' + sc.reasons.join(', ') + '</span>';
                 if(sc.warnings.length > 0) details += '<span class="popup-moon-detail">- ' + sc.warnings.join(', ') + '</span>';
                 const reasonText = [
                     ...sc.reasons.map(r => '+ ' + r),
                     ...sc.warnings.map(w => '- ' + w)
-                ].join('<br>');
-                return `<div style="margin-bottom:20px; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
+                ].join(' | ');
+
+                return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
                     ${popupDayInfoGrid([
                         popupDayInfoField('चंद्र स्थिति (Moon Status)', shubhaText, shubhaColor),
                         popupDayInfoField('विवरण', reasonText || '—')
@@ -6732,55 +6634,124 @@ restrictionModalHtml += smHtml;
                 </div>`;
             })()}
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid #eee;">
-                    <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 2px;">सूर्य नक्षत्र (Sun Nakshatra)</span>
-                    <strong style="font-size: 13px; color: var(--primary-dark);">${p.sunNakshatraName}</strong>
+            <!-- SECTION 9: सूर्य नक्षत्र (Sun Nakshatra) -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 20px 0;">
+                <div style="background: var(--bg-color); border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px;">
+                    ${popupDayInfoGrid([
+                        popupDayInfoField('सूर्य नक्षत्र (Sun Nakshatra)', p.sunNakshatraName)
+                    ])}
                 </div>
             </div>
 
-            ${typeof sarvarthaHtml !== 'undefined' ? sarvarthaHtml : ''}
-            ${ninditaTimelineHtml}
-            ${specialYogasHtml}
-            ${restrictionModalHtml}
-            ${raviYogaNoteHTML}
-            ${renderYogas(ygs).replace('class="card"', 'class="inner-card" style="box-shadow:none; padding:0;"')}
-            ${panchakHTML}
+            <!-- SECTION 10: 24-Hour Muhurta Timeline & SECTION 11: निन्दित मुहूर्त विवरण -->
+            ${typeof ninditaTimelineHtml !== 'undefined' ? ninditaTimelineHtml : ''}
 
+            <!-- SECTION 12: विशेष योग / Special Yogas & Tithis -->
+            ${typeof specialYogasHtml !== 'undefined' ? specialYogasHtml : ''}
+            ${typeof sarvarthaHtml !== 'undefined' ? sarvarthaHtml : ''}
+
+            <!-- SECTION 13: इस तिथि में निषिद्ध कर्म -->
+            ${typeof nisiddhaKarmHtml !== 'undefined' ? nisiddhaKarmHtml : ''}
+
+            <!-- SECTION 14: Yogas -->
+            ${renderYogas(ygs).replace('class="card"', 'class="inner-card" style="box-shadow:none; padding:0;')}
+            ${typeof raviYogaNoteHTML !== 'undefined' ? raviYogaNoteHTML : ''}
+            ${typeof panchakHTML !== 'undefined' ? panchakHTML : ''}
+
+            <!-- SECTION 15: सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi) -->
+            ${(() => {
+                let sKundali = window.calculateSunriseKundali(dateObj, p.lat, p.lng, p.ayanamsha);
+                let sl = window.analyzeShubhaLagna(sKundali.ascendant.rashiIndex, sKundali.planets);
+                if(!sl) return '';
+                let shubhaColor = sl.isShubha ? 'var(--green-shubh)' : 'var(--red-ashubh)';
+                let shubhaText = sl.isShubha ? 'शुभ लग्न (Shubha Lagna)' : 'अशुभ लग्न (Afflicted Lagna)';
+                let details = '';
+                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:12px;">+ ' + sl.reasons.join(', ') + '</span>';
+                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:12px;">- ' + sl.warnings.join(', ') + '</span>';
+
+                return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
+                    <h4 style="margin:0 0 5px 0;">सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h4>
+                    ${popupDayInfoGrid([
+                        popupDayInfoField('स्थिति (Status)', shubhaText, shubhaColor)
+                    ])}
+                    ${details}
+                </div>`;
+            })()}
+
+            <!-- SECTION 16: खरीद-बिक्री / बाजार कार्य -->
+            ${typeof bsHtml !== 'undefined' ? bsHtml : ''}
+            ${typeof adhikKshayaHtml !== 'undefined' ? adhikKshayaHtml : ''}
+
+            <!-- SECTION 17: होम एवं अग्निवास -->
+            ${typeof homaHtml !== 'undefined' ? homaHtml : ''}
+
+            <!-- SECTION 18: विशेष मुहूर्त -->
+            ${typeof visheshMuhurtaHtml !== 'undefined' ? visheshMuhurtaHtml : ''}
+
+            <!-- SECTION 19: कृषि एवं खेती के मुहूर्त -->
+            ${typeof agriHtml !== 'undefined' ? agriHtml : ''}
+
+            <!-- SECTION 20: जलाशय खनन -->
+            ${typeof specialHtml !== 'undefined' ? specialHtml : ''}
+            ${typeof jKhananHtml !== 'undefined' ? jKhananHtml : ''}
+
+            <!-- SECTION 21: दिवा मुहूर्त -->
+            ${typeof divaMuhurtaHtml !== 'undefined' ? divaMuhurtaHtml : ''}
+
+            <!-- SECTION 22: रात्रि मुहूर्त -->
+            ${typeof ratriMuhurtaHtml !== 'undefined' ? ratriMuhurtaHtml : ''}
+
+            <!-- SECTION 23: विषघटी -->
+            ${typeof vishaghatiHtml !== 'undefined' ? vishaghatiHtml : ''}
+
+            <!-- SECTION 24: विशेष मुहूर्त एवं विषघटी -->
+            ${typeof visheshVishaghatiHtml !== 'undefined' ? visheshVishaghatiHtml : ''}
+
+            <!-- SECTION 25: दिवा के 15 मुहूर्त -->
+            ${typeof diva15MuhurtasHtml !== 'undefined' ? diva15MuhurtasHtml : ''}
+
+            <!-- SECTION 26: रात्रि के 15 मुहूर्त -->
+            ${typeof ratri15MuhurtasHtml !== 'undefined' ? ratri15MuhurtasHtml : ''}
+
+            <!-- SECTION 27: सूर्योदय लग्न कुंडली -->
+            ${(() => {
+                let sKundali = window.calculateSunriseKundali(dateObj, p.lat, p.lng, p.ayanamsha);
+                return window.renderSunriseKundaliSVG(sKundali);
+            })()}
 
             ${(() => {
                 let sData = window.calculateSankranti(dateObj, lat, lng, p.ayanamsha);
                 if (!sData) return '';
 
                 let isCompleteDay = sData.specialStatus && sData.specialStatus.includes('पूर्ण दिन');
-
                 let pkHtml = '';
-                if (isCompleteDay) {
-                    pkHtml = `<div style="font-size: 12px; color: var(--green-shubh); font-weight: bold; margin-bottom: 8px;">🟢 पूर्ण दिन पुण्यकाल</div>`;
-                } else if (sData.punyakalaStart && sData.punyakalaEnd) {
-                    pkHtml = `
-                        <strong>पुण्यकाल प्रारंभ:</strong> ${sData.punyakalaStart.toLocaleString([], {dateStyle:'short', timeStyle:'short'})}<br>
-                        <strong>पुण्यकाल समाप्त:</strong> ${sData.punyakalaEnd.toLocaleString([], {dateStyle:'short', timeStyle:'short'})}<br>
-                    `;
+                if (sData.punyakalaStart && sData.punyakalaEnd) {
+                    pkHtml = `<div style="font-size: 12px; color: var(--green-shubh); font-weight: bold; margin-bottom: 4px;">
+                        <strong>पुण्यकाल अवधि:</strong> ${sData.punyakalaStart.toLocaleString([], {dateStyle:'short', timeStyle:'short'})} – ${sData.punyakalaEnd.toLocaleString([], {dateStyle:'short', timeStyle:'short'})}
+                    </div>`;
+                } else if (isCompleteDay) {
+                    pkHtml = `<div style="font-size: 12px; color: var(--green-shubh); font-weight: bold; margin-bottom: 4px;">
+                        <strong>पुण्यकाल अवधि:</strong> पूर्ण दिन (Complete Day)
+                    </div>`;
                 }
 
-                let specialHtml = sData.specialStatus ? `<div style="margin-top:8px; padding:8px; background:#fffaf0; border:1px solid #fbd38d; border-radius:4px; font-size:12px; color:#c05621;"><strong>विशेष स्थिति:</strong> ${sData.specialStatus}</div>` : '';
+                let specialHtml = sData.specialStatus ? `<div style="margin-top:8px; padding:8px; background:#fffaf0; border-radius:4px; border:1px solid #feebc8; font-size:12px; color:#c05621;">
+                    <strong>विशेष मान्यता:</strong> ${sData.specialStatus}
+                </div>` : '';
 
                 return `
-                <div id="sankrantiSection" style="margin: 20px 0; padding:15px; background:#fffcf5; border-radius:8px; border:1px solid #f6e05e;">
-                    <h3 style="margin:0 0 15px 0; color: #b7791f; border-bottom: 1px solid #f6e05e; padding-bottom: 8px; display:flex; align-items:center; gap:8px;">
-                        <span style="">☀️</span> संक्रांति
+                <div style="margin: 20px 0; padding: 15px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h3 class="popup-section-heading" style="margin: 0 0 12px 0; color: var(--primary-dark); border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+                        ☀️ सूर्य संक्रांति विवरण (${sData.sankrantiName})
                     </h3>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 12px;">
                         <!-- Card 1 -->
                         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 12px;">☀️ संक्रांति</h4>
-                            <div style="font-size:13px; color:var(--text-main); line-height:1.6;">
-                                <strong>संक्रांति:</strong> ${window.RASHI_NAMES[sData.enteredRashi]} संक्रांति<br>
-                                <strong>सूर्य प्रवेश:</strong> ${window.RASHI_NAMES[sData.enteredRashi]}<br>
-                                <strong>संक्रांति समय:</strong> ${sData.exactTime.toLocaleString([], {dateStyle:'short', timeStyle:'short'})}
-                            </div>
+                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 12px;">📍 संक्रांति प्रवेश</h4>
+                            ${popupDayInfoGrid([
+                                popupDayInfoField('प्रविष्ट राशि', sData.targetRashiName)
+                            ])}
                         </div>
 
                         <!-- Card 2 -->
@@ -6801,7 +6772,7 @@ restrictionModalHtml += smHtml;
                     </div>
 
                     <!-- Punyakala -->
-                    <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:12px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                    <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
                         <h4 style="margin:0 0 10px 0; color:#4a5568; font-size: 12px; display:flex; align-items:center; gap:6px;">
                             <span>🕰️</span> संक्रांति पुण्यकाल
                         </h4>
@@ -6814,26 +6785,6 @@ restrictionModalHtml += smHtml;
                     </div>
 
                 </div>`;
-            })()}
-
-            <!-- SUNRISE KUNDALI & SHUBHA LAGNA -->
-            ${(() => {
-                let sKundali = window.calculateSunriseKundali(dateObj, p.lat, p.lng, p.ayanamsha);
-                let sl = window.analyzeShubhaLagna(sKundali.ascendant.rashiIndex, sKundali.planets);
-                if(!sl) return '';
-                let shubhaColor = sl.isShubha ? 'var(--green-shubh)' : 'var(--red-ashubh)';
-                let shubhaText = sl.isShubha ? 'शुभ लग्न (Shubha Lagna)' : 'अशुभ लग्न (Afflicted Lagna)';
-                let details = '';
-                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:12px;">+ ' + sl.reasons.join(', ') + '</span>';
-                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:12px;">- ' + sl.warnings.join(', ') + '</span>';
-
-                return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
-                    <h4 style="margin:0 0 5px 0;">सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h4>
-                    ${popupDayInfoGrid([
-                        popupDayInfoField('स्थिति (Status)', shubhaText, shubhaColor)
-                    ])}
-                    ${details}
-                </div>` + window.renderSunriseKundaliSVG(sKundali);
             })()}
 
             ${(() => {
@@ -6850,7 +6801,7 @@ restrictionModalHtml += smHtml;
                                 </h4>
                                 <div style="font-size: 13px; color: var(--text-main); margin-bottom: 5px;">
                                     <strong>बृहस्पति:</strong> सिंह राशि, ${jupSimhaNavamsha.jDegInLeo.toFixed(4)}° (सिंह नवांश)<br>
-                                    <strong>गोदावरी और गंगा के मध्य के प्रदेशों के लिए विशेष नियम:</strong> जब तक सूर्य मेष राशि में नहीं आता तब तक विवाह निषिद्ध है।
+                                    <strong>गोदावरी और गंगा के मध्य के प्रदेशों के लिए विशेष नियम:</strong> जब तक सूर्य मेष राशि में न आए, विवाह इष्ट नहीं।
                                 </div>
                             </div>`;
                         } else if (jupSimhaNavamsha.isExempted) {
@@ -6858,12 +6809,12 @@ restrictionModalHtml += smHtml;
                             <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                                 <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                                     <span>✅ सिंह राशि के सिंह नवांश में बृहस्पति — अपवाद (Sun in Aries)</span>
-                                    <span style="font-size:11px; border:1px solid var(--green-shubh); background:white; color:#fff; padding:2px 6px; border-radius:4px;">अपवाद</span>
+                                    <span style="font-size:11px; border:1px solid var(--green-shubh); background:white; color:var(--green-shubh); padding:2px 6px; border-radius:4px;">शुभ/अनुमत</span>
                                 </h4>
                                 <div style="font-size: 13px; color: var(--text-main); margin-bottom: 5px;">
                                     <strong>बृहस्पति:</strong> सिंह राशि, ${jupSimhaNavamsha.jDegInLeo.toFixed(4)}° (सिंह नवांश)<br>
                                     <strong>सूर्य:</strong> मेष राशि (${jupSimhaNavamsha.sLonSidereal.toFixed(4)}°)<br>
-                                    <strong>नियम:</strong> सूर्य मेष राशि में होने के कारण सिंह राशि के सिंह नवांश में बृहस्पति का विवाह निषेध लागू नहीं होता।
+                                    <strong>नियम:</strong> सूर्य मेष राशि में होने के कारण सिंह राशि के सिंह नवांश में बृहस्पति का दोष लागू नहीं होता। विवाह शुभ माना गया है।
                                 </div>
                             </div>`;
                         }
@@ -6874,119 +6825,73 @@ restrictionModalHtml += smHtml;
                 let events = window.calculateDailyAstaUdaya(dateObj, p.lat, p.lng, p.ayanamsha);
                 if (!events || events.length === 0) return htmlStr;
 
-                // let htmlStr = ''; (already declared)
                 events.forEach(ev => {
-
-                    // Check if it's Udaya event date
                     if (ev.isUdayaEventDate) {
                         htmlStr += `
                         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                             <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                                 <span>🌅 ${ev.symbol} ${ev.hindi} — उदय (Visible)</span>
-                                <span style="font-size:11px; border:1px solid var(--green-shubh); background:white; color:#fff; padding:2px 6px; border-radius:4px;">उदय</span>
+                                <span style="font-size:11px; border:1px solid var(--green-shubh); background:white; color:var(--green-shubh); padding:2px 6px; border-radius:4px;">उदय तिथि</span>
                             </h4>
-                            <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: bold; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                            <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
                                 <div style="display:flex; justify-content:space-between; color: var(--green-shubh);">
                                     <span>🟢 उदय समय (Exact Udaya Time):</span>
-                                    <span>${ev.udayaTimestamp ? ev.udayaTimestamp.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'N/A'}</span>
+                                    <span>${ev.udayaTimestamp ? ev.udayaTimestamp.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'आज'}</span>
                                 </div>
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: var(--text-main);">
-                                <div><strong>सूर्य से कोणीय दूरी:</strong> ${ev.separation.toFixed(4)}° ${ev.isRetrograde ? '(वक्री)' : '(मार्गी)'}</div>
+                                <div><strong>सूर्य से कोणीय दूरी:</strong> ${ev.separation.toFixed(4)}° ${ev.isRetrograde ? '(वक्र)' : ''}</div>
                                 <div><strong>राशि:</strong> ${ev.rashiName}</div>
                             </div>
                         </div>`;
-
                     }
 
-                    if (!ev.isAstaDisplay) return; // Ignore if not Asta
+                    if (!ev.isAstaDisplay) return;
 
                     let isAsta = true;
                     let titleStr = 'अस्त (Combust)';
                     let colorCode = 'var(--red-ashubh)';
-
                     let bgCol = '#fff5f5';
                     let bdCol = '#fecaca';
 
-                    let astaTimeStr = ev.lastTransition ? ev.lastTransition.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'N/A';
-                    let udayaTimeStr = ev.nextTransition ? ev.nextTransition.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'N/A';
+                    let astaTimeStr = ev.lastTransition ? ev.lastTransition.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'अज्ञात';
+                    let udayaTimeStr = ev.nextTransition ? ev.nextTransition.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'अज्ञात';
 
                     htmlStr += `
                     <div style="background: ${bgCol}; border: 1px solid ${bdCol}; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                         <h4 style="margin: 0 0 10px 0; color: ${colorCode}; border-bottom: 1px solid ${bdCol}; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                             <span>🌌 ${ev.symbol} ${ev.hindi} — ${titleStr}</span>
-                            <span style="font-size:11px; background:${colorCode}; color:#fff; padding:2px 6px; border-radius:4px;">${isAsta ? 'अस्त' : 'उदय'}</span>
+                            <span style="font-size:11px; background:${colorCode}; color:#fff; padding:2px 6px; border-radius:4px;">वर्जित काल</span>
                         </h4>
 
-                        <!-- Prominent Asta/Udaya Timings -->
-                        <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: bold; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                        <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
                             <div style="display:flex; justify-content:space-between; color: var(--red-ashubh);">
                                 <span>🔴 अस्त प्रारंभ (Asta Start):</span>
                                 <span>${astaTimeStr}</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; color: var(--text-main);">
-                                <span>🟢 संभावित उदय (Expected Udaya):</span>
+                            <div style="display:flex; justify-content:space-between; color: var(--green-shubh);">
+                                <span>🟢 उदय तिथि (Udaya Date):</span>
                                 <span>${udayaTimeStr}</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; color: var(--red-ashubh); border-top: 1px solid #eee; padding-top: 5px; margin-top: 2px;">
-                                <span>वर्तमान स्थिति:</span>
-                                <span>🔴 अस्त अवधि में ग्रह वर्तमान में अस्त है।</span>
-                            </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: var(--text-main);">
-                            <div><strong>सूर्य से कोणीय दूरी:</strong> ${ev.separation.toFixed(4)}° ${ev.isRetrograde ? '(वक्री)' : '(मार्गी)'}</div>
-                            <div><strong>राशि:</strong> ${ev.rashiName}</div>
-                            <div><strong>ग्रह अंश:</strong> ${ev.pLon.toFixed(4)}°</div>
-                            <div><strong>सूर्य अंश:</strong> ${ev.sLon.toFixed(4)}°</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: var(--text-main); margin-bottom: 10px;">
+                            <div><strong>सूर्य से कोणीय दूरी:</strong> ${ev.separation.toFixed(4)}° ${ev.isRetrograde ? '(वक्र)' : ''}</div>
+                            <div><strong>अस्त सीमा (Limit):</strong> ${ev.limit.toFixed(1)}°</div>
                         </div>
-                        <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); background: #fff; padding: 8px; border-radius: 4px; border: 1px dashed ${bdCol};">
-                            <strong>गणना पद्धति:</strong> ${ev.rule.source} (Limit: ${ev.limit}°)<br>
-                            <strong>पारंपरिक नियम:</strong> ${ev.rule.traditionalRule}
-                        </div>
-                        ${(ev.isJupiterSimhaNavamsha9) ? `<div style="margin-top: 10px; font-size: 11px; color: #234e52; background: #e6fffa; padding: 8px; border-radius: 4px; border: 1px solid #bbeeeb;"><strong>अपवाद (Exception):</strong> गुरु सिंह राशि के नवें नवमांश में होने के कारण वर्जित मांगलिक कार्यों (जैसे विवाह) में छूट प्राप्त हो सकती है। (गोदावरी क्षेत्र आदि विशेष भौगोलिक नियमों का भी ध्यान रखें)</div>` : ''}
 
+                        ${(ev.isJupiterSimhaNavamsha9) ? `<div style="margin-top: 10px; font-size: 12px; color: var(--red-ashubh); font-weight: bold;">⚠️ विवाह आदि मांगलिक कार्य वर्जित।</div>` : ''}
                         ${isAsta && ev.planetId === Astronomy.Body.Venus ? `
-                            <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px;">
-                                <div style="background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                    <strong style="color:var(--red-ashubh); display:block; margin-bottom:4px;">🚫 क्या न करें (Avoid)</strong>
-                                    <ul style="margin:0; padding-left:15px; color:var(--text-main);">
-                                        <li>विवाह, यज्ञोपवीत आदि मांगलिक कार्य</li>
-                                        <li>दांतों/रत्नों से बने आभूषण धारण करना</li>
-                                        <li>नए व्रत-उद्यापन आदि</li>
-                                    </ul>
-                                </div>
-                                <div style="background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                    <strong style="color:var(--text-muted); display:block; margin-bottom:4px;">✅ क्या किया जा सकता है</strong>
-                                    <span style="color:var(--text-muted);">दैनिक एवं नित्य-नैमित्तिक कार्य, आवश्यक कर्म जिनमें शास्त्र छूट देते हैं।</span>
-                                </div>
-                            </div>
-                        ` : ''}
-
+                        <div style="margin-top: 10px; font-size: 12px; color: var(--red-ashubh); border-top: 1px dashed #fecaca; padding-top: 8px;">
+                            <strong>शुक्रास्त विचार:</strong> शुक्र के अस्त रहने की अवधि में विवाह, गृहारंभ, मुंडन, व्रत-उद्यापन, देव-प्रतिष्ठा आदि सभी मांगलिक एवं शुभ कार्य शास्त्रानुसार वर्जित होते हैं।
+                        </div>` : ''}
                         ${isAsta && ev.planetId === Astronomy.Body.Jupiter ? `
-                            <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px;">
-                                <div style="background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                    <strong style="color:var(--red-ashubh); display:block; margin-bottom:4px;">🚫 क्या न करें (Avoid)</strong>
-                                    <ul style="margin:0; padding-left:15px; color:var(--text-main);">
-                                        <li>विवाह, यज्ञोपवीत (जनेऊ)</li>
-                                        <li>दांतों/रत्नों से बने आभूषण धारण करना</li>
-                                        <li>गृह प्रवेश / गृहारंभ</li>
-                                    </ul>
-                                </div>
-                                <div style="background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                    <strong style="color:var(--text-muted); display:block; margin-bottom:4px;">✅ क्या किया जा सकता है</strong>
-                                    <span style="color:var(--text-muted);">दैनिक कर्म, नित्य पूजा-पाठ, और पूर्व-प्रारब्ध कार्य।</span>
-                                </div>
-                            </div>
-                        ` : ''}
+                        <div style="margin-top: 10px; font-size: 12px; color: var(--red-ashubh); border-top: 1px dashed #fecaca; padding-top: 8px;">
+                            <strong>गुरु अस्त विचार:</strong> बृहस्पति (गुरु) के अस्त रहने के कारण इस अवधि में मांगलिक कार्य (विवाह, यज्ञोपवीत, मुंडन, गृहारंभ आदि) वर्जित एवं त्याज्य हैं।
+                        </div>` : ''}
                     </div>`;
                 });
-
-                return htmlStr ? `
-                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">🌌 ग्रह अस्त-उदय (Graha Asta-Udaya)</h3>
-                    ${htmlStr}
-                ` : '';
+                return htmlStr;
             })()}
         </div>
     </div>`;

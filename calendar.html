@@ -5383,13 +5383,13 @@ window.closeCalendarModal = function() {
             </h3>
 
             <p style="margin:0 0 5px 0; color: ${bs.canBuy ? 'var(--green-shubh)' : 'var(--red-ashubh)'}; font-weight:bold; display:flex; align-items:center; gap:8px;">
-                ${bs.canBuy ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--green-shubh); background:white; border-radius:50%; color:white; font-size: 12px;">🛒</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 12px;">🛒</span>'}
+                ${bs.canBuy ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--green-shubh); background:white; border-radius:50%; color:white; font-size: 11px !important;">🛒</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 11px !important;">🛒</span>'}
                 आज खरीदना (मोल लेना) ${bs.canBuy ? 'शुभ है' : 'शुभ नहीं है'}
             </p>
             ${bs.canBuy ? `<p style="margin:0 0 15px 32px; font-size:13px; color:var(--text-main);"><strong>कारण:</strong> ${bs.buyReason}</p>` : '<div style="margin-bottom:15px;"></div>'}
 
             <p style="margin:0 0 5px 0; color: ${bs.canSell ? 'var(--green-shubh)' : 'var(--red-ashubh)'}; font-weight:bold; display:flex; align-items:center; gap:8px;">
-                ${bs.canSell ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--red-ashubh); border-radius:50%; font-size: 12px; background:white;">🏷️</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 12px;">🏷️</span>'}
+                ${bs.canSell ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--red-ashubh); border-radius:50%; font-size: 12px; background:white;">🏷️</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 11px !important;">🏷️</span>'}
                 आज बेचना (मोल देना) ${bs.canSell ? 'शुभ है' : 'शुभ नहीं है'}
             </p>
             ${bs.canSell ? `<p style="margin:0 0 5px 32px; font-size:13px; color:var(--text-main);"><strong>कारण:</strong> ${bs.sellReason}</p>` : ''}
@@ -5566,7 +5566,7 @@ window.closeCalendarModal = function() {
 
             <!-- Nested Sun Chakra -->
             <div style="margin-top:10px; padding:8px; background:#fffbeb; border-radius:6px; border:1px solid #fef08a;">
-                <div style="font-size:13px; font-weight:bold; color:#b45309; display:flex; align-items:center; gap:4px;"><span style="font-size: 12px;">☀️</span> सूर्यभुक्तभात हलचक्र</div>
+                <div style="font-size:13px; font-weight:bold; color:#b45309; display:flex; align-items:center; gap:4px;"><span style="font-size: 11px !important;">☀️</span> सूर्यभुक्तभात हलचक्र</div>
                 <div style="font-size:12px; margin-top:4px;">
                     सूर्य का नक्षत्र: ${NAKSHATRA_NAMES_HINDI[Math.floor(p.sunLongitude / (360/27))]}<br>
                     क्रम: ${agri.sunHalChakra.kram}<br>
@@ -5594,7 +5594,7 @@ window.closeCalendarModal = function() {
 
             <!-- Nested Rahu Chakra -->
             <div style="margin-top:10px; padding:8px; background:#f5f3ff; border-radius:6px; border:1px solid #ddd6fe;">
-                <div style="font-size:13px; font-weight:bold; color:#5b21b6; display:flex; align-items:center; gap:4px;"><span style="font-size: 12px;">☊</span> राहुभुक्तभात — बीज बोना</div>
+                <div style="font-size:13px; font-weight:bold; color:#5b21b6; display:flex; align-items:center; gap:4px;"><span style="font-size: 11px !important;">☊</span> राहुभुक्तभात — बीज बोना</div>
                 <div style="font-size:12px; margin-top:4px;">
                     राहु का नक्षत्र: ${agri.rahuBeejChakra.rahuNakshatra}<br>
                     क्रम: ${agri.rahuBeejChakra.kram}<br>
@@ -5708,10 +5708,10 @@ window.closeCalendarModal = function() {
             <h3 style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 13px; border-bottom: 1px solid #bfdbfe; padding-bottom: 5px;">
                 💧 जलाशय खनन
             </h3>
-            <p style="margin:0 0 8px 0; font-size: 12px; font-weight:bold; color: ${jKhanan.isShubh ? 'var(--green-shubh)' : 'var(--red-ashubh)'}">
+            <p style="margin:0 0 8px 0; font-size: 11px !important; font-weight:bold; color: ${jKhanan.isShubh ? 'var(--green-shubh)' : 'var(--red-ashubh)'}">
                 स्थिति: ${jKhanan.isShubh ? 'शुभ' : 'शुभ नहीं'}
             </p>
-            <div style="font-size: 13px; color: var(--text-main); line-height:1.6;">
+            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35;">
                 <strong>नक्षत्र:</strong> ${jKhanan.nakshatraName}<br>
                 <strong>कारण:</strong>
                 <ul style="margin: 4px 0 0 0; padding-left: 20px; list-style-type: none;">
@@ -5732,10 +5732,10 @@ window.closeCalendarModal = function() {
             <h3 style="margin: 0 0 10px 0; color: #14532d; font-size: 13px; border-bottom: 1px solid #bbf7d0; padding-bottom: 5px;">
                 💰 द्रव्य देना / रोजगार में लगाना
             </h3>
-            <p style="margin:0 0 8px 0; font-size: 12px; font-weight:bold; color: ${dhanDena.isShubh ? 'var(--green-shubh)' : 'var(--red-ashubh)'}">
+            <p style="margin:0 0 8px 0; font-size: 11px !important; font-weight:bold; color: ${dhanDena.isShubh ? 'var(--green-shubh)' : 'var(--red-ashubh)'}">
                 स्थिति: ${dhanDena.isShubh ? 'शुभ' : 'शुभ नहीं'}
             </p>
-            <div style="font-size: 13px; color: var(--text-main); line-height:1.6;">
+            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35;">
                 <strong>नक्षत्र:</strong> ${dhanDena.nakshatraName}<br>
                 <strong>लग्न:</strong> ${dhanDena.lagnaName || '-'}<br>
                 <strong>पंचम भाव:</strong> ${dhanDena.h5 && dhanDena.h5.length>0 ? dhanDena.h5.join(', ') : 'Empty'}<br>
@@ -5755,7 +5755,7 @@ window.closeCalendarModal = function() {
             <h3 style="margin: 0 0 10px 0; color: #c53030; font-size: 13px; border-bottom: 1px solid #feb2b2; padding-bottom: 5px;">
                 ⚠️ ऋण लेने से बचें
             </h3>
-            <div style="font-size: 13px; color: var(--text-main); line-height:1.6;">
+            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35;">
                 <strong>कारण:</strong>
                 <ul style="margin: 4px 0 10px 0; padding-left: 20px; color: #c53030; font-weight:bold;">
                     ${rinLenaProhibition.map(r => `<li>${r}</li>`).join('')}
@@ -5772,7 +5772,7 @@ window.closeCalendarModal = function() {
             <h3 style="margin: 0 0 10px 0; color: #c53030; font-size: 13px; border-bottom: 1px solid #feb2b2; padding-bottom: 5px;">
                 ⚠️ धन देने से बचें
             </h3>
-            <div style="font-size: 13px; color: var(--text-main); line-height:1.6;">
+            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35;">
                 <strong>कारण:</strong> बुधवार<br>
                 <strong>फल:</strong> बुधवार को किसी को भी अपना धन किसी भी तरह से नहीं देना चाहिए।
             </div>
@@ -5916,7 +5916,7 @@ restrictionModalHtml += smHtml;
                         <div style="position:absolute; width:100%; height:100%; border-radius:50%; border:0.5px solid rgba(255,0,0,0.5); pointer-events:none;"><div style="position:absolute; top:50%; left:0; width:100%; height:0.5px; background:rgba(255,0,0,0.7); transform:translateY(-50%) rotate(45deg);"></div></div>
                     </div>
                     <div>
-                        <h4 style="margin: 0 0 4px 0; color: var(--red-ashubh); font-size: 12px;">${r.activity} <span style="background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 5px;">निषिद्ध</span></h4>
+                        <h4 style="margin: 0 0 4px 0; color: var(--red-ashubh); font-size: 11px !important;">${r.activity} <span style="background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 5px;">निषिद्ध</span></h4>
                         <p style="margin: 0; font-size: 13px; color: var(--text-main);">${r.description}</p>
                     </div>
                 </div>`;
@@ -6019,7 +6019,7 @@ restrictionModalHtml += smHtml;
         ninditaTimelineHtml = `
         <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
         <h3 class="popup-section-heading" style="color: var(--primary-color); margin-bottom: 10px;">24-Hour Muhurta Timeline</h3>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4;">
+        <p style="font-size: 11px !important; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4;">
             <strong>मुहूर्त क्या है?</strong> दिनमान (सूर्योदय से सूर्यास्त) को 16 समान भागों में बाँटने पर प्रत्येक भाग को मुहूर्त कहा जाता है। इसलिए मुहूर्त की अवधि प्रतिदिन सूर्योदय और सूर्यास्त के अनुसार बदलती है।
         </p>
 
@@ -6291,7 +6291,7 @@ restrictionModalHtml += smHtml;
         <div style="background: #e8f5e9; border: 2px solid #28a745; padding: 10px; margin-bottom: 15px; border-radius: 8px; text-align: center;">
             <div style="font-size: 24px; margin-bottom: 5px;">☀️</div>
             <strong style="color: #28a745; font-size: 13px;">रवि योग</strong><br>
-            <span style="color: #155724; font-size: 12px;">रवि योग संपूर्ण दोषों का नाश करने वाला होता है। इसके प्रभाव में तिथि आदि के अशुभ प्रभाव नष्ट हो जाते हैं।</span>
+            <span style="color: #155724; font-size: 11px !important;">रवि योग संपूर्ण दोषों का नाश करने वाला होता है। इसके प्रभाव में तिथि आदि के अशुभ प्रभाव नष्ट हो जाते हैं।</span>
         </div>
         `;
     }
@@ -6530,7 +6530,7 @@ restrictionModalHtml += smHtml;
 
                 return `
                 <div id="bhadraSection" style="background: #fff1f2; border: 1px solid #fecdd3; padding: 15px; border-radius: 8px; margin-bottom: 15px; scroll-margin-top: 20px;">
-                    <h3 style="margin: 0 0 10px 0; color: #be123c; font-size: 13px; border-bottom: 1px solid #fecdd3; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0 0 10px 0; color: #be123c; font-size: 13px !important; border-bottom: 1px solid #fecdd3; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                         <span>⚠️ भद्रा काल (Vishti Karana)</span>
                         <span style="font-size: 10px; background: #be123c; color: white; padding: 2px 6px; border-radius: 4px;">वर्जित काल</span>
                     </h3>
@@ -6545,8 +6545,8 @@ restrictionModalHtml += smHtml;
                     ])}
 
                     <div style="background: #ffffff; border: 1px solid #fecdd3; border-radius: 6px; padding: 10px; margin-top: 10px;">
-                        <h4 style="margin: 0 0 8px 0; color: #be123c; font-size: 12px;">🎯 विशेष अंग काल (Mukha & Puchha)</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+                        <h4 style="margin: 0 0 8px 0; color: #be123c; font-size: 11px !important;">🎯 विशेष अंग काल (Mukha & Puchha)</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px !important;">
                             <div style="background: #fff5f5; padding: 8px; border-radius: 4px; border-left: 3px solid var(--red-ashubh);">
                                 <strong>भद्रा मुख (अति-वर्जित):</strong><br>
                                 ${mStartHtml} – ${mEndHtml}<br>
@@ -6560,7 +6560,7 @@ restrictionModalHtml += smHtml;
                         </div>
                     </div>
 
-                    ${bd.isFavorableTime ? '<div style="margin-top: 10px; padding: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; color: var(--green-shubh); font-weight: bold; font-size: 12px;">✓ वर्तमान समय भद्रा काल से बाहर है या शुभ अंग काल में है।</div>' : ''}
+                    ${bd.isFavorableTime ? '<div style="margin-top: 10px; padding: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; color: var(--green-shubh); font-weight: bold; font-size: 11px !important;">✓ वर्तमान समय भद्रा काल से बाहर है या शुभ अंग काल में है।</div>' : ''}
                 </div>`;
             })()}
 
@@ -6572,8 +6572,8 @@ restrictionModalHtml += smHtml;
                 vastraHtml += '<h4 class="popup-subheading" style="margin:0 0 10px 0; color: #b83280; border-bottom: 1px solid #fed7e2; padding-bottom: 5px;">👔 वस्त्र एवं आभूषण धारण विचार</h4>';
                 if (vastraRules.shubhWear) {
                     vastraHtml += `<div style="background:#fff; border:1px solid #fbcfe8; border-radius:6px; padding:8px 10px; margin-bottom:8px;">
-                        <div style="font-weight:bold; color:var(--green-shubh); font-size:12px; margin-bottom:2px;">✅ धारण शुभ</div>
-                        <div style="font-size:12px; color:var(--text-main); line-height:1.4;">आज वस्त्र एवं आभूषण धारण करना शुभ फलदायी है।</div>
+                        <div style="font-weight:bold; color:var(--green-shubh); font-size:12px !important; margin-bottom:2px;">✅ धारण शुभ</div>
+                        <div style="font-size:11px !important; color:var(--text-main); line-height:1.35;">आज वस्त्र एवं आभूषण धारण करना शुभ फलदायी है।</div>
                     </div>`;
                 }
                 vastraHtml += '</div>';
@@ -6587,8 +6587,8 @@ restrictionModalHtml += smHtml;
                 if (apraptiCauses.length > 0) {
                     apraptiHtml = `
                     <div style="margin-top:10px; padding:8px; background:#fff5f5; border-radius:4px; border-left:3px solid var(--red-ashubh);">
-                        <strong style="color:var(--red-ashubh); font-size:12px;">⚠️ वस्तु अप्राप्ति / नाश योग:</strong>
-                        <ul style="margin: 4px 0 0 0; padding-left: 20px; font-size:11px; color:var(--text-main);">
+                        <strong style="color:var(--red-ashubh); font-size:12px !important;">⚠️ वस्तु अप्राप्ति / नाश योग:</strong>
+                        <ul style="margin: 4px 0 0 0; padding-left: 20px; font-size:11px !important; color:var(--text-main);">
                             ${apraptiCauses.map(c => `<li>${c}</li>`).join('')}
                         </ul>
                     </div>`;
@@ -6666,8 +6666,8 @@ restrictionModalHtml += smHtml;
                 let shubhaColor = sl.isShubha ? 'var(--green-shubh)' : 'var(--red-ashubh)';
                 let shubhaText = sl.isShubha ? 'शुभ लग्न (Shubha Lagna)' : 'अशुभ लग्न (Afflicted Lagna)';
                 let details = '';
-                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:12px;">+ ' + sl.reasons.join(', ') + '</span>';
-                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:12px;">- ' + sl.warnings.join(', ') + '</span>';
+                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:11px !important;">+ ' + sl.reasons.join(', ') + '</span>';
+                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:11px !important;">- ' + sl.warnings.join(', ') + '</span>';
 
                 return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
                     <h4 style="margin:0 0 5px 0;">सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h4>
@@ -6748,7 +6748,7 @@ restrictionModalHtml += smHtml;
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 12px;">
                         <!-- Card 1 -->
                         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 12px;">📍 संक्रांति प्रवेश</h4>
+                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 11px !important;">📍 संक्रांति प्रवेश</h4>
                             ${popupDayInfoGrid([
                                 popupDayInfoField('प्रविष्ट राशि', sData.targetRashiName)
                             ])}
@@ -6756,7 +6756,7 @@ restrictionModalHtml += smHtml;
 
                         <!-- Card 2 -->
                         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 12px;">🧭 संक्रांति वर्गीकरण</h4>
+                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 11px !important;">🧭 संक्रांति वर्गीकरण</h4>
                             <div style="font-size: 12px; font-weight:bold; color:var(--primary-dark);">
                                 ${sData.classification}
                             </div>
@@ -6764,7 +6764,7 @@ restrictionModalHtml += smHtml;
 
                         <!-- Card 3 -->
                         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 12px;">☀️ अयन</h4>
+                            <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 11px !important;">☀️ अयन</h4>
                             <div style="font-size: 12px; font-weight:bold; color:var(--primary-dark);">
                                 ${sData.ayana}
                             </div>
@@ -7455,7 +7455,7 @@ window.openYatraModal = function(year, month, dateStr) {
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                     <strong>${y.why}</strong>
                 </div>
-                <div style="font-size: 12px;">
+                <div style="font-size: 11px !important;">
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                     <strong>${y.fruit}</strong>
                 </div>
@@ -7478,7 +7478,7 @@ window.openYatraModal = function(year, month, dateStr) {
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 12px;">
+                    <div style="font-size: 11px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong>${y.fruit}</strong>
                     </div>
@@ -7503,7 +7503,7 @@ window.openYatraModal = function(year, month, dateStr) {
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 12px;">
+                    <div style="font-size: 11px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong style="color: var(--green-shubh);">${y.fruit}</strong>
                     </div>
@@ -7554,8 +7554,8 @@ window.openYatraModal = function(year, month, dateStr) {
                 let shubhaColor = sl.isShubha ? 'var(--green-shubh)' : 'var(--red-ashubh)';
                 let shubhaText = sl.isShubha ? 'शुभ लग्न (Shubha Lagna)' : 'अशुभ लग्न (Afflicted Lagna)';
                 let details = '';
-                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:12px;">+ ' + sl.reasons.join(', ') + '</span>';
-                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:12px;">- ' + sl.warnings.join(', ') + '</span>';
+                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:11px !important;">+ ' + sl.reasons.join(', ') + '</span>';
+                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:11px !important;">- ' + sl.warnings.join(', ') + '</span>';
 
                 return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
                     <h4 style="margin:0 0 5px 0;">सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h4>
@@ -9901,7 +9901,7 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                     <strong>${y.why}</strong>
                 </div>
-                <div style="font-size: 12px;">
+                <div style="font-size: 11px !important;">
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                     <strong>${y.fruit}</strong>
                 </div>
@@ -9924,7 +9924,7 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 12px;">
+                    <div style="font-size: 11px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong>${y.fruit}</strong>
                     </div>
@@ -9949,7 +9949,7 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 12px;">
+                    <div style="font-size: 11px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong style="color: var(--green-shubh);">${y.fruit}</strong>
                     </div>
@@ -10084,8 +10084,8 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
                 let shubhaColor = sc.isShubha ? 'var(--green-shubh)' : (sc.isAfflicted ? 'var(--red-ashubh)' : 'var(--amber-mixed)');
                 let shubhaText = sc.isShubha ? 'शुभ चंद्र (Shubha Chandra)' : (sc.isAfflicted ? 'अशुभ/पीड़ित चंद्र (Afflicted Moon)' : 'मिश्रित चंद्र (Mixed Moon)');
                 let details = '';
-                if(sc.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:12px;">+ ' + sc.reasons.join(', ') + '</span>';
-                if(sc.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:12px;">- ' + sc.warnings.join(', ') + '</span>';
+                if(sc.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size:11px !important;">+ ' + sc.reasons.join(', ') + '</span>';
+                if(sc.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:11px !important;">- ' + sc.warnings.join(', ') + '</span>';
 
                 return `<div style="margin-top:10px; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
                     <strong>चंद्र स्थिति (Moon Status):</strong> <span style="color:${shubhaColor}; font-weight:bold;">${shubhaText}</span>

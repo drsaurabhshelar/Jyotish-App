@@ -6567,15 +6567,47 @@ restrictionModalHtml += smHtml;
             <!-- SECTION 6: वस्त्र एवं आभूषण धारण विचार -->
             ${(() => {
                 let vastraRules = window.checkVastraAbhushanRules(p.moonNakshatraName, dateObj.getDay(), p.tithiNumber);
-                if (!vastraRules || !vastraRules.hasRule) return '';
-                let vastraHtml = '<div style="margin: 20px 0; padding:10px; background:#fdf2f8; border-radius:6px; border:1px solid #fbcfe8;">';
+                if (!vastraRules) return '';
+
+                let vastraHtml = '<div style="margin: 20px 0; padding:10px; background:#fdf2f8; border-radius:6px; border:1px solid #fed7e2;">';
                 vastraHtml += '<h4 class="popup-subheading" style="margin:0 0 10px 0; color: #b83280; border-bottom: 1px solid #fed7e2; padding-bottom: 5px;">👔 वस्त्र एवं आभूषण धारण विचार</h4>';
+
                 if (vastraRules.shubhWear) {
-                    vastraHtml += `<div style="background:#fff; border:1px solid #fbcfe8; border-radius:6px; padding:8px 10px; margin-bottom:8px;">
-                        <div style="font-weight:bold; color:var(--green-shubh); font-size:12px !important; margin-bottom:2px;">✅ धारण शुभ</div>
-                        <div style="font-size:11px !important; color:var(--text-main); line-height:1.35;">आज वस्त्र एवं आभूषण धारण करना शुभ फलदायी है।</div>
+                    vastraHtml += `
+                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                        <strong style="color: var(--green-shubh); font-size: 12px !important;">✅ शुभ योग:</strong> मूंगा, दाँत, शंख, सुवर्ण (सोने) के आभूषण और नवीन वस्त्र धारण करना शुभ है।
                     </div>`;
                 }
+
+                if (vastraRules.tuesdayRed) {
+                    vastraHtml += `
+                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                        <strong style="color: #48bb78; font-size: 12px !important;">👕 मंगलवार विशेष:</strong> आज मंगलवार के दिन लाल वस्त्र धारण करना चाहिए।
+                    </div>`;
+                }
+
+                if (vastraRules.sadhavaRestricted) {
+                    vastraHtml += `
+                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                        <strong style="color: var(--red-ashubh); font-size: 12px !important;">❌ सधवा स्त्री निषेध:</strong> आज (${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]} नक्षत्र) सधवा स्त्री नवीन वस्त्र-आभूषण आदि धारण न करे।
+                    </div>`;
+                }
+
+                if (vastraRules.shatabhishaRestricted) {
+                    vastraHtml += `
+                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main); background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #fed7e2;">
+                        <strong style="color: var(--red-ashubh); font-size: 12px !important;">⚠️ कुछ आचार्यों के मतानुसार:</strong> शतभिषा नक्षत्र में सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण और स्नान न करे。<br>
+                        <strong style="color: #b83280; font-size: 11px !important; margin-top:4px; display:inline-block;">शांति उपाय:</strong> यदि भूलवश या अज्ञानतावश ऐसा हो जाए, तो दोष की शांति के लिए अपने पति का पूजन करें।
+                    </div>`;
+                }
+
+                if (!vastraRules.shubhWear) {
+                    vastraHtml += `
+                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                        <strong style="color: var(--red-ashubh); font-size: 12px !important;">❌ सद्वस्त्र निषेध:</strong> आज नवीन (नए) वस्त्र एवं आभूषण धारण करना शुभ नहीं है।
+                    </div>`;
+                }
+
                 vastraHtml += '</div>';
                 return vastraHtml;
             })()}
@@ -6595,12 +6627,12 @@ restrictionModalHtml += smHtml;
                 }
 
                 let nakshatraHindiName = NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex];
-                let lochan = window.getNakshatraLochan ? window.getNakshatraLochan(p.moonNakshatraName) : null;
+                let lochan = window.getNakshatraLochan ? window.getNakshatraLochan(nakshatraHindiName) : null;
                 if (!lochan) return apraptiHtml;
                 return `
                 <div style="margin: 20px 0; padding:10px; background:#fff7ed; border-radius:6px; border:1px solid #ffedd5;">
                     <h4 class="popup-subheading" style="margin:0 0 8px 0; color:#c2410c;">
-                        🔍 खोई/चोरी हुई वस्तु — नक्षत्र लोचन
+                        🔎 खोई/चोरी हुई वस्तु — नक्षत्र लोचन
                     </h4>
                     ${popupDayInfoGrid([
                         popupDayInfoField('नक्षत्र', nakshatraHindiName),
@@ -6670,11 +6702,12 @@ restrictionModalHtml += smHtml;
                 if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size:11px !important;">- ' + sl.warnings.join(', ') + '</span>';
 
                 return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
-                    <h4 style="margin:0 0 5px 0;">सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h4>
+                    <h4 class="popup-subheading" style="margin:0 0 8px 0; font-size:13px !important; color:var(--primary-dark);">🌅 सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h4>
                     ${popupDayInfoGrid([
-                        popupDayInfoField('स्थिति (Status)', shubhaText, shubhaColor)
+                        popupDayInfoField('स्थिति (Status)', shubhaText, shubhaColor),
+                        popupDayInfoField('शुभ केंद्र (Beneficent Kendra)', sl.beneficKendra ? 'हाँ (Yes)' : 'नहीं (No)')
                     ])}
-                    ${details}
+                    <div style="font-size:11px !important; color:var(--text-main); margin-top:4px;">${details}</div>
                 </div>`;
             })()}
 

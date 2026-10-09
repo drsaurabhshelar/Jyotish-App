@@ -6462,19 +6462,19 @@ restrictionModalHtml += smHtml;
                 return `
                 <div style="margin: 20px 0; padding: 15px; background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px;">
                     <h3 class="popup-section-heading" style="margin-top:0; color: #c05621;">नक्षत्र का स्वरूप (Form & Nature of Nakshatra)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                         <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #fbd38d;">
                             <span class="popup-dayinfo-label">आकृति (Symbol/Form)</span>
-                            <strong style="font-size: 13px; color: #c05621;">${nData.form}</strong>
+                            <strong style="font-size: 13px; color: #c05621; display:block; margin-top:2px;">${nData.form}</strong>
                         </div>
                         <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #fbd38d;">
                             <span class="popup-dayinfo-label">तारे (Number of Stars)</span>
-                            <strong style="font-size: 13px; color: #c05621;">${nData.starCount}</strong>
+                            <strong style="font-size: 13px; color: #c05621; display:block; margin-top:2px;">${nData.starCount}</strong>
                         </div>
-                    </div>
-                    <div style="background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #fbd38d; font-size: 12px; color: var(--text-main); line-height: 1.5;">
-                        <strong>दृश्य / पहचान (Visual Identification):</strong><br>
-                        ${nData.visual}
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #fbd38d;">
+                            <span class="popup-dayinfo-label">दृश्य / पहचान (Visual Identification)</span>
+                            <strong style="font-size: 11px; color: var(--text-main); font-weight: normal; display:block; margin-top:2px; line-height: 1.35;">${nData.visual}</strong>
+                        </div>
                     </div>
                 </div>`;
             })()}

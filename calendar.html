@@ -5781,33 +5781,48 @@ window.closeCalendarModal = function() {
 
     // newRulesHtml replaced
 
-                let smHtml = '';
                 if (p.specialMuhurta) {
                     let sm = p.specialMuhurta;
                     let v = p.vishaghati;
                     let fTime = (d) => d ? d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
                     let fDateTime = (d) => d ? d.toLocaleString([], {month:'short', day:'numeric', hour: '2-digit', minute:'2-digit'}) : '';
+                    let now = new Date();
 
-                    let dayTableRows = sm.dayMuhurtas.map(m => `<tr style="${m.isProhibited ? 'background:#fff5f5;' : ''}">
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color); color:${m.isProhibited ? 'var(--red-ashubh)' : 'inherit'};">${m.isProhibited ? 'हाँ' : 'नहीं'}</td>
-                    </tr>`).join('');
+                    let dayLengthStr = ((sm.dayMuhurtas[0].end - sm.dayMuhurtas[0].start) / 60000).toFixed(2) + " मिनट";
+                    let nightLengthStr = ((sm.nightMuhurtas[0].end - sm.nightMuhurtas[0].start) / 60000).toFixed(2) + " मिनट";
 
-                    let nightTableRows = sm.nightMuhurtas.map(m => `<tr>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
-                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
-                    </tr>`).join('');
+                    let dayBoxes = sm.dayMuhurtas.map(m => {
+                        let isCurrent = (now >= m.start && now < m.end) && (p.date.toDateString() === now.toDateString());
+                        let bg = m.isProhibited ? '#ffebee' : (isCurrent ? 'var(--primary-color)' : '#fdf8f4');
+                        let color = m.isProhibited ? '#d32f2f' : (isCurrent ? '#fff' : '#333');
+                        let border = m.isProhibited ? '1px solid #ffcdd2' : '1px solid #fed7e2';
+                        let title = `क्रमांक: ${m.num}\nस्वामी: ${m.swami}\nदिन/रात्रि: दिवा (Day)\nआरंभ: ${fTime(m.start)}\nसमाप्ति: ${fTime(m.end)}\n${m.isProhibited ? "आज यह मुहूर्त निषिद्ध है। शुभ कार्य न करें।" : "सामान्य"}`;
+                        return `<div title="${title}" style="flex:1; background:${bg}; color:${color}; border-right: ${border}; box-sizing:border-box; display:flex; align-items:center; justify-content:center; font-size:10px; cursor:pointer; text-align:center;">${m.num}</div>`;
+                    }).join('');
 
-                    let prohibitedList = sm.dayMuhurtas.filter(m => m.isProhibited).map(m => m.swami).join(', ');
+                    divaMuhurtaHtml = `<div style="margin: 20px 0;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 13px !important; font-weight:700; color: var(--primary-dark);">☀️ दिवा मुहूर्त</h3>
+                        <p style="margin: 0 0 10px 0; font-size: 11px !important; color: var(--text-muted);">दिनमान को 15 समान भागों में बांटा गया है। आज प्रत्येक दिवा मुहूर्त की अवधि <strong>${dayLengthStr}</strong> है。</p>
+                        <div style="display:flex; height:30px; width:100%; border-radius:4px; overflow:hidden; border:1px solid var(--border-color);">${dayBoxes}</div>
+                    </div>`;
 
-                    let vHtml = '';
+                    let nightBoxes = sm.nightMuhurtas.map(m => {
+                        let isCurrent = (now >= m.start && now < m.end) && (p.date.toDateString() === now.toDateString());
+                        let bg = isCurrent ? 'var(--primary-dark)' : '#f0f4f8';
+                        let color = isCurrent ? '#fff' : '#333';
+                        let border = '1px solid #e2e8f0';
+                        let title = `क्रमांक: ${m.num}\nस्वामी: ${m.swami}\nदिन/रात्रि: रात्रि (Night)\nआरंभ: ${fTime(m.start)}\nसमाप्ति: ${fTime(m.end)}\nसामान्य`;
+                        return `<div title="${title}" style="flex:1; background:${bg}; color:${color}; border-right: ${border}; box-sizing:border-box; display:flex; align-items:center; justify-content:center; font-size:10px; cursor:pointer; text-align:center;">${m.num}</div>`;
+                    }).join('');
+
+                    ratriMuhurtaHtml = `<div style="margin: 20px 0;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 13px !important; font-weight:700; color: var(--primary-dark);">🌙 रात्रि मुहूर्त</h3>
+                        <p style="margin: 0 0 10px 0; font-size: 11px !important; color: var(--text-muted);">रात्रिमान को 15 समान भागों में बांटा गया है। आज प्रत्येक रात्रि मुहूर्त की अवधि <strong>${nightLengthStr}</strong> है。</p>
+                        <div style="display:flex; height:30px; width:100%; border-radius:4px; overflow:hidden; border:1px solid var(--border-color);">${nightBoxes}</div>
+                    </div>`;
+
                     if (v && v.hasVishaghati) {
-                        vHtml = `<div style="margin-bottom:15px; padding:10px; background:#fffcf5; border:1px solid #fbd38d; border-radius:6px;">
+                        vishaghatiHtml = `<div style="margin: 20px 0; padding:10px; background:#fffcf5; border:1px solid #fbd38d; border-radius:6px;">
                             <h4 class="popup-subheading" style="margin:0 0 10px 0; color:#b7791f;">विषघटी</h4>
                             ${popupDayInfoGrid([
                                 popupDayInfoField('नक्षत्र', v.nakName),
@@ -5821,27 +5836,36 @@ window.closeCalendarModal = function() {
                             ])}
                         </div>`;
                     } else {
-                        vHtml = `<div class="popup-small-text" style="margin-bottom:15px; padding:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; color:#64748b;">
+                        vishaghatiHtml = `<div class="popup-small-text" style="margin: 20px 0; padding:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; color:#64748b;">
                             आज के नक्षत्र के लिए विषघटी निर्धारित नहीं है।
                         </div>`;
                     }
 
-                    smHtml = `
-                    <div style="margin-top:20px; border-top:2px solid var(--primary-light); padding-top:15px;">
-                        ${renderSpecialTimeline(p)}
-                        <h3 id="muhurtaVishaghatiSection" class="popup-section-heading" style="margin:0 0 15px 0; color:var(--primary-dark);">⏳ विशेष मुहूर्त एवं विषघटी</h3>
+                    let prohibitedList = sm.dayMuhurtas.filter(m => m.isProhibited).map(m => m.swami).join(', ');
 
+                    visheshVishaghatiHtml = `
+                    <div style="margin: 20px 0;">
+                        <h3 id="muhurtaVishaghatiSection" class="popup-section-heading" style="margin:0 0 15px 0; color:var(--primary-dark);">⏳ विशेष मुहूर्त एवं विषघटी</h3>
                         <div style="margin-bottom:15px;">
                             <h4 class="popup-subheading" style="margin:0 0 5px 0;">आज के निषिद्ध मुहूर्त (वार अनुसार)</h4>
                             <div class="popup-prohibited" style="padding:10px; background:${prohibitedList ? '#fff5f5' : '#f0fdf4'}; border:1px solid ${prohibitedList ? '#ffcdd2' : '#bbf7d0'}; border-radius:6px; font-size:13px;">
                                 ${prohibitedList ? `<strong style="color:var(--red-ashubh);">${prohibitedList}</strong> (शुभ कार्य न करें)` : '<span style="color:#166534;">आज कोई दिन का मुहूर्त निषिद्ध नहीं है।</span>'}
                             </div>
                         </div>
+                    </div>`;
 
-                        ${vHtml}
+                    let dayTableRows = sm.dayMuhurtas.map(m => `<tr style="${m.isProhibited ? 'background:#fff5f5;' : ''}">
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color); color:${m.isProhibited ? 'var(--red-ashubh)' : 'inherit'};">${m.isProhibited ? 'हाँ' : 'नहीं'}</td>
+                    </tr>`).join('');
 
+                    diva15MuhurtasHtml = `
+                    <div style="margin: 20px 0;">
                         <h4 class="popup-subheading" style="margin:0 0 10px 0;">दिवा के 15 मुहूर्त</h4>
-                        <div style="overflow-x:auto; margin-bottom:15px;">
+                        <div style="overflow-x:auto;">
                             <table class="popup-muhurta-table" style="width:100%; border-collapse:collapse; text-align:left;">
                                 <thead>
                                     <tr style="background:var(--primary-light);">
@@ -5855,7 +5879,17 @@ window.closeCalendarModal = function() {
                                 <tbody>${dayTableRows}</tbody>
                             </table>
                         </div>
+                    </div>`;
 
+                    let nightTableRows = sm.nightMuhurtas.map(m => `<tr>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.num}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${m.swami}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.start)}</td>
+                        <td style="padding:6px; border:1px solid var(--border-color);">${fTime(m.end)}</td>
+                    </tr>`).join('');
+
+                    ratri15MuhurtasHtml = `
+                    <div style="margin: 20px 0;">
                         <h4 class="popup-subheading" style="margin:0 0 10px 0;">रात्रि के 15 मुहूर्त</h4>
                         <div style="overflow-x:auto; margin-bottom:15px;">
                             <table class="popup-muhurta-table" style="width:100%; border-collapse:collapse; text-align:left;">
@@ -5870,7 +5904,6 @@ window.closeCalendarModal = function() {
                                 <tbody>${nightTableRows}</tbody>
                             </table>
                         </div>
-
                         <div class="popup-rules" style="color:var(--text-muted); background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
                             <strong>नियम (Rules):</strong><br>
                             - संपूर्ण दिनमान (सूर्योदय से सूर्यास्त) को 15 समान भागों में बांटकर 'दिवा मुहूर्त' निकाले जाते हैं। इसी प्रकार रात्रिमान को 15 भागों में बांटकर 'रात्रि मुहूर्त' निकलते हैं।<br>
@@ -5879,8 +5912,6 @@ window.closeCalendarModal = function() {
                         </div>
                     </div>`;
                 }
-
-restrictionModalHtml += smHtml;
 
 
 

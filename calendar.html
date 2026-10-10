@@ -789,41 +789,81 @@ button:hover {
 
 
 
-/* Unified Small Typography & Layout for All Calendar Popups (Portrait & Landscape) */
-.modal-scroll-container,
+/* Unified Popup-Scoped Typography & Layout (Portrait & Landscape) */
 #calModalScrollContainer,
-#yatraModalScrollContainer,
-#yatraModalBgEval .card {
-    font-size: 11px !important;
-    line-height: 1.35 !important;
-    color: var(--text-main);
+#calModalScrollContainer *,
+.modal-scroll-container,
+.modal-scroll-container * {
+    box-sizing: border-box;
 }
 
-@media (orientation: landscape), (min-width: 768px), (max-width: 900px) {
-    .modal-scroll-container,
-    #calModalScrollContainer,
-    #yatraModalScrollContainer,
-    #yatraModalBgEval .card {
-        font-size: 11px !important;
-        line-height: 1.35 !important;
-    }
-    .modal-scroll-container h3,
-    #calModalScrollContainer h3,
-    .popup-section-heading {
-        font-size: 13px !important;
-        font-weight: 700 !important;
-    }
-    .modal-scroll-container h4,
-    #calModalScrollContainer h4,
-    .popup-subheading {
-        font-size: 12px !important;
-        font-weight: 700 !important;
-    }
-    .nakshatra-3col-grid {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 10px !important;
-    }
+#calModalScrollContainer,
+.modal-scroll-container {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+}
+
+/* Headings Level 1 (Section Main Title) */
+#calModalScrollContainer h2,
+#calModalScrollContainer h3,
+.modal-scroll-container h2,
+.modal-scroll-container h3,
+#calModalScrollContainer .popup-section-heading,
+.modal-scroll-container .popup-section-heading {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+}
+
+/* Headings Level 2 (Subheadings / Section Labels / Yoga Status) */
+#calModalScrollContainer h4,
+.modal-scroll-container h4,
+#calModalScrollContainer .popup-subheading,
+.modal-scroll-container .popup-subheading,
+#calModalScrollContainer .yoga-card-title,
+.modal-scroll-container .yoga-card-title {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+}
+
+/* Body Text, Values, Labels, Bullets, Table cells inside Popups */
+#calModalScrollContainer p,
+#calModalScrollContainer span,
+#calModalScrollContainer div,
+#calModalScrollContainer li,
+#calModalScrollContainer td,
+#calModalScrollContainer th,
+#calModalScrollContainer strong,
+#calModalScrollContainer .popup-dayinfo-label,
+#calModalScrollContainer .popup-dayinfo-value,
+.modal-scroll-container p,
+.modal-scroll-container span,
+.modal-scroll-container div,
+.modal-scroll-container li,
+.modal-scroll-container td,
+.modal-scroll-container th,
+.modal-scroll-container strong,
+.modal-scroll-container .popup-dayinfo-label,
+.modal-scroll-container .popup-dayinfo-value {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+}
+
+/* Strong bold values inside popups */
+#calModalScrollContainer strong,
+.modal-scroll-container strong,
+#calModalScrollContainer .popup-dayinfo-value,
+.modal-scroll-container .popup-dayinfo-value {
+    font-weight: 700 !important;
+}
+
+/* Enforce 3-column Nakshatra Form Grid in Popups across all viewports */
+#calModalScrollContainer .nakshatra-3col-grid,
+.modal-scroll-container .nakshatra-3col-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
 }
 
 .modal-scroll-container h2,

@@ -789,7 +789,7 @@ button:hover {
 
 
 
-/* Unified Small Typography & Layout for All Calendar Popups */
+/* Unified Small Typography & Layout for All Calendar Popups (Portrait & Landscape) */
 .modal-scroll-container,
 #calModalScrollContainer,
 #yatraModalScrollContainer,
@@ -797,6 +797,33 @@ button:hover {
     font-size: 11px !important;
     line-height: 1.35 !important;
     color: var(--text-main);
+}
+
+@media (orientation: landscape), (min-width: 768px), (max-width: 900px) {
+    .modal-scroll-container,
+    #calModalScrollContainer,
+    #yatraModalScrollContainer,
+    #yatraModalBgEval .card {
+        font-size: 11px !important;
+        line-height: 1.35 !important;
+    }
+    .modal-scroll-container h3,
+    #calModalScrollContainer h3,
+    .popup-section-heading {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+    }
+    .modal-scroll-container h4,
+    #calModalScrollContainer h4,
+    .popup-subheading {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+    }
+    .nakshatra-3col-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+    }
 }
 
 .modal-scroll-container h2,
@@ -6493,7 +6520,7 @@ window.closeCalendarModal = function() {
                 return `
                 <div style="margin: 20px 0; padding: 15px; background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px;">
                     <h3 class="popup-section-heading" style="margin-top:0; color: #c05621;">नक्षत्र का स्वरूप (Form & Nature of Nakshatra)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div class="nakshatra-3col-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                         <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #fbd38d;">
                             <span class="popup-dayinfo-label">आकृति — सिम्बॉल फॉर्म (Symbol Form)</span>
                             <strong style="font-size: 11px !important; color: #c05621; display:block; margin-top:2px;">${nData.form}</strong>

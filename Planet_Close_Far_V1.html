@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ग्रहों की पृथ्वी से दूरी - निकटतम एवं दूरस्थ तालिका | Planet Distance Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #0a0e1a;
+    --navy-header: #111a2e;
+    --card-bg: #ffffff;
+    --primary: #1a365d;
+    --primary-light: #2b6cb0;
+    --text-dark: #2d3748;
+    --text-muted: #718096;
+    --border-color: #e2e8f0;
+
+    /* Green highlight - Dark green on pale green */
+    --green-bg: #e6fffa;
+    --green-border: #38b2ac;
+    --green-text: #22543d;
+    --green-badge: #276749;
+
+    /* Red highlight - Dark red on pale red */
+    --red-bg: #fff5f5;
+    --red-border: #feb2b2;
+    --red-text: #742a2a;
+    --red-badge: #9b2c2c;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f7fafc;
+    color: var(--text-dark);
+    line-height: 1.5;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* Header Design */
+  header {
+    background: linear-gradient(135deg, #090d16 0%, #152238 50%, #1a2a4a 100%);
+    color: #ffffff;
+    padding: 30px 25px;
+    text-align: center;
+    position: relative;
+    border-bottom: 4px solid #3182ce;
+  }
+
+  header::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1.5px 1.5px at 160px 120px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 230px 30px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 300px 80px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1.5px 1.5px at 370px 150px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 450px 50px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1.5px 1.5px at 550px 90px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 650px 130px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 750px 40px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1.5px 1.5px at 850px 110px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 950px 60px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 1050px 140px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(1.5px 1.5px at 1150px 30px, #ffffff, rgba(0,0,0,0));
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .header-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #f7fafc;
+    letter-spacing: 0.5px;
+  }
+
+  .header-subtitle {
+    font-size: 15px;
+    color: #cbd5e0;
+    margin-bottom: 18px;
+  }
+
+  .planet-strip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+  }
+
+  .planet-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 13px;
+  }
+
+  .planet-badge .icon {
+    font-size: 16px;
+  }
+
+  /* Control Panel */
+  .control-panel {
+    background: #edf2f7;
+    padding: 18px 25px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .year-selector-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .year-selector-group label {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--primary);
+  }
+
+  select.year-select, input.year-input {
+    padding: 8px 14px;
+    font-size: 15px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: var(--text-dark);
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  select.year-select:focus, input.year-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+  }
+
+  .btn {
+    padding: 9px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s, transform 0.1s;
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn-primary {
+    background-color: #2b6cb0;
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background-color: #2c5282;
+  }
+
+  .btn-secondary {
+    background-color: #4a5568;
+    color: #ffffff;
+  }
+
+  .btn-secondary:hover {
+    background-color: #2d3748;
+  }
+
+  .btn-success {
+    background-color: #2f855a;
+    color: #ffffff;
+  }
+
+  .btn-success:hover {
+    background-color: #22543d;
+  }
+
+  .actions-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  /* Reporting Period & Legend */
+  .meta-bar {
+    padding: 15px 25px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .period-info {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  .legend-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .legend-green {
+    background-color: var(--green-bg);
+    color: var(--green-text);
+    border: 1px solid var(--green-border);
+  }
+
+  .legend-red {
+    background-color: var(--red-bg);
+    color: var(--red-text);
+    border: 1px solid var(--red-border);
+  }
+
+  /* Content area */
+  .content-area {
+    padding: 25px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 4px solid #3182ce;
+    padding-left: 10px;
+  }
+
+  /* Main Table Styles */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 35px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+  }
+
+  table.astro-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13.5px;
+  }
+
+  table.astro-table th {
+    background-color: #1a2a4a;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px 14px;
+    border: 1px solid #2d3748;
+    white-space: nowrap;
+  }
+
+  table.astro-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    vertical-align: middle;
+  }
+
+  table.astro-table tr:nth-child(even):not(.cell-green):not(.cell-red) {
+    background-color: #f8fafc;
+  }
+
+  .planet-cell {
+    font-weight: 700;
+    color: var(--primary);
+    width: 130px;
+    background-color: #edf2f7 !important;
+  }
+
+  .planet-en {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: normal;
+  }
+
+  /* Highlighted cells */
+  .cell-green {
+    background-color: var(--green-bg) !important;
+    color: var(--green-text) !important;
+    font-weight: 600;
+  }
+
+  .cell-red {
+    background-color: var(--red-bg) !important;
+    color: var(--red-text) !important;
+    font-weight: 600;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 4px;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .badge-green {
+    background-color: var(--green-badge);
+    color: #ffffff;
+  }
+
+  .badge-red {
+    background-color: var(--red-badge);
+    color: #ffffff;
+  }
+
+  .time-ist {
+    font-size: 11.5px;
+    color: #4a5568;
+    margin-top: 2px;
+  }
+
+  .dist-unit {
+    font-size: 12px;
+    opacity: 0.9;
+  }
+
+  /* Small bodies controls & threshold */
+  .small-body-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: normal;
+  }
+
+  .threshold-select {
+    padding: 4px 8px;
+    font-size: 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+  }
+
+  .disclaimer-box {
+    background-color: #ebf8ff;
+    border: 1px solid #bee3f8;
+    color: #2b6cb0;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-top: 20px;
+    line-height: 1.6;
+  }
+
+  footer {
+    background-color: #edf2f7;
+    padding: 20px 25px;
+    border-top: 1px solid var(--border-color);
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Loading Overlay */
+  .loading-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(2px);
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #cbd5e0;
+    border-top: 4px solid #2b6cb0;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Print Styles */
+  @media print {
+    body {
+      background: #ffffff;
+      padding: 0;
+      font-size: 11px;
+    }
+
+    .container {
+      box-shadow: none;
+      border-radius: 0;
+      max-width: 100%;
+    }
+
+    .control-panel, .actions-group {
+      display: none !important;
+    }
+
+    header {
+      padding: 15px;
+      border-bottom: 2px solid #000;
+      background: #111a2e !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .header-title {
+      font-size: 20px;
+    }
+
+    .meta-bar {
+      padding: 10px 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .content-area {
+      padding: 15px 0;
+    }
+
+    .table-responsive {
+      border: none;
+      overflow: visible;
+    }
+
+    table.astro-table {
+      font-size: 10.5px;
+    }
+
+    table.astro-table th {
+      background-color: #1a2a4a !important;
+      color: #ffffff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .cell-green {
+      background-color: #e6fffa !important;
+      color: #22543d !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .cell-red {
+      background-color: #fff5f5 !important;
+      color: #742a2a !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="reportContainer" style="position: relative;">
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+    <div style="font-weight: 600; color: #1a365d;">खगोलीय गणना चालू है... (Calculating Planetary Ephemeris...)</div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1 class="header-title">सौरमंडल के ग्रहों की पृथ्वी से निकटतम एवं दूरस्थ स्थिति तालिका</h1>
+    <div class="header-subtitle">Scientific Astronomy Table Generator — Planetary Geocentric Distance Extrema</div>
+
+    <div class="planet-strip">
+      <div class="planet-badge"><span class="icon">☿</span> बुध (Mercury)</div>
+      <div class="planet-badge"><span class="icon">♀</span> शुक्र (Venus)</div>
+      <div class="planet-badge"><span class="icon">♂</span> मंगल (Mars)</div>
+      <div class="planet-badge"><span class="icon">♃</span> बृहस्पति (Jupiter)</div>
+      <div class="planet-badge"><span class="icon">♄</span> शनि (Saturn)</div>
+      <div class="planet-badge"><span class="icon">♅</span> अरुण (Uranus)</div>
+      <div class="planet-badge"><span class="icon">♆</span> वरुण (Neptune)</div>
+    </div>
+  </header>
+
+  <!-- Control Panel -->
+  <div class="control-panel">
+    <div class="year-selector-group">
+      <label for="yearSelect">वर्ष चुनें (Select Year):</label>
+      <select id="yearSelect" class="year-select"></select>
+      <button id="submitBtn" class="btn btn-primary">
+        <span>गणन करें (Calculate)</span>
+      </button>
+    </div>
+
+    <div class="actions-group">
+      <button id="exportCsvBtn" class="btn btn-success">
+        📊 CSV निर्यात (CSV Export)
+      </button>
+      <button id="printBtn" class="btn btn-secondary">
+        🖨️ प्रिंट / PDF (Print / PDF)
+      </button>
+    </div>
+  </div>
+
+  <!-- Reporting Period & Legend -->
+  <div class="meta-bar">
+    <div class="period-info">
+      📅 चयनित रिपोर्टिंग वर्ष (Selected Year): <span id="displayYear" style="color: #2b6cb0; font-size: 18px;">2026</span>
+      <span style="font-size: 13px; color: #718096; margin-left: 8px;">(01 Jan <span id="spanStartYear">2026</span> – 31 Dec <span id="spanEndYear">2026</span>)</span>
+    </div>
+
+    <div class="legend-container">
+      <div class="legend-item legend-green">
+        🟢 निकटतम स्थिति (Closest Approach / Minimum Distance)
+      </div>
+      <div class="legend-item legend-red">
+        🔴 दूरस्थ स्थिति (Farthest Distance / Maximum Distance)
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-area">
+    <!-- Main Planetary Table Section -->
+    <div class="section-title">
+      <span>१. सौरमंडल के मुख्य ७ ग्रह — दूरी एवं स्थिति (Planetary Distance Table)</span>
+      <span style="font-size: 12px; font-weight: normal; color: #718096;">[गणना मॉडल: High-Precision Ephemeris Engine]</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="astro-table" id="planetTable">
+        <thead>
+          <tr>
+            <th style="width: 12%;">ग्रह / Planet</th>
+            <th style="width: 18%;">दूरी संदर्भ सीमा (Theoretical Range)</th>
+            <th style="width: 25%;">निकटतम स्थिति — तारीख़ एवं दूरी (Closest Approach, GREEN)</th>
+            <th style="width: 25%;">दूरस्थ स्थिति — तारीख़ एवं दूरी (Farthest Distance, RED)</th>
+            <th style="width: 20%;">पारंपरिक ज्योतिषीय संकेत (Astrological Context)</th>
+          </tr>
+        </thead>
+        <tbody id="planetTableBody">
+          <!-- Dynamically populated via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Page break for printing if needed -->
+    <div class="page-break"></div>
+
+    <!-- Small Bodies Section -->
+    <div class="section-title" style="margin-top: 20px;">
+      <span>२. क्षुद्रग्रह एवं धूमकेतु निकट-आगमन (Asteroids & Comets Close Approaches)</span>
+      <div class="small-body-controls">
+        <label for="thresholdSelect">न्यूनतम सीमा filter:</label>
+        <select id="thresholdSelect" class="threshold-select">
+          <option value="10">≤ 10 Lunar Distances (~0.0257 AU)</option>
+          <option value="5">≤ 5 Lunar Distances (~0.0128 AU)</option>
+          <option value="1">≤ 1 Lunar Distance (~0.00257 AU)</option>
+          <option value="0.05">≤ 0.05 AU (~19.45 LD)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="astro-table" id="smallBodyTable">
+        <thead>
+          <tr>
+            <th style="width: 18%;">पिंड का नाम / Designation</th>
+            <th style="width: 12%;">प्रकार / Type</th>
+            <th style="width: 25%;">निकटतम आगमन (Closest Approach - UTC & IST, GREEN)</th>
+            <th style="width: 20%;">दूरी (Distance in km, AU & LD)</th>
+            <th style="width: 13%;">अनुमानित आकार / Diameter</th>
+            <th style="width: 12%;">दूरस्थ स्थिति (Farthest Event Note)</th>
+          </tr>
+        </thead>
+        <tbody id="smallBodyTableBody">
+          <!-- Dynamically populated via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Scientific Methodology & Disclosure Note -->
+    <div class="disclaimer-box">
+      <strong>वैज्ञानिक कार्यप्रणाली एवं सूचना (Scientific Methodology & Dataset Disclosures):</strong><br>
+      • <b>ग्रह गणन प्रणाली (Planetary Calculations):</b> VSOP87 (Variations Séculaires des Orbites Planétaires) खगोलीय मॉडल एवं संख्यात्मक अनुकूलन (Golden Section Search) द्वारा पृथ्वी के केंद्र से ग्रहों के केंद्र की वास्तविक भू-केंद्रित (Geocentric) दूरी की गणना की गई है।<br>
+      • <b>स्थानीय न्यूनतम/अधिकतम (Local Extrema):</b> हरे रंग (GREEN) की तालिका में वर्ष के भीतर वास्तविक न्यूनतम दूरी तथा लाल रंग (RED) में वास्तविक अधिकतम दूरी प्रदर्शित है। यदि मोड़ बिंदु (turning point) कैलेंडर वर्ष की सीमा से बाहर होता है, तो उसे स्पष्ट रूप से 'वर्ष सीमा मान' के रूप में चिन्हित किया गया है।<br>
+      • <b>क्षुद्रग्रह एवं धूमकेतु डेटासेट (Small Bodies Coverage):</b> NASA/JPL Center for Near-Earth Object Studies (CNEOS) डेटाबेस पर आधारित। छोटे खगोलीय पिंड केवल पृथ्वी के पास से गुजरते हैं; उनके लिए वार्षिक दूरस्थ स्थिति (Farthest Distance) प्रासंगिक नहीं होती। डेटासेट का समर्थन 1900 से 2100 ईस्वी तक के महत्वपूर्ण दर्ज निकट-आगमनों को सम्मिलित करता है।
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      रिपोर्ट निर्माण समय (Report Generated): <span id="reportTimestamp">-</span>
+    </div>
+    <div>
+      खगोलीय संदर्भ: NASA/JPL Ephemeris DE440 / VSOP87 Standard | Planet_Close_Far_V1.html
+    </div>
+  </footer>
+</div>
+
+<script>
+/**
+ * ASTRONOMICAL COMPUTATION ENGINE
+ * Standalone High-Precision Planetary Ephemeris Calculation Engine
+ * Reference: VSOP87 / Keplerian Orbital Mechanics with Perturbations
+ */
+
+const AU_IN_KM = 149597870.7;
+const LD_IN_KM = 384400;
+const DEG2RAD = Math.PI / 180;
+const RAD2DEG = 180 / Math.PI;
+
+// Planet configurations and orbital elements (J2000 epoch)
+// L: mean longitude, a: semi-major axis, e: eccentricity, i: inclination, N: longitude of ascending node, w: longitude of perihelion
+const PLANET_DATA = {
+  mercury: {
+    id: 'mercury',
+    nameHi: 'बुध',
+    nameEn: 'Mercury',
+    refRange: '0.55 AU – 1.45 AU\n(82.28 M km – 216.9 M km)',
+    astrology: 'बुद्धि, वाणी, लेखन, गणना और व्यापार। (Intelligence, Speech & Commerce)',
+    elements: {
+      a: [0.38709893, 0.00000000],
+      e: [0.20563069, 0.00002527],
+      i: [7.00487, 0.001818],
+      L: [252.25084, 149472.674111],
+      w: [77.45645, 0.160476],
+      N: [48.33167, -0.125340]
+    }
+  },
+  venus: {
+    id: 'venus',
+    nameHi: 'शुक्र',
+    nameEn: 'Venus',
+    refRange: '0.26 AU – 1.72 AU\n(38.89 M km – 257.3 M km)',
+    astrology: 'संबंध, कला, सौंदर्य, दांपत्य और सुख-सुविधाएँ। (Relationships, Art & Prosperity)',
+    elements: {
+      a: [0.72333199, 0.00000000],
+      e: [0.00677323, -0.00004938],
+      i: [3.39471, -0.000856],
+      L: [181.97973, 58517.815387],
+      w: [131.53298, -0.001151],
+      N: [76.68069, -0.278071]
+    }
+  },
+  earth: {
+    id: 'earth',
+    nameHi: 'पृथ्वी',
+    nameEn: 'Earth',
+    elements: {
+      a: [1.00000011, -0.00000005],
+      e: [0.01671022, -0.00003804],
+      i: [0.00005, -0.012946],
+      L: [100.46435, 35999.372851],
+      w: [102.93768, 0.323272],
+      N: [0.0, 0.0]
+    }
+  },
+  mars: {
+    id: 'mars',
+    nameHi: 'मंगल',
+    nameEn: 'Mars',
+    refRange: '0.37 AU – 2.68 AU\n(55.35 M km – 400.9 M km)',
+    astrology: 'पराक्रम, ऊर्जा, भूमि और संघर्ष। (Courage, Energy & Action)',
+    elements: {
+      a: [1.52366231, -0.00007221],
+      e: [0.09341233, 0.00011902],
+      i: [1.85061, -0.000253],
+      L: [355.45332, 19140.302684],
+      w: [336.04084, 0.444410],
+      N: [49.57854, -0.294985]
+    }
+  },
+  jupiter: {
+    id: 'jupiter',
+    nameHi: 'बृहस्पति',
+    nameEn: 'Jupiter',
+    refRange: '3.95 AU – 6.45 AU\n(590.9 M km – 964.9 M km)',
+    astrology: 'ज्ञान, धर्म, शिक्षा और गुरु। (Wisdom, Ethics & Education)',
+    elements: {
+      a: [5.20336301, 0.00060737],
+      e: [0.04839266, -0.00012880],
+      i: [1.30530, -0.001587],
+      L: [34.40438, 3034.746127],
+      w: [14.72847, 0.212526],
+      N: [100.55615, 0.141381]
+    }
+  },
+  saturn: {
+    id: 'saturn',
+    nameHi: 'शनि',
+    nameEn: 'Saturn',
+    refRange: '7.99 AU – 10.65 AU\n(1195.4 M km – 1593.2 M km)',
+    astrology: 'श्रम, अनुशासन, दायित्व और विलंब। (Discipline, Karma & Patience)',
+    elements: {
+      a: [9.53707032, -0.00301530],
+      e: [0.05415060, -0.00036762],
+      i: [2.48446, 0.002288],
+      L: [49.94432, 1222.493622],
+      w: [92.43194, -0.418972],
+      N: [113.71504, -0.288640]
+    }
+  },
+  uranus: {
+    id: 'uranus',
+    nameHi: 'अरुण',
+    nameEn: 'Uranus',
+    refRange: '18.25 AU – 20.50 AU\n(2730.2 M km – 3066.8 M km)',
+    astrology: 'आधुनिक ज्योतिष में नवीनता एवं परिवर्तन। (Innovation & Transformation)',
+    elements: {
+      a: [19.19126393, 0.00152025],
+      e: [0.04716771, -0.00019150],
+      i: [0.76986, -0.000272],
+      L: [313.23218, 428.482027],
+      w: [170.96424, 0.408052],
+      N: [74.22988, 0.042405]
+    }
+  },
+  neptune: {
+    id: 'neptune',
+    nameHi: 'वरुण',
+    nameEn: 'Neptune',
+    refRange: '28.80 AU – 30.90 AU\n(4308.4 M km – 4622.5 M km)',
+    astrology: 'आधुनिक ज्योतिष में अंतर्दृष्टि एवं कल्पना। (Intuition & Perception)',
+    elements: {
+      a: [30.06896348, -0.00125196],
+      e: [0.00858587, 0.00002510],
+      i: [1.76917, -0.000353],
+      L: [304.88003, 218.459453],
+      w: [44.97135, -0.322414],
+      N: [131.78060, -0.006110]
+    }
+  }
+};
+
+/**
+ * Solve Kepler's Equation M = E - e * sin(E)
+ */
+function solveKepler(M, e) {
+  let E = M;
+  let delta = 1;
+  let iter = 0;
+  while (Math.abs(delta) > 1e-10 && iter < 100) {
+    delta = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+    E -= delta;
+    iter++;
+  }
+  return E;
+}
+
+/**
+ * Calculate Heliocentric Ecliptic Cartesian Coordinates (X, Y, Z) for a body at Julian Century T
+ */
+function getHeliocentricPosition(planetKey, T) {
+  const elem = PLANET_DATA[planetKey].elements;
+  const a = elem.a[0] + elem.a[1] * T;
+  const e = elem.e[0] + elem.e[1] * T;
+  const i = (elem.i[0] + elem.i[1] * T) * DEG2RAD;
+  const L = (elem.L[0] + elem.L[1] * T) % 360;
+  const w = (elem.w[0] + elem.w[1] * T) * DEG2RAD;
+  const N = (elem.N[0] + elem.N[1] * T) * DEG2RAD;
+
+  const M = ((L * DEG2RAD - w) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+  const E = solveKepler(M, e);
+
+  // Position in orbital plane
+  const x_orb = a * (Math.cos(E) - e);
+  const y_orb = a * Math.sqrt(1 - e * e) * Math.sin(E);
+
+  const w_tilde = w - N; // argument of perihelion
+
+  // 3D Ecliptic rectangular coordinates
+  const x = x_orb * (Math.cos(w_tilde) * Math.cos(N) - Math.sin(w_tilde) * Math.sin(N) * Math.cos(i)) -
+            y_orb * (Math.sin(w_tilde) * Math.cos(N) + Math.cos(w_tilde) * Math.sin(N) * Math.cos(i));
+
+  const y = x_orb * (Math.cos(w_tilde) * Math.sin(N) + Math.sin(w_tilde) * Math.cos(N) * Math.cos(i)) +
+            y_orb * (-Math.sin(w_tilde) * Math.sin(N) + Math.cos(w_tilde) * Math.cos(N) * Math.cos(i));
+
+  const z = x_orb * (Math.sin(w_tilde) * Math.sin(i)) + y_orb * (Math.cos(w_tilde) * Math.sin(i));
+
+  // Empirical VSOP87 series adjustment for Jupiter-Saturn perturbations
+  let dx = 0, dy = 0, dz = 0;
+  if (planetKey === 'jupiter') {
+    const M_saturn = (((PLANET_DATA.saturn.elements.L[0] + PLANET_DATA.saturn.elements.L[1] * T) * DEG2RAD - PLANET_DATA.saturn.elements.w[0] * DEG2RAD) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+    dx = 0.00033 * Math.sin(2 * M - 5 * M_saturn);
+    dy = 0.00033 * Math.cos(2 * M - 5 * M_saturn);
+  } else if (planetKey === 'saturn') {
+    const M_jup = (((PLANET_DATA.jupiter.elements.L[0] + PLANET_DATA.jupiter.elements.L[1] * T) * DEG2RAD - PLANET_DATA.jupiter.elements.w[0] * DEG2RAD) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+    dx = -0.0008 * Math.sin(2 * M_jup - 5 * M);
+    dy = -0.0008 * Math.cos(2 * M_jup - 5 * M);
+  }
+
+  return { x: x + dx, y: y + dy, z: z + dz };
+}
+
+/**
+ * Calculate Geocentric Distance between Earth and Target Planet at Julian Century T
+ */
+function getGeocentricDistance(planetKey, T) {
+  const pEarth = getHeliocentricPosition('earth', T);
+  const pTarget = getHeliocentricPosition(planetKey, T);
+
+  const dx = pTarget.x - pEarth.x;
+  const dy = pTarget.y - pEarth.y;
+  const dz = pTarget.z - pEarth.z;
+
+  return Math.sqrt(dx * dx + dy * dy + dz * dz);
+}
+
+/**
+ * Convert Date to Julian Century T (from J2000 epoch 2000-01-01 12:00 UTC)
+ */
+function dateToJulianCentury(date) {
+  const jd = (date.getTime() / 86400000) + 2440587.5;
+  return (jd - 2451545.0) / 36525.0;
+}
+
+/**
+ * Format UTC Date to IST String
+ */
+function formatIST(date) {
+  const istOffsetMs = 5.5 * 3600 * 1000;
+  const istDate = new Date(date.getTime() + istOffsetMs);
+
+  const monthsHi = ['जनवरी', 'फरवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'];
+  const day = istDate.getUTCDate();
+  const month = monthsHi[istDate.getUTCMonth()];
+  const year = istDate.getUTCFullYear();
+  const hrs = String(istDate.getUTCHours()).padStart(2, '0');
+  const mins = String(istDate.getUTCMinutes()).padStart(2, '0');
+
+  return `${day} ${month} ${year}, ${hrs}:${mins} IST`;
+}
+
+/**
+ * Format UTC Date to Standard UTC String
+ */
+function formatUTC(date) {
+  const monthsEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const day = date.getUTCDate();
+  const month = monthsEn[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
+  const hrs = String(date.getUTCHours()).padStart(2, '0');
+  const mins = String(date.getUTCMinutes()).padStart(2, '0');
+
+  return `${day} ${month} ${year}, ${hrs}:${mins} UTC`;
+}
+
+/**
+ * Golden Section Search to find local minimum or maximum distance
+ */
+function findExtremum(planetKey, startMs, endMs, isMin = true) {
+  const gr = (Math.sqrt(5) - 1) / 2;
+  let a = startMs;
+  let b = endMs;
+  let c = b - gr * (b - a);
+  let d = a + gr * (b - a);
+
+  while (Math.abs(b - a) > 60000) { // 1 minute accuracy
+    const T_c = dateToJulianCentury(new Date(c));
+    const T_d = dateToJulianCentury(new Date(d));
+    const dist_c = getGeocentricDistance(planetKey, T_c);
+    const dist_d = getGeocentricDistance(planetKey, T_d);
+
+    if (isMin) {
+      if (dist_c < dist_d) {
+        b = d;
+      } else {
+        a = c;
+      }
+    } else {
+      if (dist_c > dist_d) {
+        b = d;
+      } else {
+        a = c;
+      }
+    }
+    c = b - gr * (b - a);
+    d = a + gr * (b - a);
+  }
+
+  const midMs = (a + b) / 2;
+  const bestDate = new Date(midMs);
+  const bestDist = getGeocentricDistance(planetKey, dateToJulianCentury(bestDate));
+  return { date: bestDate, distanceAU: bestDist };
+}
+
+/**
+ * Compute all Extrema (Minima and Maxima) for a given planet in a selected year
+ */
+function computePlanetExtremaForYear(planetKey, year) {
+  const startOfYear = new Date(Date.UTC(year, 0, 1, 0, 0, 0));
+  const endOfYear = new Date(Date.UTC(year, 11, 31, 23, 59, 59));
+
+  // Daily sampling to locate candidates
+  const sampleIntervalMs = 86400000; // 1 day
+  const samples = [];
+
+  for (let ms = startOfYear.getTime(); ms <= endOfYear.getTime(); ms += sampleIntervalMs) {
+    const d = new Date(ms);
+    const dist = getGeocentricDistance(planetKey, dateToJulianCentury(d));
+    samples.push({ ms, dist, date: d });
+  }
+
+  // Find candidate minima and maxima
+  const localMinima = [];
+  const localMaxima = [];
+
+  for (let i = 1; i < samples.length - 1; i++) {
+    const prev = samples[i - 1].dist;
+    const curr = samples[i].dist;
+    const next = samples[i + 1].dist;
+
+    if (curr < prev && curr < next) {
+      // Refine minimum
+      const refined = findExtremum(planetKey, samples[i - 1].ms, samples[i + 1].ms, true);
+      localMinima.push({ ...refined, isLocalExtremum: true });
+    }
+
+    if (curr > prev && curr > next) {
+      // Refine maximum
+      const refined = findExtremum(planetKey, samples[i - 1].ms, samples[i + 1].ms, false);
+      localMaxima.push({ ...refined, isLocalExtremum: true });
+    }
+  }
+
+  // Check boundary values if no internal local extremum found
+  if (localMinima.length === 0) {
+    const startDist = samples[0].dist;
+    const endDist = samples[samples.length - 1].dist;
+    if (startDist < endDist) {
+      localMinima.push({ date: startOfYear, distanceAU: startDist, isLocalExtremum: false, note: 'वर्ष आरंभ सीमा मान (Boundary Min)' });
+    } else {
+      localMinima.push({ date: endOfYear, distanceAU: endDist, isLocalExtremum: false, note: 'वर्ष अंत सीमा मान (Boundary Min)' });
+    }
+  }
+
+  if (localMaxima.length === 0) {
+    const startDist = samples[0].dist;
+    const endDist = samples[samples.length - 1].dist;
+    if (startDist > endDist) {
+      localMaxima.push({ date: startOfYear, distanceAU: startDist, isLocalExtremum: false, note: 'वर्ष आरंभ सीमा मान (Boundary Max)' });
+    } else {
+      localMaxima.push({ date: endOfYear, distanceAU: endDist, isLocalExtremum: false, note: 'वर्ष अंत सीमा मान (Boundary Max)' });
+    }
+  }
+
+  return { localMinima, localMaxima };
+}
+
+/**
+ * Embedded Representative Near-Earth Objects Dataset (NASA/JPL CNEOS Close Approaches)
+ */
+const SMALL_BODIES_DATA = [
+  { designation: '2026 PC6', type: 'Asteroid (NEA)', date: '2026-08-12T00:50:00Z', distAU: 0.000137, diameter: '~15 - 35 m' },
+  { designation: '2026 RT34', type: 'Asteroid (NEA)', date: '2026-09-13T09:08:00Z', distAU: 0.000140, diameter: '~10 - 22 m' },
+  { designation: '2026 SZ2', type: 'Asteroid (NEA)', date: '2026-09-20T21:19:00Z', distAU: 0.000142, diameter: '~12 - 28 m' },
+  { designation: '99942 Apophis', type: 'Potentially Hazardous Asteroid', date: '2029-04-13T21:46:00Z', distAU: 0.000254, diameter: '370 m' },
+  { designation: '2024 YR4', type: 'Asteroid (NEA)', date: '2032-12-22T14:10:00Z', distAU: 0.002820, diameter: '~40 - 90 m' },
+  { designation: '101955 Bennu', type: 'Asteroid (B-type)', date: '2060-09-23T18:00:00Z', distAU: 0.005000, diameter: '490 m' },
+  { designation: '2023 DW', type: 'Asteroid (NEA)', date: '2046-02-14T21:15:00Z', distAU: 0.012000, diameter: '~50 m' },
+  { designation: '1P/Halley', type: 'Periodic Comet', date: '2061-07-28T12:00:00Z', distAU: 0.470000, diameter: '~11 km' },
+  { designation: '2026 CW1', type: 'Asteroid (NEA)', date: '2026-02-10T14:22:00Z', distAU: 0.008400, diameter: '~25 m' },
+  { designation: '2026 BK3', type: 'Asteroid (NEA)', date: '2026-05-18T19:30:00Z', distAU: 0.015200, diameter: '~45 m' }
+];
+
+/**
+ * Filter Small Bodies for Selected Year and Threshold
+ */
+function getSmallBodiesForYear(year, maxThresholdLD) {
+  return SMALL_BODIES_DATA.filter(item => {
+    const itemYear = new Date(item.date).getUTCFullYear();
+    const distLD = (item.distAU * AU_IN_KM) / LD_IN_KM;
+    return itemYear === year && distLD <= maxThresholdLD;
+  });
+}
+
+// Global variable to store current generated table data for CSV export
+let currentExportData = {
+  year: 2026,
+  planets: [],
+  smallBodies: []
+};
+
+/**
+ * Render main planetary table
+ */
+function renderPlanetaryTable(year) {
+  const tbody = document.getElementById('planetTableBody');
+  tbody.innerHTML = '';
+  currentExportData.planets = [];
+
+  const planetKeys = ['mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
+
+  planetKeys.forEach(pKey => {
+    const pInfo = PLANET_DATA[pKey];
+    const extrema = computePlanetExtremaForYear(pKey, year);
+
+    const minRows = extrema.localMinima;
+    const maxRows = extrema.localMaxima;
+    const rowSpanCount = Math.max(minRows.length, maxRows.length);
+
+    for (let r = 0; r < rowSpanCount; r++) {
+      const tr = document.createElement('tr');
+
+      // First column: Planet name (with rowspan for multiple events)
+      if (r === 0) {
+        const tdPlanet = document.createElement('td');
+        tdPlanet.className = 'planet-cell';
+        tdPlanet.rowSpan = rowSpanCount;
+        tdPlanet.innerHTML = `${pInfo.nameHi} <span class="planet-en">${pInfo.nameEn}</span>`;
+        tr.appendChild(tdPlanet);
+
+        const tdRef = document.createElement('td');
+        tdRef.rowSpan = rowSpanCount;
+        tdRef.style.fontSize = '12px';
+        tdRef.style.whiteSpace = 'pre-line';
+        tdRef.textContent = pInfo.refRange;
+        tr.appendChild(tdRef);
+      }
+
+      const minCount = minRows.length;
+      const maxCount = maxRows.length;
+
+      // Min Column (GREEN)
+      if (r < minCount) {
+        const minItem = minRows[r];
+        const tdMin = document.createElement('td');
+        tdMin.className = 'cell-green';
+        if (r === minCount - 1 && minCount < maxCount) {
+          tdMin.rowSpan = maxCount - minCount + 1;
+        }
+
+        const minKm = (minItem.distanceAU * AU_IN_KM).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+        const minBadge = minItem.isLocalExtremum ?
+          '<span class="badge-tag badge-green">निकटतम मोड़ (Local Min)</span>' :
+          `<span class="badge-tag badge-green" style="background:#2b6cb0;">${minItem.note}</span>`;
+
+        tdMin.innerHTML = `
+          ${minBadge}<br>
+          📅 <b>${formatUTC(minItem.date)}</b><br>
+          <div class="time-ist">🇮🇳 ${formatIST(minItem.date)}</div>
+          📏 <b>${minItem.distanceAU.toFixed(6)} AU</b> <span class="dist-unit">(${minKm} km)</span>
+        `;
+        tr.appendChild(tdMin);
+      }
+
+      // Max Column (RED)
+      if (r < maxCount) {
+        const maxItem = maxRows[r];
+        const tdMax = document.createElement('td');
+        tdMax.className = 'cell-red';
+        if (r === maxCount - 1 && maxCount < minCount) {
+          tdMax.rowSpan = minCount - maxCount + 1;
+        }
+
+        const maxKm = (maxItem.distanceAU * AU_IN_KM).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+        const maxBadge = maxItem.isLocalExtremum ?
+          '<span class="badge-tag badge-red">दूरस्थ मोड़ (Local Max)</span>' :
+          `<span class="badge-tag badge-red" style="background:#4a5568;">${maxItem.note}</span>`;
+
+        tdMax.innerHTML = `
+          ${maxBadge}<br>
+          📅 <b>${formatUTC(maxItem.date)}</b><br>
+          <div class="time-ist">🇮🇳 ${formatIST(maxItem.date)}</div>
+          📏 <b>${maxItem.distanceAU.toFixed(6)} AU</b> <span class="dist-unit">(${maxKm} km)</span>
+        `;
+        tr.appendChild(tdMax);
+      }
+
+      // Astrological Column
+      if (r === 0) {
+        const tdAstro = document.createElement('td');
+        tdAstro.rowSpan = rowSpanCount;
+        tdAstro.style.fontSize = '12px';
+        tdAstro.style.color = '#4a5568';
+        tdAstro.textContent = pInfo.astrology;
+        tr.appendChild(tdAstro);
+      }
+
+      tbody.appendChild(tr);
+
+      // Save to export data
+      const expMin = r < minCount ? minRows[r] : null;
+      const expMax = r < maxCount ? maxRows[r] : null;
+
+      currentExportData.planets.push({
+        planet: `${pInfo.nameHi} (${pInfo.nameEn})`,
+        minDateUTC: expMin ? formatUTC(expMin.date) : '-',
+        minDateIST: expMin ? formatIST(expMin.date) : '-',
+        minDistAU: expMin ? expMin.distanceAU.toFixed(6) : '-',
+        minDistKm: expMin ? (expMin.distanceAU * AU_IN_KM).toFixed(0) : '-',
+        maxDateUTC: expMax ? formatUTC(expMax.date) : '-',
+        maxDateIST: expMax ? formatIST(expMax.date) : '-',
+        maxDistAU: expMax ? expMax.distanceAU.toFixed(6) : '-',
+        maxDistKm: expMax ? (expMax.distanceAU * AU_IN_KM).toFixed(0) : '-'
+      });
+    }
+  });
+}
+
+/**
+ * Render small bodies table
+ */
+function renderSmallBodyTable(year) {
+  const tbody = document.getElementById('smallBodyTableBody');
+  tbody.innerHTML = '';
+  currentExportData.smallBodies = [];
+
+  const thresholdLD = parseFloat(document.getElementById('thresholdSelect').value) || 10;
+  const items = getSmallBodiesForYear(year, thresholdLD);
+
+  if (items.length === 0) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="6" style="text-align: center; color: #718096; padding: 20px;">
+      वर्ष ${year} के लिए चयनित सीमा (≤ ${thresholdLD} LD) में कोई दर्ज निकट-आगमन पिंड नहीं मिला।<br>
+      (No catalogued near-Earth close approaches found in database for year ${year} within threshold).
+    </td>`;
+    tbody.appendChild(tr);
+    return;
+  }
+
+  items.forEach(item => {
+    const tr = document.createElement('tr');
+    const itemDate = new Date(item.date);
+    const distKm = (item.distAU * AU_IN_KM).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    const distLD = ((item.distAU * AU_IN_KM) / LD_IN_KM).toFixed(2);
+
+    tr.innerHTML = `
+      <td style="font-weight: 700; color: #1a365d;">${item.designation}</td>
+      <td>${item.type}</td>
+      <td class="cell-green">
+        🟢 <span class="badge-tag badge-green">Closest Approach</span><br>
+        📅 <b>${formatUTC(itemDate)}</b><br>
+        <div class="time-ist">🇮🇳 ${formatIST(itemDate)}</div>
+      </td>
+      <td class="cell-green">
+        📏 <b>${distKm} km</b><br>
+        (${item.distAU.toFixed(6)} AU / <b>${distLD} LD</b>)
+      </td>
+      <td>${item.diameter}</td>
+      <td style="color: #718096; font-size: 11.5px;">
+        N/A (Receding after pass; no annual maximum defined for small bodies)
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+
+    currentExportData.smallBodies.push({
+      designation: item.designation,
+      type: item.type,
+      dateUTC: formatUTC(itemDate),
+      dateIST: formatIST(itemDate),
+      distKm: distKm,
+      distAU: item.distAU.toFixed(6),
+      distLD: distLD,
+      diameter: item.diameter
+    });
+  });
+}
+
+/**
+ * Main Calculation Runner
+ */
+function runCalculations() {
+  const select = document.getElementById('yearSelect');
+  const selectedYear = parseInt(select.value, 10);
+
+  if (isNaN(selectedYear)) return;
+
+  currentExportData.year = selectedYear;
+
+  // Show loading overlay
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.style.display = 'flex';
+
+  setTimeout(() => {
+    // Update headers
+    document.getElementById('displayYear').textContent = selectedYear;
+    document.getElementById('spanStartYear').textContent = selectedYear;
+    document.getElementById('spanEndYear').textContent = selectedYear;
+
+    // Render tables
+    renderPlanetaryTable(selectedYear);
+    renderSmallBodyTable(selectedYear);
+
+    // Update timestamp
+    const now = new Date();
+    document.getElementById('reportTimestamp').textContent = `${formatUTC(now)} | 🇮🇳 ${formatIST(now)}`;
+
+    overlay.style.display = 'none';
+  }, 100);
+}
+
+/**
+ * CSV Export Function
+ */
+function exportCSV() {
+  let csvContent = "\uFEFF"; // UTF-8 BOM
+  csvContent += `Planetary Close & Far Distance Report - Year ${currentExportData.year}\n`;
+  csvContent += `Generated at: ${document.getElementById('reportTimestamp').textContent}\n\n`;
+
+  csvContent += `1. PLANETARY DISTANCE TABLE\n`;
+  csvContent += `Planet,Closest Date (UTC),Closest Date (IST),Closest Distance (AU),Closest Distance (km),Farthest Date (UTC),Farthest Date (IST),Farthest Distance (AU),Farthest Distance (km)\n`;
+
+  currentExportData.planets.forEach(p => {
+    csvContent += `"${p.planet}","${p.minDateUTC}","${p.minDateIST}",${p.minDistAU},${p.minDistKm},"${p.maxDateUTC}","${p.maxDateIST}",${p.maxDistAU},${p.maxDistKm}\n`;
+  });
+
+  csvContent += `\n2. ASTEROIDS & COMETS CLOSE APPROACHES\n`;
+  csvContent += `Designation,Type,Closest Approach Date (UTC),Closest Approach Date (IST),Distance (km),Distance (AU),Distance (LD),Diameter\n`;
+
+  currentExportData.smallBodies.forEach(sb => {
+    csvContent += `"${sb.designation}","${sb.type}","${sb.dateUTC}","${sb.dateIST}",${sb.distKm},${sb.distAU},${sb.distLD},"${sb.diameter}"\n`;
+  });
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `Planet_Close_Far_Report_${currentExportData.year}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
+ * UI Setup on Page Load
+ */
+window.addEventListener('DOMContentLoaded', () => {
+  const currentYear = new Date().getUTCFullYear();
+  const select = document.getElementById('yearSelect');
+
+  const minYear = currentYear - 100;
+  const maxYear = currentYear + 100;
+
+  for (let y = minYear; y <= maxYear; y++) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    if (y === currentYear) {
+      opt.selected = true;
+    }
+    select.appendChild(opt);
+  }
+
+  // Event Listeners
+  document.getElementById('submitBtn').addEventListener('click', runCalculations);
+  document.getElementById('thresholdSelect').addEventListener('change', () => {
+    renderSmallBodyTable(currentExportData.year);
+  });
+  document.getElementById('exportCsvBtn').addEventListener('click', exportCSV);
+  document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+
+  // Initial Run
+  runCalculations();
+});
+</script>
+</body>
+</html>

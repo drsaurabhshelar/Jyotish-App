@@ -460,6 +460,33 @@ button:hover {
 }
 
 </style>
+<style>
+
+/* MAIN CALENDAR GRID CELL TEXT SIZING: 9px FOR TEXT, 27px FOR DATE NUMBER */
+.calendar-cell, .calendar-cell span, .calendar-cell div, .calendar-cell p, .calendar-cell td, .calendar-cell th {
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+}
+
+.calendar-cell strong {
+    font-size: 27px !important;
+    line-height: 1 !important;
+}
+
+/* Ensure popup modal typography remains STRICTLY untouched */
+#calModalBg, #calModalBg *,
+#yatraModalBg, #yatraModalBg *,
+#yatraModalBgEval, #yatraModalBgEval *,
+.modal-scroll-container, .modal-scroll-container *,
+[id*="calModal"], [id*="calModal"] *,
+[id*="yatraModal"], [id*="yatraModal"] *,
+[id*="ModalBg"], [id*="ModalBg"] *,
+[id*="ModalScrollContainer"], [id*="ModalScrollContainer"] * {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+}
+
+</style>
 </head>
 <body>
     <div id="app"></div>
@@ -2854,7 +2881,7 @@ function renderMonthlyCalendar(year, month) {
             })()}
 
             <div style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top: 15px; margin-bottom: auto;">
-                <strong style="font-size:18px;">${date.getDate()}</strong>
+                <strong style="font-size:27px; font-weight:800; display:inline-block; margin:2px 0;">${date.getDate()}</strong>
 
             </div>
 
@@ -4120,7 +4147,7 @@ renderMonthlyCalendar = function(year, month) {
             })()}
 
             <div style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top: 15px; margin-bottom: auto;">
-                <strong style="font-size:18px;">${date.getDate()}</strong>
+                <strong style="font-size:27px; font-weight:800; display:inline-block; margin:2px 0;">${date.getDate()}</strong>
 
             </div>
 
@@ -6749,7 +6776,7 @@ function renderYatraMonthlyCalendar(year, month) {
             </div>
             ${typeof eclipseHtml !== 'undefined' && eclipseHtml !== '' ? `<div style="position:absolute; left:2px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2px; z-index:10;">${eclipseHtml}</div>` : ''}
 
-            <strong style="font-size:18px;">${date.getDate()}</strong><br>
+            <strong style="font-size:27px; font-weight:800; display:inline-block; margin:2px 0;">${date.getDate()}</strong><br>
             <div style="margin-top:5px; display:flex; flex-direction:column; gap:2px;">${badges}</div>
         </div>`;
         date.setDate(date.getDate() + 1);
@@ -8829,7 +8856,7 @@ function renderYatraEvaluatedMonthlyCalendar(year, month) {
             </div>
             ${typeof eclipseHtml !== 'undefined' && eclipseHtml !== '' ? `<div style="position:absolute; left:2px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2px; z-index:10;">${eclipseHtml}</div>` : ''}
 
-            <strong style="font-size:18px;">${date.getDate()}</strong><br>
+            <strong style="font-size:27px; font-weight:800; display:inline-block; margin:2px 0;">${date.getDate()}</strong><br>
             <div style="margin-top:5px; display:flex; flex-direction:column; gap:2px;">${badges}</div>
         </div>`;
         date.setDate(date.getDate() + 1);

@@ -927,6 +927,14 @@ button:hover {
     padding: 2px 6px !important;
 }
 
+
+/* Ultra-compact font size for all non-date text inside calendar cells */
+.calendar-cell *:not(strong) {
+    font-size: 8.5px !important;
+}
+.calendar-cell .badge {
+    font-size: 8px !important;
+}
 </style>
 </head>
 <body>
@@ -2986,7 +2994,7 @@ function renderMonthlyCalendar(year, month) {
 
         let hasRaviYoga = ygs.some(y => y.name && y.name.includes('रवि योग'));
         let cellStyle = hasRaviYoga ? `background-color: #e8f5e9 !important; border: 1px solid var(--border-color); box-sizing: border-box;` : ``;
-        let sunEmojiHtml = hasRaviYoga ? `<div style="font-size: 11px !important; margin-top:2px; text-align:center;">☀️</div>` : '';
+        let sunEmojiHtml = hasRaviYoga ? `<div style="font-size: 8.5px !important; margin-top:2px; text-align:center;">☀️</div>` : '';
 
         let restrictions = evaluateDayRestrictions(date, p);
         let activitySpecificRestrictions = getActivitySpecificProhibitions(date.getDay(), p.moonNakshatraName);
@@ -3010,14 +3018,14 @@ function renderMonthlyCalendar(year, month) {
             if (vastraRules.hasRule) {
                 if (vastraRules.tuesdayRed) {
                     restrictionsHtml += `
-                    <div title="आज मंगलवार है, लाल वस्त्र धारण करें।" style="position:relative; font-size: 11px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
+                    <div title="आज मंगलवार है, लाल वस्त्र धारण करें।" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
                         🥻
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid #48bb78; border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
                     </div>`;
                 }
                 if (vastraRules.shatabhishaRestricted) {
                     restrictionsHtml += `
-                    <div title="शतभिषा नक्षत्र: कुछ आचार्यों के मतानुसार सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण न करे।" style="position:relative; font-size: 11px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
+                    <div title="शतभिषा नक्षत्र: कुछ आचार्यों के मतानुसार सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण न करे।" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
                         👗
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
                         <div style="position:absolute; top:50%; left:0; width:100%; height:1px; background:var(--red-ashubh); transform:translateY(-50%) rotate(45deg); pointer-events:none;"></div>
@@ -3031,7 +3039,7 @@ function renderMonthlyCalendar(year, month) {
 
                 uniqueRestrictions.forEach(r => {
                     restrictionsHtml += `
-                        <div title="आज ${r.activity} नहीं करना चाहिए" style="position:relative; font-size: 11px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
+                        <div title="आज ${r.activity} नहीं करना चाहिए" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
                             ${r.emoji}
                             <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid red; border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
                             <div style="position:absolute; top:50%; left:0; width:100%; height:1px; background:red; transform:translateY(-50%) rotate(45deg); pointer-events:none;"></div>
@@ -3085,7 +3093,7 @@ function renderMonthlyCalendar(year, month) {
         ashubhYogas = [...new Set(ashubhYogas)];
 
         if (shubhYogas.length > 0) {
-            badges += `<span class="badge green" style="font-size: 11px !important; display:block; margin-bottom:2px;">${shubhYogas.join(', ')}</span>`;
+            badges += `<span class="badge green" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${shubhYogas.join(', ')}</span>`;
         }
         let bhadraDataCalendar = window.calculateBhadra(p);
         let hasBhadraInCell = false;
@@ -3099,7 +3107,7 @@ function renderMonthlyCalendar(year, month) {
         }
 
         if (ashubhYogas.length > 0) {
-            badges += `<span class="badge red" style="font-size: 11px !important; display:block; margin-bottom:2px;">${ashubhYogas.join(', ')}</span>`;
+            badges += `<span class="badge red" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${ashubhYogas.join(', ')}</span>`;
         }
 
 
@@ -3142,7 +3150,7 @@ function renderMonthlyCalendar(year, month) {
                 tithiCircleHTML += `<div style="background:#000; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
             }
         } else {
-            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 11px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
+            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 8.5px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
         }
 
 
@@ -3156,7 +3164,7 @@ function renderMonthlyCalendar(year, month) {
 
 
 
-        tithiCircleHTML += `<span style="font-size: 11px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
+        tithiCircleHTML += `<span style="font-size: 8.5px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
 
         let isToday = (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear());
         let panchakDetails = getPanchakDetails(date, p.lat, p.lng);
@@ -3168,16 +3176,16 @@ function renderMonthlyCalendar(year, month) {
 
         html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
 
-            <span style="position:absolute; top:2px; font-size: 11px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
+            <span style="position:absolute; top:2px; font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
 
             <div style="position:absolute; top:2px; left:2px; display:flex; flex-direction:column; gap:1px; text-align:left;">
-                <span style="font-size: 11px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
-                <span style="font-size: 11px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
+                <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
+                <span style="font-size: 8.5px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
             </div>
 
             <div style="position:absolute; top:2px; right:2px; display:flex; flex-direction:column; align-items:center; gap:2px;">
                 <div style="display:flex; align-items:center; gap:2px;">
-                    <span style="font-size: 11px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
+                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
                     ${tithiCircleHTML}
                 </div>
                 ${sunEmojiHtml}
@@ -3198,9 +3206,9 @@ function renderMonthlyCalendar(year, month) {
                 let akDataCell = window.getAdhikKshayaMasData(date, lat, lng);
                 if (akDataCell) {
                     if (akDataCell.adhik) {
-                        rightBarContent += `<div title="अधिक मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#f0fff4; border:1px solid #48bb78; color:#48bb78; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 11px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">+</div>`;
+                        rightBarContent += `<div title="अधिक मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#f0fff4; border:1px solid #48bb78; color:#48bb78; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 8.5px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">+</div>`;
                     } else if (akDataCell.kshay) {
-                        rightBarContent += `<div title="क्षय मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#fff5f5; border:1px solid #e53e3e; color:#e53e3e; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 11px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">-</div>`;
+                        rightBarContent += `<div title="क्षय मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#fff5f5; border:1px solid #e53e3e; color:#e53e3e; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 8.5px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">-</div>`;
                     }
                 }
 
@@ -3220,13 +3228,13 @@ function renderMonthlyCalendar(year, month) {
                 if (bs.canBuy) {
                     rightBarContent += `
                     <div title="मोल लेना / खरीदना शुभ" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--green-shubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">
-                        <span style="font-size: 11px !important;">🛒</span>
+                        <span style="font-size: 8.5px !important;">🛒</span>
                     </div>`;
                 }
                 if (bs.canSell) {
                     rightBarContent += `
                     <div title="बेचना शुभ" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--red-ashubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">
-                        <span style="font-size: 11px !important;">🏷️</span>
+                        <span style="font-size: 8.5px !important;">🏷️</span>
                     </div>`;
                 }
 
@@ -3280,7 +3288,7 @@ function renderMonthlyCalendar(year, month) {
                     let jTip = jewelryTooltips.join(' + ') + " के कारण आभूषण/रत्न धारण वर्जित।";
                     rightBarContent += `
                     <div title="${jTip}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
-                        <div style="font-size: 11px !important;">💍</div>
+                        <div style="font-size: 8.5px !important;">💍</div>
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%;"></div>
                         <div style="position:absolute; top:50%; left:50%; width:100%; height:1px; background:var(--red-ashubh); transform:translate(-50%, -50%) rotate(45deg);"></div>
                     </div>`;
@@ -3290,7 +3298,7 @@ function renderMonthlyCalendar(year, month) {
                     let mTip = marriageTooltips.join(' + ') + " के कारण विवाहादि शुभ कर्म वर्ज।";
                     rightBarContent += `
                     <div title="${mTip}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
-                        <div style="font-size: 11px !important;">💒</div>
+                        <div style="font-size: 8.5px !important;">💒</div>
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%;"></div>
                         <div style="position:absolute; top:50%; left:50%; width:100%; height:1px; background:var(--red-ashubh); transform:translate(-50%, -50%) rotate(45deg);"></div>
                     </div>`;
@@ -3318,10 +3326,10 @@ function renderMonthlyCalendar(year, month) {
                         let sym = ev.symbol + '\uFE0E';
                         if (ev.isAstaDisplay) {
                             let tTip = `${ev.hindi} अस्त\n🔴 अस्त प्रारंभ: ${ev.lastTransition ? ev.lastTransition.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}\n🟢 संभावित उदय: ${ev.nextTransition ? ev.nextTransition.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}`;
-                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; opacity: 0.65; color: var(--text-main); border: 1px solid var(--text-main); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 11px !important; line-height: 1;">${sym}</div>`;
+                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; opacity: 0.65; color: var(--text-main); border: 1px solid var(--text-main); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 8.5px !important; line-height: 1;">${sym}</div>`;
                         } else if (ev.isUdayaEventDate) {
                             let tTip = `${ev.hindi} उदय\n🟢 उदय: ${ev.udayaTimestamp ? ev.udayaTimestamp.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}`;
-                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; color: var(--green-shubh); border: 1px solid var(--green-shubh); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 11px !important; line-height: 1;">${sym}</div>`;
+                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; color: var(--green-shubh); border: 1px solid var(--green-shubh); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 8.5px !important; line-height: 1;">${sym}</div>`;
                         }
                     });
                 } catch(e) {
@@ -3348,7 +3356,7 @@ function renderPersonalTab() {
         <div class="card">
             <h2>Personal / जन्म नक्षत्र</h2>
 
-            <div class="tabs" style="font-size: 11px !important; margin-bottom: 15px;">
+            <div class="tabs" style="font-size: 8.5px !important; margin-bottom: 15px;">
                 <div class="tab active" onclick="switchSubTab('methodB')" id="tabMethodB">Birth Date</div>
                 <div class="tab" onclick="switchSubTab('methodA')" id="tabMethodA">Manual Nakshatra</div>
             </div>
@@ -4267,7 +4275,7 @@ renderMonthlyCalendar = function(year, month) {
 
         let hasRaviYoga = ygs.some(y => y.name && y.name.includes('रवि योग'));
         let cellStyle = hasRaviYoga ? `background-color: #e8f5e9 !important; border: 1px solid var(--border-color); box-sizing: border-box;` : ``;
-        let sunEmojiHtml = hasRaviYoga ? `<div style="font-size: 11px !important; margin-top:2px; text-align:center;">☀️</div>` : '';
+        let sunEmojiHtml = hasRaviYoga ? `<div style="font-size: 8.5px !important; margin-top:2px; text-align:center;">☀️</div>` : '';
 
         let restrictions = evaluateDayRestrictions(date, p);
         let activitySpecificRestrictions = getActivitySpecificProhibitions(date.getDay(), p.moonNakshatraName);
@@ -4291,14 +4299,14 @@ renderMonthlyCalendar = function(year, month) {
             if (vastraRules.hasRule) {
                 if (vastraRules.tuesdayRed) {
                     restrictionsHtml += `
-                    <div title="आज मंगलवार है, लाल वस्त्र धारण करें।" style="position:relative; font-size: 11px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
+                    <div title="आज मंगलवार है, लाल वस्त्र धारण करें।" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
                         🥻
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid #48bb78; border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
                     </div>`;
                 }
                 if (vastraRules.shatabhishaRestricted) {
                     restrictionsHtml += `
-                    <div title="शतभिषा नक्षत्र: कुछ आचार्यों के मतानुसार सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण न करे।" style="position:relative; font-size: 11px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
+                    <div title="शतभिषा नक्षत्र: कुछ आचार्यों के मतानुसार सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण न करे।" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
                         👗
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
                         <div style="position:absolute; top:50%; left:0; width:100%; height:1px; background:var(--red-ashubh); transform:translateY(-50%) rotate(45deg); pointer-events:none;"></div>
@@ -4312,7 +4320,7 @@ renderMonthlyCalendar = function(year, month) {
 
                 uniqueRestrictions.forEach(r => {
                     restrictionsHtml += `
-                        <div title="आज ${r.activity} नहीं करना चाहिए" style="position:relative; font-size: 11px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
+                        <div title="आज ${r.activity} नहीं करना चाहिए" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
                             ${r.emoji}
                             <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid red; border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
                             <div style="position:absolute; top:50%; left:0; width:100%; height:1px; background:red; transform:translateY(-50%) rotate(45deg); pointer-events:none;"></div>
@@ -4366,7 +4374,7 @@ renderMonthlyCalendar = function(year, month) {
         ashubhYogas = [...new Set(ashubhYogas)];
 
         if (shubhYogas.length > 0) {
-            badges += `<span class="badge green" style="font-size: 11px !important; display:block; margin-bottom:2px;">${shubhYogas.join(', ')}</span>`;
+            badges += `<span class="badge green" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${shubhYogas.join(', ')}</span>`;
         }
         let bhadraDataCalendar = window.calculateBhadra(p);
         let hasBhadraInCell = false;
@@ -4380,7 +4388,7 @@ renderMonthlyCalendar = function(year, month) {
         }
 
         if (ashubhYogas.length > 0) {
-            badges += `<span class="badge red" style="font-size: 11px !important; display:block; margin-bottom:2px;">${ashubhYogas.join(', ')}</span>`;
+            badges += `<span class="badge red" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${ashubhYogas.join(', ')}</span>`;
         }
 
 
@@ -4423,7 +4431,7 @@ renderMonthlyCalendar = function(year, month) {
                 tithiCircleHTML += `<div style="background:#000; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
             }
         } else {
-            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 11px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
+            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 8.5px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
         }
 
 
@@ -4437,7 +4445,7 @@ renderMonthlyCalendar = function(year, month) {
 
 
 
-        tithiCircleHTML += `<span style="font-size: 11px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
+        tithiCircleHTML += `<span style="font-size: 8.5px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
 
         let isToday = (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear());
         let panchakDetails = getPanchakDetails(date, p.lat, p.lng);
@@ -4449,16 +4457,16 @@ renderMonthlyCalendar = function(year, month) {
 
         html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
 
-            <span style="position:absolute; top:2px; font-size: 11px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
+            <span style="position:absolute; top:2px; font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
 
             <div style="position:absolute; top:2px; left:2px; display:flex; flex-direction:column; gap:1px; text-align:left;">
-                <span style="font-size: 11px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
-                <span style="font-size: 11px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
+                <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
+                <span style="font-size: 8.5px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
             </div>
 
             <div style="position:absolute; top:2px; right:2px; display:flex; flex-direction:column; align-items:center; gap:2px;">
                 <div style="display:flex; align-items:center; gap:2px;">
-                    <span style="font-size: 11px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
+                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
                     ${tithiCircleHTML}
                 </div>
                 ${sunEmojiHtml}
@@ -4479,9 +4487,9 @@ renderMonthlyCalendar = function(year, month) {
                 let akDataCell = window.getAdhikKshayaMasData(date, lat, lng);
                 if (akDataCell) {
                     if (akDataCell.adhik) {
-                        rightBarContent += `<div title="अधिक मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#f0fff4; border:1px solid #48bb78; color:#48bb78; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 11px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">+</div>`;
+                        rightBarContent += `<div title="अधिक मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#f0fff4; border:1px solid #48bb78; color:#48bb78; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 8.5px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">+</div>`;
                     } else if (akDataCell.kshay) {
-                        rightBarContent += `<div title="क्षय मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#fff5f5; border:1px solid #e53e3e; color:#e53e3e; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 11px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">-</div>`;
+                        rightBarContent += `<div title="क्षय मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#fff5f5; border:1px solid #e53e3e; color:#e53e3e; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 8.5px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">-</div>`;
                     }
                 }
 
@@ -4501,13 +4509,13 @@ renderMonthlyCalendar = function(year, month) {
                 if (bs.canBuy) {
                     rightBarContent += `
                     <div title="मोल लेना / खरीदना शुभ" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--green-shubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">
-                        <span style="font-size: 11px !important;">🛒</span>
+                        <span style="font-size: 8.5px !important;">🛒</span>
                     </div>`;
                 }
                 if (bs.canSell) {
                     rightBarContent += `
                     <div title="बेचना शुभ" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--red-ashubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">
-                        <span style="font-size: 11px !important;">🏷️</span>
+                        <span style="font-size: 8.5px !important;">🏷️</span>
                     </div>`;
                 }
 
@@ -4561,7 +4569,7 @@ renderMonthlyCalendar = function(year, month) {
                     let jTip = jewelryTooltips.join(' + ') + " के कारण आभूषण/रत्न धारण वर्जित।";
                     rightBarContent += `
                     <div title="${jTip}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
-                        <div style="font-size: 11px !important;">💍</div>
+                        <div style="font-size: 8.5px !important;">💍</div>
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%;"></div>
                         <div style="position:absolute; top:50%; left:50%; width:100%; height:1px; background:var(--red-ashubh); transform:translate(-50%, -50%) rotate(45deg);"></div>
                     </div>`;
@@ -4571,7 +4579,7 @@ renderMonthlyCalendar = function(year, month) {
                     let mTip = marriageTooltips.join(' + ') + " के कारण विवाहादि शुभ कर्म वर्ज।";
                     rightBarContent += `
                     <div title="${mTip}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
-                        <div style="font-size: 11px !important;">💒</div>
+                        <div style="font-size: 8.5px !important;">💒</div>
                         <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%;"></div>
                         <div style="position:absolute; top:50%; left:50%; width:100%; height:1px; background:var(--red-ashubh); transform:translate(-50%, -50%) rotate(45deg);"></div>
                     </div>`;
@@ -4593,10 +4601,10 @@ renderMonthlyCalendar = function(year, month) {
                         let sym = ev.symbol + '\uFE0E';
                         if (ev.isAstaDisplay) {
                             let tTip = `${ev.hindi} अस्त\n🔴 अस्त प्रारंभ: ${ev.lastTransition ? ev.lastTransition.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}\n🟢 संभावित उदय: ${ev.nextTransition ? ev.nextTransition.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}`;
-                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; opacity: 0.65; color: var(--text-main); border: 1px solid var(--text-main); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 11px !important; line-height: 1;">${sym}</div>`;
+                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; opacity: 0.65; color: var(--text-main); border: 1px solid var(--text-main); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 8.5px !important; line-height: 1;">${sym}</div>`;
                         } else if (ev.isUdayaEventDate) {
                             let tTip = `${ev.hindi} उदय\n🟢 उदय: ${ev.udayaTimestamp ? ev.udayaTimestamp.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}`;
-                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; color: var(--green-shubh); border: 1px solid var(--green-shubh); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 11px !important; line-height: 1;">${sym}</div>`;
+                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; color: var(--green-shubh); border: 1px solid var(--green-shubh); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 8.5px !important; line-height: 1;">${sym}</div>`;
                         }
                     });
                 } catch(e) {
@@ -5325,13 +5333,13 @@ window.closeCalendarModal = function() {
             </h3>
 
             <p style="margin:0 0 5px 0; color: ${bs.canBuy ? 'var(--green-shubh)' : 'var(--red-ashubh)'}; font-weight:bold; display:flex; align-items:center; gap:8px;">
-                ${bs.canBuy ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--green-shubh); background:white; border-radius:50%; color:white; font-size: 11px !important;">🛒</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 11px !important;">🛒</span>'}
+                ${bs.canBuy ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--green-shubh); background:white; border-radius:50%; color:white; font-size: 8.5px !important;">🛒</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 8.5px !important;">🛒</span>'}
                 आज खरीदना (मोल लेना) ${bs.canBuy ? 'शुभ है' : 'शुभ नहीं है'}
             </p>
             ${bs.canBuy ? `<p style="margin:0 0 15px 32px; font-size: 11px !important; color:var(--text-main);"><strong>कारण:</strong> ${bs.buyReason}</p>` : '<div style="margin-bottom:15px;"></div>'}
 
             <p style="margin:0 0 5px 0; color: ${bs.canSell ? 'var(--green-shubh)' : 'var(--red-ashubh)'}; font-weight:bold; display:flex; align-items:center; gap:8px;">
-                ${bs.canSell ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--red-ashubh); border-radius:50%; font-size: 11px !important; background:white;">🏷️</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 11px !important;">🏷️</span>'}
+                ${bs.canSell ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid var(--red-ashubh); border-radius:50%; font-size: 8.5px !important; background:white;">🏷️</span>' : '<span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; background:#e2e8f0; border-radius:50%; color:#94a3b8; font-size: 8.5px !important;">🏷️</span>'}
                 आज बेचना (मोल देना) ${bs.canSell ? 'शुभ है' : 'शुभ नहीं है'}
             </p>
             ${bs.canSell ? `<p style="margin:0 0 5px 32px; font-size: 11px !important; color:var(--text-main);"><strong>कारण:</strong> ${bs.sellReason}</p>` : ''}
@@ -5361,14 +5369,14 @@ window.closeCalendarModal = function() {
             adhikKshayaHtml = `
                 <div style="margin-top:10px; padding:10px; background:#f0fff4; border-radius:6px; border:1px solid #c6f6d5;">
                     <strong style="color:#2f855a;">अधिक मास (Adhik Mas)</strong><br>
-                    <span style="font-size: 11px !important; color:var(--text-main);">यह अधिक मास है (कोई सूर्य संक्रांति नहीं)। इस मास में सकाम कर्म, विवाह, मुंडन, गृहारंभ, आदि शुभ कार्य वर्जित होते हैं।</span>
+                    <span style="font-size: 8.5px !important; color:var(--text-main);">यह अधिक मास है (कोई सूर्य संक्रांति नहीं)। इस मास में सकाम कर्म, विवाह, मुंडन, गृहारंभ, आदि शुभ कार्य वर्जित होते हैं।</span>
                 </div>
             `;
         } else if (akData.kshay) {
             adhikKshayaHtml = `
                 <div style="margin-top:10px; padding:10px; background:#fff5f5; border-radius:6px; border:1px solid #fed7e2;">
                     <strong style="color:#c53030;">क्षय मास (Kshaya Mas)</strong><br>
-                    <span style="font-size: 11px !important; color:var(--text-main);">यह क्षय मास है (दो सूर्य संक्रांति)। यह अत्यंत अशुभ माना जाता है। सभी प्रकार के शुभ एवं मांगलिक कार्य सर्वथा वर्जित हैं।</span>
+                    <span style="font-size: 8.5px !important; color:var(--text-main);">यह क्षय मास है (दो सूर्य संक्रांति)। यह अत्यंत अशुभ माना जाता है। सभी प्रकार के शुभ एवं मांगलिक कार्य सर्वथा वर्जित हैं।</span>
                 </div>
             `;
         }
@@ -5391,18 +5399,18 @@ window.closeCalendarModal = function() {
     homaHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#fff1f2; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🔥</div>
+                <div style="width:32px; height:32px; background:#fff1f2; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🔥</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">होमाहुति का फल</strong>
             </div>
-            <div style="font-size: 11px !important; color:var(--text-main); line-height:1.6;">
+            <div style="font-size: 8.5px !important; color:var(--text-main); line-height:1.6;">
                 ग्रह: <strong>${homaData.homaPlanet}</strong><br>
                 ${homaData.homaPlanet} के मुख में होमाहुति पड़ती है।
             </div>
             ${homaData.homaIsKhal ? `
-            <div style="margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; font-size: 11px !important; color:var(--red-ashubh); font-weight:bold;">
+            <div style="margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; font-size: 8.5px !important; color:var(--red-ashubh); font-weight:bold;">
                 ⚠️ खल ग्रह के मुख में होमाहुति — शुभ नहीं।
             </div>` : `
-            <div style="margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; font-size: 11px !important; color:var(--green-shubh); font-weight:bold;">
+            <div style="margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; font-size: 8.5px !important; color:var(--green-shubh); font-weight:bold;">
                 ✓ शुभ ग्रह के मुख में होमाहुति।
             </div>`}
         </div>`;
@@ -5411,10 +5419,10 @@ window.closeCalendarModal = function() {
     homaHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#fff1f2; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🔥</div>
+                <div style="width:32px; height:32px; background:#fff1f2; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🔥</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">अग्निवास</strong>
             </div>
-            <div style="font-size: 11px !important; color:var(--text-main); line-height:1.6;">
+            <div style="font-size: 8.5px !important; color:var(--text-main); line-height:1.6;">
                 वास: <strong>${homaData.agniVasa}</strong><br>
                 फल: ${homaData.agniPhal}
             </div>
@@ -5442,7 +5450,7 @@ window.closeCalendarModal = function() {
             specialHtml += `
             <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                    <div style="width:32px; height:32px; background:#f5f3ff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🤝</div>
+                    <div style="width:32px; height:32px; background:#f5f3ff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🤝</div>
                     <strong style="color:var(--text-main); font-size: 11px !important;">संधि एवं मित्रता</strong>
                 </div>
                 ${popupDayInfoGrid([
@@ -5457,11 +5465,11 @@ window.closeCalendarModal = function() {
             specialHtml += `
             <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                    <div style="width:32px; height:32px; background:#f5f3ff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🛁</div>
+                    <div style="width:32px; height:32px; background:#f5f3ff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🛁</div>
                     <strong style="color:var(--text-main); font-size: 11px !important;">रोग से छूटे पुरुष का स्नान</strong>
                 </div>
-                <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px; color:var(--green-shubh);">🟢 शुभ</div>
-                <div style="font-size: 11px !important; color:var(--text-main); line-height:1.6;">
+                <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px; color:var(--green-shubh);">🟢 शुभ</div>
+                <div style="font-size: 8.5px !important; color:var(--text-main); line-height:1.6;">
                     <strong>अनुकूल स्थिति:</strong>
                     <ul style="margin: 4px 0 0 0; padding-left: 20px;">
                         ${snanData.factors.map(f => `<li>${f}</li>`).join('')}
@@ -5492,24 +5500,24 @@ window.closeCalendarModal = function() {
     agriHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🚜</div>
+                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🚜</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">पहले-पहल हल चलाना</strong>
             </div>
-            <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px;">${agri.halChalana.status}</div>
-            <div style="font-size: 11px !important; color:var(--text-main); display:grid; grid-template-columns: 70px 1fr; gap:4px; margin-bottom:8px;">
+            <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px;">${agri.halChalana.status}</div>
+            <div style="font-size: 8.5px !important; color:var(--text-main); display:grid; grid-template-columns: 70px 1fr; gap:4px; margin-bottom:8px;">
                 <span style="color:var(--text-muted)">नक्षत्र</span><span>${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
                 <span style="color:var(--text-muted)">वार</span><span>${wdName}</span>
                 <span style="color:var(--text-muted)">लग्न</span><span>${lagnaName}</span>
                 <span style="color:var(--text-muted)">चन्द्रमा</span><span>${moonRashiName}</span>
             </div>
-            <div style="font-size: 11px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <div style="font-size: 8.5px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
                 ${agri.halChalana.status === '🟢 शुभ' ? '✓ सभी आवश्यक शर्तें पूरी हैं।' : '✗ कुछ शर्तें पूरी नहीं हुईं। (क्षयकारक/नक्षत्र/वार/पापग्रह/लग्न दोष)'}
             </div>
 
             <!-- Nested Sun Chakra -->
             <div style="margin-top:10px; padding:8px; background:#fffbeb; border-radius:6px; border:1px solid #fef08a;">
-                <div style="font-size: 11px !important; font-weight:bold; color:#b45309; display:flex; align-items:center; gap:4px;"><span style="font-size: 11px !important;">☀️</span> सूर्यभुक्तभात हलचक्र</div>
-                <div style="font-size: 11px !important; margin-top:4px;">
+                <div style="font-size: 8.5px !important; font-weight:bold; color:#b45309; display:flex; align-items:center; gap:4px;"><span style="font-size: 8.5px !important;">☀️</span> सूर्यभुक्तभात हलचक्र</div>
+                <div style="font-size: 8.5px !important; margin-top:4px;">
                     सूर्य का नक्षत्र: ${NAKSHATRA_NAMES_HINDI[Math.floor(p.sunLongitude / (360/27))]}<br>
                     क्रम: ${agri.sunHalChakra.kram}<br>
                     फल: <strong>${agri.sunHalChakra.status}</strong>
@@ -5521,23 +5529,23 @@ window.closeCalendarModal = function() {
     agriHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🌱</div>
+                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🌱</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">बीज बोना</strong>
             </div>
-            <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px;">${agri.beejBona.status}</div>
-            <div style="font-size: 11px !important; color:var(--text-main); display:grid; grid-template-columns: 70px 1fr; gap:4px; margin-bottom:8px;">
+            <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px;">${agri.beejBona.status}</div>
+            <div style="font-size: 8.5px !important; color:var(--text-main); display:grid; grid-template-columns: 70px 1fr; gap:4px; margin-bottom:8px;">
                 <span style="color:var(--text-muted)">नक्षत्र</span><span>${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
                 <span style="color:var(--text-muted)">वार</span><span>${wdName}</span>
                 <span style="color:var(--text-muted)">हलप्रवाह</span><span>${agri.halChalana.status}</span>
             </div>
-            <div style="font-size: 11px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <div style="font-size: 8.5px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
                 ${agri.beejBona.isExcluded ? '✗ यह नक्षत्र या मंगलवार इस नियम में वर्जित है।' : '✓ स्रोत के अनुसार बीज बोना शुभ है।'}
             </div>
 
             <!-- Nested Rahu Chakra -->
             <div style="margin-top:10px; padding:8px; background:#f5f3ff; border-radius:6px; border:1px solid #ddd6fe;">
-                <div style="font-size: 11px !important; font-weight:bold; color:#5b21b6; display:flex; align-items:center; gap:4px;"><span style="font-size: 11px !important;">☊</span> राहुभुक्तभात — बीज बोना</div>
-                <div style="font-size: 11px !important; margin-top:4px;">
+                <div style="font-size: 8.5px !important; font-weight:bold; color:#5b21b6; display:flex; align-items:center; gap:4px;"><span style="font-size: 8.5px !important;">☊</span> राहुभुक्तभात — बीज बोना</div>
+                <div style="font-size: 8.5px !important; margin-top:4px;">
                     राहु का नक्षत्र: ${agri.rahuBeejChakra.rahuNakshatra}<br>
                     क्रम: ${agri.rahuBeejChakra.kram}<br>
                     फल: <strong>${agri.rahuBeejChakra.status}</strong>
@@ -5549,11 +5557,11 @@ window.closeCalendarModal = function() {
     agriHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🌾</div>
+                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🌾</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">धान्यस्थिति — अन्न रखना</strong>
             </div>
-            <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px;">${agri.dhanyaSthiti.status}</div>
-            <div style="font-size: 11px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px;">${agri.dhanyaSthiti.status}</div>
+            <div style="font-size: 8.5px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
                 ${agri.dhanyaSthiti.nakValid ? '✓' : '✗'} नक्षत्र अनुकूल<br>
                 ${agri.dhanyaSthiti.lagnaValid ? '✓' : '✗'} लग्न अनुकूल (कर्क/मेष/तुला वर्जित)<br>
                 ${agri.dhanyaSthiti.wdValid ? '✓' : '✗'} वार अनुकूल
@@ -5564,11 +5572,11 @@ window.closeCalendarModal = function() {
     agriHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">📈</div>
+                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">📈</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">धान्यवृद्धि — अनाज देना</strong>
             </div>
-            <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px;">${agri.dhanyaVriddhi.status}</div>
-            <div style="font-size: 11px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px;">${agri.dhanyaVriddhi.status}</div>
+            <div style="font-size: 8.5px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
                 नक्षत्र: ${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}<br>
                 ${agri.dhanyaVriddhi.isValid ? '✓ इस नक्षत्र में डेढ़ी/सवाई पर अनाज देना शुभ है।' : '✗ नक्षत्र अनुकूल नहीं है।'}
             </div>
@@ -5578,11 +5586,11 @@ window.closeCalendarModal = function() {
     agriHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🌱</div>
+                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🌱</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">खेत में धान लगाना</strong>
             </div>
-            <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px;">${agri.dhanLagana.status}</div>
-            <div style="font-size: 11px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px;">${agri.dhanLagana.status}</div>
+            <div style="font-size: 8.5px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
                 ${agri.dhanLagana.nakValid ? '✓' : '✗'} नक्षत्र अनुकूल<br>
                 ${agri.dhanLagana.wdValid ? '✓' : '✗'} वार अनुकूल (शनि/मंगल वर्जित)
             </div>
@@ -5592,11 +5600,11 @@ window.closeCalendarModal = function() {
     agriHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🌾</div>
+                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🌾</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">कणमर्दन</strong>
             </div>
-            <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px;">${agri.kanMardan.status}</div>
-            <div style="font-size: 11px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px;">${agri.kanMardan.status}</div>
+            <div style="font-size: 8.5px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
                 ${agri.kanMardan.isValid ? '✓ खलिहान में अनाज का कार्य (कणमर्दन) इस नक्षत्र में स्रोत अनुसार उल्लिखित है।' : '✗ नक्षत्र अनुकूल नहीं है।'}
             </div>
         </div>`;
@@ -5605,17 +5613,17 @@ window.closeCalendarModal = function() {
     agriHtml += `
         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 11px !important;">🌾</div>
+                <div style="width:32px; height:32px; background:#f0fdf4; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important;">🌾</div>
                 <strong style="color:var(--text-main); font-size: 11px !important;">अनाज काटना</strong>
             </div>
-            <div style="font-size: 11px !important; font-weight:bold; margin-bottom:10px;">${agri.anajKatna.status}</div>
-            <div style="font-size: 11px !important; color:var(--text-main); display:grid; grid-template-columns: 50px 1fr; gap:4px; margin-bottom:8px;">
+            <div style="font-size: 8.5px !important; font-weight:bold; margin-bottom:10px;">${agri.anajKatna.status}</div>
+            <div style="font-size: 8.5px !important; color:var(--text-main); display:grid; grid-template-columns: 50px 1fr; gap:4px; margin-bottom:8px;">
                 <span style="color:var(--text-muted)">नक्षत्र</span><span>${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
                 <span style="color:var(--text-muted)">वार</span><span>${wdName}</span>
                 <span style="color:var(--text-muted)">तिथि</span><span>${p.tithiName}</span>
                 <span style="color:var(--text-muted)">लग्न</span><span>${lagnaName}</span>
             </div>
-            <div style="font-size: 11px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <div style="font-size: 8.5px !important; border-top:1px solid #e2e8f0; padding-top:8px;">
                 ${agri.anajKatna.nakValid ? '✓' : '✗'} नक्षत्र<br>
                 ${agri.anajKatna.wdValid ? '✓' : '✗'} वार (शनि/मंगल वर्जित)<br>
                 ${agri.anajKatna.tithiValid ? '✓' : '✗'} रिक्ता तिथि वर्जित<br>
@@ -5650,11 +5658,11 @@ window.closeCalendarModal = function() {
             <h3 class="popup-section-heading" style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 11px !important; font-weight: 700 !important; border-bottom: 1px solid #bfdbfe; padding-bottom: 5px;">
                 💧 जलाशय खनन
             </h3>
-            <div style="margin:0 0 8px 0; font-size: 11px !important; font-weight: 700 !important; color: ${jKhanan.isShubh ? 'var(--green-shubh)' : 'var(--red-ashubh)'}">
-                <span class="popup-subheading" style="font-size: 11px !important; font-weight: 700 !important; color: var(--text-main);">स्थिति:</span> ${jKhanan.isShubh ? 'शुभ' : 'शुभ नहीं'}
+            <div style="margin:0 0 8px 0; font-size: 8.5px !important; font-weight: 700 !important; color: ${jKhanan.isShubh ? 'var(--green-shubh)' : 'var(--red-ashubh)'}">
+                <span class="popup-subheading" style="font-size: 8.5px !important; font-weight: 700 !important; color: var(--text-main);">स्थिति:</span> ${jKhanan.isShubh ? 'शुभ' : 'शुभ नहीं'}
             </div>
-            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35; font-weight: normal;">
-                <strong style="font-size: 11px !important; font-weight: 700 !important;">नक्षत्र:</strong> <span style="font-size: 11px !important;">${jKhanan.nakshatraName}</span><br>
+            <div style="font-size: 8.5px !important; color: var(--text-main); line-height:1.35; font-weight: normal;">
+                <strong style="font-size: 11px !important; font-weight: 700 !important;">नक्षत्र:</strong> <span style="font-size: 8.5px !important;">${jKhanan.nakshatraName}</span><br>
                 <strong style="font-size: 11px !important; font-weight: 700 !important;">कारण:</strong>
                 <ul style="margin: 4px 0 0 0; padding-left: 20px; list-style-type: none; font-size: 11px !important;">
                     <li style="font-size: 11px !important;">${jKhanan.isEligibleNakshatra ? '✅' : '❌'} अनुकूल नक्षत्र</li>
@@ -5677,7 +5685,7 @@ window.closeCalendarModal = function() {
             <p style="margin:0 0 8px 0; font-size: 11px !important; font-weight:bold; color: ${dhanDena.isShubh ? 'var(--green-shubh)' : 'var(--red-ashubh)'}">
                 स्थिति: ${dhanDena.isShubh ? 'शुभ' : 'शुभ नहीं'}
             </p>
-            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35;">
+            <div style="font-size: 8.5px !important; color: var(--text-main); line-height:1.35;">
                 <strong>नक्षत्र:</strong> ${dhanDena.nakshatraName}<br>
                 <strong>लग्न:</strong> ${dhanDena.lagnaName || '-'}<br>
                 <strong>पंचम भाव:</strong> ${dhanDena.h5 && dhanDena.h5.length>0 ? dhanDena.h5.join(', ') : 'Empty'}<br>
@@ -5697,7 +5705,7 @@ window.closeCalendarModal = function() {
             <h3 style="margin: 0 0 10px 0; color: #c53030; font-size: 11px !important; border-bottom: 1px solid #feb2b2; padding-bottom: 5px;">
                 ⚠️ ऋण लेने से बचें
             </h3>
-            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35;">
+            <div style="font-size: 8.5px !important; color: var(--text-main); line-height:1.35;">
                 <strong>कारण:</strong>
                 <ul style="margin: 4px 0 10px 0; padding-left: 20px; color: #c53030; font-weight:bold;">
                     ${rinLenaProhibition.map(r => `<li>${r}</li>`).join('')}
@@ -5714,7 +5722,7 @@ window.closeCalendarModal = function() {
             <h3 style="margin: 0 0 10px 0; color: #c53030; font-size: 11px !important; border-bottom: 1px solid #feb2b2; padding-bottom: 5px;">
                 ⚠️ धन देने से बचें
             </h3>
-            <div style="font-size: 11px !important; color: var(--text-main); line-height:1.35;">
+            <div style="font-size: 8.5px !important; color: var(--text-main); line-height:1.35;">
                 <strong>कारण:</strong> बुधवार<br>
                 <strong>फल:</strong> बुधवार को किसी को भी अपना धन किसी भी तरह से नहीं देना चाहिए।
             </div>
@@ -5739,7 +5747,7 @@ window.closeCalendarModal = function() {
                         let color = m.isProhibited ? '#d32f2f' : (isCurrent ? '#fff' : '#333');
                         let border = m.isProhibited ? '1px solid #ffcdd2' : '1px solid #fed7e2';
                         let title = `क्रमांक: ${m.num}\nस्वामी: ${m.swami}\nदिन/रात्रि: दिवा (Day)\nआरंभ: ${fTime(m.start)}\nसमाप्ति: ${fTime(m.end)}\n${m.isProhibited ? "आज यह मुहूर्त निषिद्ध है। शुभ कार्य न करें।" : "सामान्य"}`;
-                        return `<div title="${title}" style="flex:1; background:${bg}; color:${color}; border-right: ${border}; box-sizing:border-box; display:flex; align-items:center; justify-content:center; font-size: 11px !important; cursor:pointer; text-align:center;">${m.num}</div>`;
+                        return `<div title="${title}" style="flex:1; background:${bg}; color:${color}; border-right: ${border}; box-sizing:border-box; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important; cursor:pointer; text-align:center;">${m.num}</div>`;
                     }).join('');
 
                     divaMuhurtaHtml = `<div style="margin: 20px 0;">
@@ -5754,7 +5762,7 @@ window.closeCalendarModal = function() {
                         let color = isCurrent ? '#fff' : '#333';
                         let border = '1px solid #e2e8f0';
                         let title = `क्रमांक: ${m.num}\nस्वामी: ${m.swami}\nदिन/रात्रि: रात्रि (Night)\nआरंभ: ${fTime(m.start)}\nसमाप्ति: ${fTime(m.end)}\nसामान्य`;
-                        return `<div title="${title}" style="flex:1; background:${bg}; color:${color}; border-right: ${border}; box-sizing:border-box; display:flex; align-items:center; justify-content:center; font-size: 11px !important; cursor:pointer; text-align:center;">${m.num}</div>`;
+                        return `<div title="${title}" style="flex:1; background:${bg}; color:${color}; border-right: ${border}; box-sizing:border-box; display:flex; align-items:center; justify-content:center; font-size: 8.5px !important; cursor:pointer; text-align:center;">${m.num}</div>`;
                     }).join('');
 
                     ratriMuhurtaHtml = `<div style="margin: 20px 0;">
@@ -5790,7 +5798,7 @@ window.closeCalendarModal = function() {
                         <h3 id="muhurtaVishaghatiSection" class="popup-section-heading" style="margin:0 0 15px 0; color:var(--primary-dark);">⏳ विशेष मुहूर्त एवं विषघटी</h3>
                         <div style="margin-bottom:15px;">
                             <h4 class="popup-subheading" style="margin:0 0 5px 0;">आज के निषिद्ध मुहूर्त (वार अनुसार)</h4>
-                            <div class="popup-prohibited" style="padding:10px; background:${prohibitedList ? '#fff5f5' : '#f0fdf4'}; border:1px solid ${prohibitedList ? '#ffcdd2' : '#bbf7d0'}; border-radius:6px; font-size: 11px !important;">
+                            <div class="popup-prohibited" style="padding:10px; background:${prohibitedList ? '#fff5f5' : '#f0fdf4'}; border:1px solid ${prohibitedList ? '#ffcdd2' : '#bbf7d0'}; border-radius:6px; font-size: 8.5px !important;">
                                 ${prohibitedList ? `<strong style="color:var(--red-ashubh);">${prohibitedList}</strong> (शुभ कार्य न करें)` : '<span style="color:#166534;">आज कोई दिन का मुहूर्त निषिद्ध नहीं है।</span>'}
                             </div>
                         </div>
@@ -5866,13 +5874,13 @@ window.closeCalendarModal = function() {
                 return `
                 <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px; margin-bottom: 8px;">
                     <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px; margin-bottom: 10px;">
-                        <div style="position:relative; font-size: 11px !important; line-height: 1; background: #fff; border-radius: 50%; padding: 4px; border: 1px solid #ffcdd2; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
+                        <div style="position:relative; font-size: 8.5px !important; line-height: 1; background: #fff; border-radius: 50%; padding: 4px; border: 1px solid #ffcdd2; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
                             ${r.emoji}
                             <div style="position:absolute; width:100%; height:100%; border-radius:50%; border:0.5px solid rgba(255,0,0,0.5); pointer-events:none;"><div style="position:absolute; top:50%; left:0; width:100%; height:0.5px; background:rgba(255,0,0,0.7); transform:translateY(-50%) rotate(45deg);"></div></div>
                         </div>
-                        <h4 style="margin: 0; color: var(--red-ashubh); font-size: 11px !important;">${r.short} <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ ${r.activity} नहीं करना चाहिए</span></h4>
+                        <h4 style="margin: 0; color: var(--red-ashubh); font-size: 11px !important;">${r.short} <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ ${r.activity} नहीं करना चाहिए</span></h4>
                     </div>
-                    <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                    <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                         <strong>वार:</strong> ${p.weekdayName}<br>
                         <strong>नक्षत्र:</strong> ${p.moonNakshatraName}<br>
                         <strong>नियम:</strong> ${r.rule}<br>
@@ -5884,12 +5892,12 @@ window.closeCalendarModal = function() {
             } else {
                 return `
                 <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px;">
-                    <div style="position:relative; font-size: 11px !important; line-height: 1; background: #fff; border-radius: 50%; padding: 4px; border: 1px solid #ffcdd2; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
+                    <div style="position:relative; font-size: 8.5px !important; line-height: 1; background: #fff; border-radius: 50%; padding: 4px; border: 1px solid #ffcdd2; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
                         ${r.emoji}
                         <div style="position:absolute; width:100%; height:100%; border-radius:50%; border:0.5px solid rgba(255,0,0,0.5); pointer-events:none;"><div style="position:absolute; top:50%; left:0; width:100%; height:0.5px; background:rgba(255,0,0,0.7); transform:translateY(-50%) rotate(45deg);"></div></div>
                     </div>
                     <div>
-                        <h4 style="margin: 0 0 4px 0; color: var(--red-ashubh); font-size: 11px !important;">${r.activity} <span style="background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px !important; margin-left: 5px;">निषिद्ध</span></h4>
+                        <h4 style="margin: 0 0 4px 0; color: var(--red-ashubh); font-size: 11px !important;">${r.activity} <span style="background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 8.5px !important; margin-left: 5px;">निषिद्ध</span></h4>
                         <p style="margin: 0; font-size: 11px !important; color: var(--text-main);">${r.description}</p>
                     </div>
                 </div>`;
@@ -5982,10 +5990,10 @@ window.closeCalendarModal = function() {
             let currentTimeStr = today.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
             timeIndicatorHtml = `
             <div style="position: absolute; top: -10px; bottom: -10px; left: ${nowPct}%; width: 2px; background: #f59e0b; z-index: 50; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center;">
-                <div style="position: absolute; top: -22px; white-space: nowrap; font-size: 11px !important; font-weight: bold; color: #fff; background: #f59e0b; padding: 2px 6px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">${currentTimeStr}</div>
+                <div style="position: absolute; top: -22px; white-space: nowrap; font-size: 8.5px !important; font-weight: bold; color: #fff; background: #f59e0b; padding: 2px 6px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">${currentTimeStr}</div>
                 <div style="position: absolute; top: -2px; width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 0 2px #fff;"></div>
                 <div style="position: absolute; bottom: -2px; width: 6px; height: 6px; border-radius: 50%; background: #f59e0b;"></div>
-                <div style="position: absolute; bottom: -22px; white-space: nowrap; font-size: 11px !important; font-weight: bold; color: #fff; background: #f59e0b; padding: 2px 6px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">${currentTimeStr}</div>
+                <div style="position: absolute; bottom: -22px; white-space: nowrap; font-size: 8.5px !important; font-weight: bold; color: #fff; background: #f59e0b; padding: 2px 6px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">${currentTimeStr}</div>
             </div>`;
         }
 
@@ -6016,10 +6024,10 @@ window.closeCalendarModal = function() {
             <span style="position: relative; left: ${sunsetPct - 100}%; transform: translateX(-50%);">🌙 ${ninditaData.sunset.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>
         </div>
 
-        <div style="display: flex; gap: 15px; margin-top: 12px; font-size: 11px !important; align-items: center; justify-content: center; background: var(--bg-color); padding: 5px; border-radius: 4px;">
-            <span style="display:flex; align-items:center; gap: 4px; font-size: 11px !important;"><span style="display:inline-block; width:12px; height:12px; background:var(--red-ashubh); border-radius:2px;"></span> निन्दित / वर्जित</span>
-            <span style="display:flex; align-items:center; gap: 4px; font-size: 11px !important;"><span style="display:inline-block; width:12px; height:12px; background:#e2e8f0; border-radius:2px;"></span> सामान्य समय</span>
-            <span style="display:flex; align-items:center; gap: 4px; font-size: 11px !important;"><span style="display:inline-block; width:12px; height:12px; background:#2d3748; border-radius:2px;"></span> रात्रि</span>
+        <div style="display: flex; gap: 15px; margin-top: 12px; font-size: 8.5px !important; align-items: center; justify-content: center; background: var(--bg-color); padding: 5px; border-radius: 4px;">
+            <span style="display:flex; align-items:center; gap: 4px; font-size: 8.5px !important;"><span style="display:inline-block; width:12px; height:12px; background:var(--red-ashubh); border-radius:2px;"></span> निन्दित / वर्जित</span>
+            <span style="display:flex; align-items:center; gap: 4px; font-size: 8.5px !important;"><span style="display:inline-block; width:12px; height:12px; background:#e2e8f0; border-radius:2px;"></span> सामान्य समय</span>
+            <span style="display:flex; align-items:center; gap: 4px; font-size: 8.5px !important;"><span style="display:inline-block; width:12px; height:12px; background:#2d3748; border-radius:2px;"></span> रात्रि</span>
         </div>
 
         <!-- 24-Hour Bhadra Overlay Integration -->
@@ -6069,15 +6077,15 @@ window.closeCalendarModal = function() {
 
                     <!-- Boundary Time Labels -->
                     <div style="position: relative; height: 15px; width: 100%; margin-top: 2px;">
-                        ${mWidthPct > 0 ? `<div style="position: absolute; top: -35px; left: ${mStartPct}%; transform: translateX(-50%); font-size: 11px !important; color: var(--red-ashubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(mStartMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
-                        <div style="position: absolute; top: 0px; left: ${mStartPct + mWidthPct}%; transform: translateX(-50%); font-size: 11px !important; color: var(--red-ashubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(mEndMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>` : ''}
+                        ${mWidthPct > 0 ? `<div style="position: absolute; top: -35px; left: ${mStartPct}%; transform: translateX(-50%); font-size: 8.5px !important; color: var(--red-ashubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(mStartMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
+                        <div style="position: absolute; top: 0px; left: ${mStartPct + mWidthPct}%; transform: translateX(-50%); font-size: 8.5px !important; color: var(--red-ashubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(mEndMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>` : ''}
 
-                        ${pWidthPct > 0 ? `<div style="position: absolute; top: -35px; left: ${pStartPct}%; transform: translateX(-50%); font-size: 11px !important; color: var(--green-shubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(pStartMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
-                        <div style="position: absolute; top: 0px; left: ${pStartPct + pWidthPct}%; transform: translateX(-50%); font-size: 11px !important; color: var(--green-shubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(pEndMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>` : ''}
+                        ${pWidthPct > 0 ? `<div style="position: absolute; top: -35px; left: ${pStartPct}%; transform: translateX(-50%); font-size: 8.5px !important; color: var(--green-shubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(pStartMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
+                        <div style="position: absolute; top: 0px; left: ${pStartPct + pWidthPct}%; transform: translateX(-50%); font-size: 8.5px !important; color: var(--green-shubh); font-weight: bold; background: rgba(255,255,255,0.8); padding: 0 2px; border-radius: 2px;">${new Date(pEndMs).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>` : ''}
                     </div>
 
                 </div>
-                <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px !important; color: var(--text-muted);">
+                <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 8.5px !important; color: var(--text-muted);">
                     <span style="display:flex; align-items:center; gap: 2px;"><span style="display:inline-block; width:8px; height:8px; background:var(--red-ashubh); border-radius:1px;"></span> मुख (Mukha)</span>
                     <span style="display:flex; align-items:center; gap: 2px;"><span style="display:inline-block; width:8px; height:8px; border:1px solid var(--green-shubh); background:white; border-radius:1px;"></span> पुच्छ (Puchha)</span>
                     <span style="display:flex; align-items:center; gap: 2px;"><span style="display:inline-block; width:8px; height:8px; background:rgba(229, 62, 62, 0.2); border-radius:1px;"></span> भद्रा काल</span>
@@ -6099,8 +6107,8 @@ window.closeCalendarModal = function() {
         if (isSiddha) {
             specialYogasHtml += `
             <div style="background: #e8f5e9; border: 1px solid #c8e6c9; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); font-size: 11px !important; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px;">सिद्ध तिथि (Siddha Tithi) <span style="font-size: 11px !important; background: var(--green-shubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">✅ Auspicious</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); font-size: 11px !important; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px;">सिद्ध तिथि (Siddha Tithi) <span style="font-size: 8.5px !important; background: var(--green-shubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">✅ Auspicious</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Tithi Saṃjñā:</strong> ${tSanjna}<br>
                     <strong>Weekday:</strong> ${p.weekdayName}<br>
                     <strong>Rule:</strong> ${p.weekdayName} + ${tSanjna.split(' ')[0]} → Siddha Tithi<br>
@@ -6114,8 +6122,8 @@ window.closeCalendarModal = function() {
         if (isMrta) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">मृत संज्ञक तिथि (Mṛta Saṃjñaka Tithi) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">मृत संज्ञक तिथि (Mṛta Saṃjñaka Tithi) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Tithi Saṃjñā:</strong> ${tSanjna}<br>
                     <strong>Weekday:</strong> ${p.weekdayName}<br>
                     <strong>Rule:</strong> ${p.weekdayName} + ${tSanjna.split(' ')[0]} → Mṛta Saṃjñaka<br>
@@ -6129,8 +6137,8 @@ window.closeCalendarModal = function() {
         if (isDagdha) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">दग्ध नक्षत्र (Dagdha Nakshatra) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">दग्ध नक्षत्र (Dagdha Nakshatra) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Nakshatra:</strong> ${p.moonNakshatraName}<br>
                     <strong>Weekday:</strong> ${p.weekdayName}<br>
                     <strong>Rule:</strong> ${p.weekdayName} + ${p.moonNakshatraName} → Dagdha Nakshatra<br>
@@ -6144,8 +6152,8 @@ window.closeCalendarModal = function() {
         if (isDagdhaYoga) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">दग्ध योग (Dagdha Yoga) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Applicable</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">दग्ध योग (Dagdha Yoga) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Applicable</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Tithi:</strong> ${p.tithiName}<br>
                     <strong>Weekday:</strong> ${p.weekdayName}<br>
                     <strong>Rule:</strong> ${p.weekdayName} + ${p.tithiName} → Dagdha Yoga<br>
@@ -6160,8 +6168,8 @@ window.closeCalendarModal = function() {
         if (isVishaktaYoga) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">विषाक्त योग (Vishakta Yoga) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Applicable</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">विषाक्त योग (Vishakta Yoga) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Applicable</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Tithi:</strong> ${p.tithiName}<br>
                     <strong>Weekday:</strong> ${p.weekdayName}<br>
                     <strong>Rule:</strong> ${p.weekdayName} + ${p.tithiName} → Vishakta Yoga<br>
@@ -6176,8 +6184,8 @@ window.closeCalendarModal = function() {
         if (isShunyaTithi) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">शून्य तिथि (Shunya Tithi) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">शून्य तिथि (Shunya Tithi) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Month/Paksha:</strong> ${p.amantaMonthName} ${p.paksha}<br>
                     <strong>Tithi:</strong> ${p.tithiName}<br>
                     <strong>कारण (Reason):</strong> इस मास और पक्ष में यह तिथि शून्य मानी जाती है।<br>
@@ -6189,8 +6197,8 @@ window.closeCalendarModal = function() {
         if (isTithiNakshatraProhibited) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">तिथि-नक्षत्र वर्जित (Tithi-Nakshatra Varjit) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">तिथि-नक्षत्र वर्जित (Tithi-Nakshatra Varjit) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Tithi:</strong> ${p.tithiName}<br>
                     <strong>Nakshatra:</strong> ${p.moonNakshatraName}<br>
                     <strong>कारण (Reason):</strong> इस तिथि और नक्षत्र का संयोग शुभ कार्यों के लिए वर्जित है।
@@ -6201,7 +6209,7 @@ window.closeCalendarModal = function() {
         if (isShunyaLagnaDay) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">शून्य लग्न (Shunya Lagna) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Warning</span></h4>
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">शून्य लग्न (Shunya Lagna) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Warning</span></h4>
                 ${popupDayInfoGrid([
                     popupDayInfoField('Month', p.amantaMonthName),
                     popupDayInfoField('Target Lagna Index', targetShunyaLagnaIdx),
@@ -6214,7 +6222,7 @@ window.closeCalendarModal = function() {
         if (isDagdhaLagnaDay) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">दग्ध लग्न (Dagdha Lagna) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Warning</span></h4>
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">दग्ध लग्न (Dagdha Lagna) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Warning</span></h4>
                 ${popupDayInfoGrid([
                     popupDayInfoField('Tithi', p.tithiName),
                     popupDayInfoField('Time(s)', dagdhaLagnaTimings.map(t => t.start.toLocaleTimeString() + ' to ' + t.end.toLocaleTimeString()).join(', ')),
@@ -6226,8 +6234,8 @@ window.closeCalendarModal = function() {
         if (isDhananash) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">धननाश (Dhananash) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">धननाश (Dhananash) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Inauspicious</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Month:</strong> ${p.amantaMonthName}<br>
                     <strong>Nakshatra:</strong> ${p.moonNakshatraName}<br>
                     <strong>कारण (Reason):</strong> मास और नक्षत्र के इस संयोग को धननाश कहा गया है।
@@ -6240,8 +6248,8 @@ window.closeCalendarModal = function() {
                 if (isHutashanaYoga) {
             specialYogasHtml += `
             <div style="background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">हुताशन योग (Hutashana Yoga) <span style="font-size: 11px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Applicable</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); font-size: 11px !important; border-bottom: 1px solid #ffcdd2; padding-bottom: 5px;">हुताशन योग (Hutashana Yoga) <span style="font-size: 8.5px !important; background: var(--red-ashubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">❌ Applicable</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>Tithi:</strong> ${p.tithiName}<br>
                     <strong>Weekday:</strong> ${p.weekdayName}<br>
                     <strong>Rule:</strong> ${p.weekdayName} + ${p.tithiName} → Hutashana Yoga<br>
@@ -6262,9 +6270,9 @@ window.closeCalendarModal = function() {
     if (ygs.some(y => y.name && y.name.includes('रवि योग'))) {
         raviYogaNoteHTML = `
         <div style="background: #e8f5e9; border: 2px solid #28a745; padding: 10px; margin-bottom: 15px; border-radius: 8px; text-align: center;">
-            <div style="font-size: 11px !important; margin-bottom: 5px;">☀️</div>
+            <div style="font-size: 8.5px !important; margin-bottom: 5px;">☀️</div>
             <strong style="color: #28a745; font-size: 11px !important;">रवि योग</strong><br>
-            <span style="color: #155724; font-size: 11px !important;">रवि योग संपूर्ण दोषों का नाश करने वाला होता है। इसके प्रभाव में तिथि आदि के अशुभ प्रभाव नष्ट हो जाते हैं।</span>
+            <span style="color: #155724; font-size: 8.5px !important;">रवि योग संपूर्ण दोषों का नाश करने वाला होता है। इसके प्रभाव में तिथि आदि के अशुभ प्रभाव नष्ट हो जाते हैं।</span>
         </div>
         `;
     }
@@ -6278,19 +6286,19 @@ window.closeCalendarModal = function() {
         <h3 style="color: var(--red-ashubh); margin-bottom: 15px;">पंचक (Panchak)</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
             <div style="background: #fff5f5; padding: 10px; border-radius: 8px; border: 1px solid #ffe3e3;">
-                <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Panchak Day</span>
+                <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Panchak Day</span>
                 <strong style="font-size: 11px !important; color: var(--red-ashubh);">Day ${pDet.dayNum}</strong>
             </div>
             <div style="background: #fff5f5; padding: 10px; border-radius: 8px; border: 1px solid #ffe3e3;">
-                <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Status</span>
+                <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Status</span>
                 <strong style="font-size: 11px !important; color: var(--red-ashubh);">Active Panchak Period</strong>
             </div>
             <div style="background: #fff5f5; padding: 10px; border-radius: 8px; border: 1px solid #ffe3e3;">
-                <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Panchak Start</span>
+                <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Panchak Start</span>
                 <strong style="font-size: 11px !important; color: var(--text-main);">${pDet.startDate.toLocaleString()}</strong>
             </div>
             <div style="background: #fff5f5; padding: 10px; border-radius: 8px; border: 1px solid #ffe3e3;">
-                <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Panchak Ends</span>
+                <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Panchak Ends</span>
                 <strong style="font-size: 11px !important; color: var(--text-main);">${pDet.endDate.toLocaleString()}</strong>
             </div>
         </div>
@@ -6443,7 +6451,7 @@ window.closeCalendarModal = function() {
                 <div id="bhadraSection" style="background: #fff1f2; border: 1px solid #fecdd3; padding: 15px; border-radius: 8px; margin-bottom: 15px; scroll-margin-top: 20px;">
                     <h3 class="popup-section-heading" style="margin: 0 0 10px 0; color: #be123c; font-size: 11px !important; font-weight: 700 !important; border-bottom: 1px solid #fecdd3; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                         <span>⚠️ भद्रा काल (Vishti Karana)</span>
-                        <span style="font-size: 11px !important; background: #be123c; color: white; padding: 2px 6px; border-radius: 4px; font-weight: normal;">वर्जित काल</span>
+                        <span style="font-size: 8.5px !important; background: #be123c; color: white; padding: 2px 6px; border-radius: 4px; font-weight: normal;">वर्जित काल</span>
                     </h3>
 
                     ${popupDayInfoGrid([
@@ -6457,21 +6465,21 @@ window.closeCalendarModal = function() {
 
                     <div style="background: #ffffff; border: 1px solid #fecdd3; border-radius: 6px; padding: 10px; margin-top: 10px;">
                         <h4 class="popup-subheading" style="margin: 0 0 8px 0; color: #be123c; font-size: 11px !important; font-weight: 700 !important;">🎯 विशेष अंग काल (Mukha & Puchha)</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px !important;">
-                            <div style="background: #fff5f5; padding: 8px; border-radius: 4px; border-left: 3px solid var(--red-ashubh); font-size: 11px !important;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 8.5px !important;">
+                            <div style="background: #fff5f5; padding: 8px; border-radius: 4px; border-left: 3px solid var(--red-ashubh); font-size: 8.5px !important;">
                                 <strong style="font-size: 11px !important;">भद्रा मुख (अति-वर्जित):</strong><br>
-                                <span style="font-size: 11px !important;">${mStartHtml} – ${mEndHtml}</span><br>
-                                <span style="font-size: 11px !important; color: var(--red-ashubh); font-weight: normal;">कार्य नाश करता है।</span>
+                                <span style="font-size: 8.5px !important;">${mStartHtml} – ${mEndHtml}</span><br>
+                                <span style="font-size: 8.5px !important; color: var(--red-ashubh); font-weight: normal;">कार्य नाश करता है।</span>
                             </div>
-                            <div style="background: #f0fdf4; padding: 8px; border-radius: 4px; border-left: 3px solid var(--green-shubh); font-size: 11px !important;">
+                            <div style="background: #f0fdf4; padding: 8px; border-radius: 4px; border-left: 3px solid var(--green-shubh); font-size: 8.5px !important;">
                                 <strong style="font-size: 11px !important;">भद्रा पुच्छ (शुभ/कार्य सिद्धि):</strong><br>
-                                <span style="font-size: 11px !important;">${pStartHtml} – ${pEndHtml}</span><br>
-                                <span style="font-size: 11px !important; color: var(--green-shubh); font-weight: normal;">विशेष कार्यों में शुभ।</span>
+                                <span style="font-size: 8.5px !important;">${pStartHtml} – ${pEndHtml}</span><br>
+                                <span style="font-size: 8.5px !important; color: var(--green-shubh); font-weight: normal;">विशेष कार्यों में शुभ।</span>
                             </div>
                         </div>
                     </div>
 
-                    ${bd.isFavorableTime ? '<div style="margin-top: 10px; padding: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; color: var(--green-shubh); font-weight: 400; font-size: 11px !important;">✓ वर्तमान समय भद्रा काल से बाहर है या शुभ अंग काल में है।</div>' : ''}
+                    ${bd.isFavorableTime ? '<div style="margin-top: 10px; padding: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; color: var(--green-shubh); font-weight: 400; font-size: 8.5px !important;">✓ वर्तमान समय भद्रा काल से बाहर है या शुभ अंग काल में है।</div>' : ''}
                 </div>`;
             })()}
 
@@ -6485,28 +6493,28 @@ window.closeCalendarModal = function() {
 
                 if (vastraRules.shubhWear) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main);">
                         <strong style="color: var(--green-shubh); font-size: 11px !important; font-weight: 700 !important;">✅ शुभ योग:</strong> मूंगा, दाँत, शंख, सुवर्ण (सोने) के आभूषण और नवीन वस्त्र धारण करना शुभ है।
                     </div>`;
                 }
 
                 if (vastraRules.tuesdayRed) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main);">
                         <strong style="color: #48bb78; font-size: 11px !important; font-weight: 700 !important;">👕 मंगलवार विशेष:</strong> आज मंगलवार के दिन लाल वस्त्र धारण करना चाहिए।
                     </div>`;
                 }
 
                 if (vastraRules.sadhavaRestricted) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main);">
                         <strong style="color: var(--red-ashubh); font-size: 11px !important; font-weight: 700 !important;">❌ सधवा स्त्री निषेध:</strong> आज (${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]} नक्षत्र) सधवा स्त्री नवीन वस्त्र-आभूषण आदि धारण न करे।
                     </div>`;
                 }
 
                 if (vastraRules.shatabhishaRestricted) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main); background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #fed7e2;">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main); background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #fed7e2;">
                         <strong style="color: var(--red-ashubh); font-size: 11px !important; font-weight: 700 !important;">⚠️ कुछ आचार्यों के मतानुसार:</strong> शतभिषा नक्षत्र में सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण और स्नान न करे。<br>
                         <strong style="color: #b83280; font-size: 11px !important; margin-top:4px; display:inline-block; font-weight: 700 !important;">शांति उपाय:</strong> यदि भूलवश या अज्ञानतावश ऐसा हो जाए, तो दोष की शांति के लिए अपने पति का पूजन करें।
                     </div>`;
@@ -6514,7 +6522,7 @@ window.closeCalendarModal = function() {
 
                 if (!vastraRules.shubhWear) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main);">
                         <strong style="color: var(--red-ashubh); font-size: 11px !important; font-weight: 700 !important;">❌ सद्वस्त्र निषेध:</strong> आज नवीन (नए) वस्त्र एवं आभूषण धारण करना शुभ नहीं है।
                     </div>`;
                 }
@@ -6609,8 +6617,8 @@ window.closeCalendarModal = function() {
                 let shubhaColor = sl.isShubha ? 'var(--green-shubh)' : 'var(--red-ashubh)';
                 let shubhaText = sl.isShubha ? 'शुभ लग्न (Shubha Lagna)' : 'अशुभ लग्न (Afflicted Lagna)';
                 let details = '';
-                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size: 11px !important; font-weight: normal;">+ ' + sl.reasons.join(', ') + '</span>';
-                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size: 11px !important; font-weight: normal;">- ' + sl.warnings.join(', ') + '</span>';
+                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size: 8.5px !important; font-weight: normal;">+ ' + sl.reasons.join(', ') + '</span>';
+                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size: 8.5px !important; font-weight: normal;">- ' + sl.warnings.join(', ') + '</span>';
 
                 return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
                     <h3 class="popup-section-heading" style="margin:0 0 8px 0; font-size: 11px !important; font-weight: 700 !important; color:var(--primary-dark);">🌅 सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h3>
@@ -6618,7 +6626,7 @@ window.closeCalendarModal = function() {
                         popupDayInfoField('स्थिति (Status)', shubhaText, shubhaColor),
                         popupDayInfoField('शुभ केंद्र (Beneficent Kendra)', sl.beneficKendra ? 'हाँ (Yes)' : 'नहीं (No)')
                     ])}
-                    <div style="font-size: 11px !important; color:var(--text-main); margin-top:4px; font-weight: normal;">${details}</div>
+                    <div style="font-size: 8.5px !important; color:var(--text-main); margin-top:4px; font-weight: normal;">${details}</div>
                 </div>`;
             })()}
 
@@ -6670,16 +6678,16 @@ window.closeCalendarModal = function() {
                 let isCompleteDay = sData.specialStatus && sData.specialStatus.includes('पूर्ण दिन');
                 let pkHtml = '';
                 if (sData.punyakalaStart && sData.punyakalaEnd) {
-                    pkHtml = `<div style="font-size: 11px !important; color: var(--green-shubh); font-weight: bold; margin-bottom: 4px;">
+                    pkHtml = `<div style="font-size: 8.5px !important; color: var(--green-shubh); font-weight: bold; margin-bottom: 4px;">
                         <strong>पुण्यकाल अवधि:</strong> ${sData.punyakalaStart.toLocaleString([], {dateStyle:'short', timeStyle:'short'})} – ${sData.punyakalaEnd.toLocaleString([], {dateStyle:'short', timeStyle:'short'})}
                     </div>`;
                 } else if (isCompleteDay) {
-                    pkHtml = `<div style="font-size: 11px !important; color: var(--green-shubh); font-weight: bold; margin-bottom: 4px;">
+                    pkHtml = `<div style="font-size: 8.5px !important; color: var(--green-shubh); font-weight: bold; margin-bottom: 4px;">
                         <strong>पुण्यकाल अवधि:</strong> पूर्ण दिन (Complete Day)
                     </div>`;
                 }
 
-                let specialHtml = sData.specialStatus ? `<div style="margin-top:8px; padding:8px; background:#fffaf0; border-radius:4px; border:1px solid #feebc8; font-size: 11px !important; color:#c05621;">
+                let specialHtml = sData.specialStatus ? `<div style="margin-top:8px; padding:8px; background:#fffaf0; border-radius:4px; border:1px solid #feebc8; font-size: 8.5px !important; color:#c05621;">
                     <strong>विशेष मान्यता:</strong> ${sData.specialStatus}
                 </div>` : '';
 
@@ -6701,7 +6709,7 @@ window.closeCalendarModal = function() {
                         <!-- Card 2 -->
                         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
                             <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 11px !important;">🧭 संक्रांति वर्गीकरण</h4>
-                            <div style="font-size: 11px !important; font-weight:bold; color:var(--primary-dark);">
+                            <div style="font-size: 8.5px !important; font-weight:bold; color:var(--primary-dark);">
                                 ${sData.classification}
                             </div>
                         </div>
@@ -6709,7 +6717,7 @@ window.closeCalendarModal = function() {
                         <!-- Card 3 -->
                         <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
                             <h4 style="margin:0 0 8px 0; color:#4a5568; font-size: 11px !important;">☀️ अयन</h4>
-                            <div style="font-size: 11px !important; font-weight:bold; color:var(--primary-dark);">
+                            <div style="font-size: 8.5px !important; font-weight:bold; color:var(--primary-dark);">
                                 ${sData.ayana}
                             </div>
                         </div>
@@ -6720,7 +6728,7 @@ window.closeCalendarModal = function() {
                         <h4 style="margin:0 0 10px 0; color:#4a5568; font-size: 11px !important; display:flex; align-items:center; gap:6px;">
                             <span>🕰️</span> संक्रांति पुण्यकाल
                         </h4>
-                        <div style="font-size: 11px !important; color:var(--text-main); line-height:1.6;">
+                        <div style="font-size: 8.5px !important; color:var(--text-main); line-height:1.6;">
                             <strong>संक्रांति समय:</strong> ${sData.exactTime.toLocaleString([], {dateStyle:'short', timeStyle:'short'})}<br>
                             ${pkHtml}
                             <strong>लागू दिन:</strong> ${sData.lagooDin}
@@ -6741,9 +6749,9 @@ window.closeCalendarModal = function() {
                             <div style="background: #fff5f5; border: 1px solid #fecaca; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                                 <h4 style="margin: 0 0 10px 0; color: var(--red-ashubh); border-bottom: 1px solid #fecaca; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                                     <span>❌ सिंह राशि के सिंह नवांश में बृहस्पति — विवाह इष्ट नहीं</span>
-                                    <span style="font-size: 11px !important; background:var(--red-ashubh); color:#fff; padding:2px 6px; border-radius:4px;">वर्जित</span>
+                                    <span style="font-size: 8.5px !important; background:var(--red-ashubh); color:#fff; padding:2px 6px; border-radius:4px;">वर्जित</span>
                                 </h4>
-                                <div style="font-size: 11px !important; color: var(--text-main); margin-bottom: 5px;">
+                                <div style="font-size: 8.5px !important; color: var(--text-main); margin-bottom: 5px;">
                                     <strong>बृहस्पति:</strong> सिंह राशि, ${jupSimhaNavamsha.jDegInLeo.toFixed(4)}° (सिंह नवांश)<br>
                                     <strong>गोदावरी और गंगा के मध्य के प्रदेशों के लिए विशेष नियम:</strong> जब तक सूर्य मेष राशि में न आए, विवाह इष्ट नहीं।
                                 </div>
@@ -6753,9 +6761,9 @@ window.closeCalendarModal = function() {
                             <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                                 <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                                     <span>✅ सिंह राशि के सिंह नवांश में बृहस्पति — अपवाद (Sun in Aries)</span>
-                                    <span style="font-size: 11px !important; border:1px solid var(--green-shubh); background:white; color:var(--green-shubh); padding:2px 6px; border-radius:4px;">शुभ/अनुमत</span>
+                                    <span style="font-size: 8.5px !important; border:1px solid var(--green-shubh); background:white; color:var(--green-shubh); padding:2px 6px; border-radius:4px;">शुभ/अनुमत</span>
                                 </h4>
-                                <div style="font-size: 11px !important; color: var(--text-main); margin-bottom: 5px;">
+                                <div style="font-size: 8.5px !important; color: var(--text-main); margin-bottom: 5px;">
                                     <strong>बृहस्पति:</strong> सिंह राशि, ${jupSimhaNavamsha.jDegInLeo.toFixed(4)}° (सिंह नवांश)<br>
                                     <strong>सूर्य:</strong> मेष राशि (${jupSimhaNavamsha.sLonSidereal.toFixed(4)}°)<br>
                                     <strong>नियम:</strong> सूर्य मेष राशि में होने के कारण सिंह राशि के सिंह नवांश में बृहस्पति का दोष लागू नहीं होता। विवाह शुभ माना गया है।
@@ -6775,15 +6783,15 @@ window.closeCalendarModal = function() {
                         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                             <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); border-bottom: 1px solid #bbf7d0; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                                 <span>🌅 ${ev.symbol} ${ev.hindi} — उदय (Visible)</span>
-                                <span style="font-size: 11px !important; border:1px solid var(--green-shubh); background:white; color:var(--green-shubh); padding:2px 6px; border-radius:4px;">उदय तिथि</span>
+                                <span style="font-size: 8.5px !important; border:1px solid var(--green-shubh); background:white; color:var(--green-shubh); padding:2px 6px; border-radius:4px;">उदय तिथि</span>
                             </h4>
-                            <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 11px !important;">
+                            <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 8.5px !important;">
                                 <div style="display:flex; justify-content:space-between; color: var(--green-shubh);">
                                     <span>🟢 उदय समय (Exact Udaya Time):</span>
                                     <span>${ev.udayaTimestamp ? ev.udayaTimestamp.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : 'आज'}</span>
                                 </div>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px !important; color: var(--text-main);">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 8.5px !important; color: var(--text-main);">
                                 <div><strong>सूर्य से कोणीय दूरी:</strong> ${ev.separation.toFixed(4)}° ${ev.isRetrograde ? '(वक्र)' : ''}</div>
                                 <div><strong>राशि:</strong> ${ev.rashiName}</div>
                             </div>
@@ -6805,10 +6813,10 @@ window.closeCalendarModal = function() {
                     <div style="background: ${bgCol}; border: 1px solid ${bdCol}; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                         <h4 style="margin: 0 0 10px 0; color: ${colorCode}; border-bottom: 1px solid ${bdCol}; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
                             <span>🌌 ${ev.symbol} ${ev.hindi} — ${titleStr}</span>
-                            <span style="font-size: 11px !important; background:${colorCode}; color:#fff; padding:2px 6px; border-radius:4px;">वर्जित काल</span>
+                            <span style="font-size: 8.5px !important; background:${colorCode}; color:#fff; padding:2px 6px; border-radius:4px;">वर्जित काल</span>
                         </h4>
 
-                        <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 11px !important;">
+                        <div style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 8.5px !important;">
                             <div style="display:flex; justify-content:space-between; color: var(--red-ashubh);">
                                 <span>🔴 अस्त प्रारंभ (Asta Start):</span>
                                 <span>${astaTimeStr}</span>
@@ -6819,18 +6827,18 @@ window.closeCalendarModal = function() {
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11px !important; color: var(--text-main); margin-bottom: 10px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 8.5px !important; color: var(--text-main); margin-bottom: 10px;">
                             <div><strong>सूर्य से कोणीय दूरी:</strong> ${ev.separation.toFixed(4)}° ${ev.isRetrograde ? '(वक्र)' : ''}</div>
                             <div><strong>अस्त सीमा (Limit):</strong> ${ev.limit.toFixed(1)}°</div>
                         </div>
 
-                        ${(ev.isJupiterSimhaNavamsha9) ? `<div style="margin-top: 10px; font-size: 11px !important; color: var(--red-ashubh); font-weight: bold;">⚠️ विवाह आदि मांगलिक कार्य वर्जित।</div>` : ''}
+                        ${(ev.isJupiterSimhaNavamsha9) ? `<div style="margin-top: 10px; font-size: 8.5px !important; color: var(--red-ashubh); font-weight: bold;">⚠️ विवाह आदि मांगलिक कार्य वर्जित।</div>` : ''}
                         ${isAsta && ev.planetId === Astronomy.Body.Venus ? `
-                        <div style="margin-top: 10px; font-size: 11px !important; color: var(--red-ashubh); border-top: 1px dashed #fecaca; padding-top: 8px;">
+                        <div style="margin-top: 10px; font-size: 8.5px !important; color: var(--red-ashubh); border-top: 1px dashed #fecaca; padding-top: 8px;">
                             <strong>शुक्रास्त विचार:</strong> शुक्र के अस्त रहने की अवधि में विवाह, गृहारंभ, मुंडन, व्रत-उद्यापन, देव-प्रतिष्ठा आदि सभी मांगलिक एवं शुभ कार्य शास्त्रानुसार वर्जित होते हैं।
                         </div>` : ''}
                         ${isAsta && ev.planetId === Astronomy.Body.Jupiter ? `
-                        <div style="margin-top: 10px; font-size: 11px !important; color: var(--red-ashubh); border-top: 1px dashed #fecaca; padding-top: 8px;">
+                        <div style="margin-top: 10px; font-size: 8.5px !important; color: var(--red-ashubh); border-top: 1px dashed #fecaca; padding-top: 8px;">
                             <strong>गुरु अस्त विचार:</strong> बृहस्पति (गुरु) के अस्त रहने के कारण इस अवधि में मांगलिक कार्य (विवाह, यज्ञोपवीत, मुंडन, गृहारंभ आदि) वर्जित एवं त्याज्य हैं।
                         </div>` : ''}
                     </div>`;
@@ -7143,7 +7151,7 @@ function renderYatraMonthlyCalendar(year, month) {
 
         let badges = yatraResults.filter(r => !r.hiddenBadge).map(y => {
             let cls = y.type === 'shubh' ? 'green' : 'red';
-            return `<span class="badge ${cls}" style="font-size: 11px !important; display:block; margin-bottom:2px;">${y.name}</span>`;
+            return `<span class="badge ${cls}" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${y.name}</span>`;
         }).join('');
 
         let eclipseHtml = '';
@@ -7184,9 +7192,9 @@ function renderYatraMonthlyCalendar(year, month) {
                 tithiCircleHTML += `<div style="background:#000; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
             }
         } else {
-            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 11px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 ? '' : tNum}</div>`;
+            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 8.5px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 ? '' : tNum}</div>`;
         }
-        tithiCircleHTML += `<span style="font-size: 11px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
+        tithiCircleHTML += `<span style="font-size: 8.5px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
 
         let isToday = (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear());
 
@@ -7194,7 +7202,7 @@ function renderYatraMonthlyCalendar(year, month) {
 
             <div style="position:absolute; top:5px; right:5px; display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
                 <div style="display:flex; align-items:flex-start; gap:4px;">
-                    <span style="font-size: 11px !important; color:var(--primary-color); font-weight:700; margin-top:2px;">${hindiMonth}</span>
+                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; margin-top:2px;">${hindiMonth}</span>
                     ${tithiCircleHTML}
                 </div>
             </div>
@@ -7290,8 +7298,8 @@ window.openYatraModal = function(year, month, dateStr) {
 
             sarvarthaHtml = `
             <div style="background: #e8f5e9; border: 1px solid #c8e6c9; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); font-size: 11px !important; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px;">सर्वार्थसिद्धि योग <span style="font-size: 11px !important; background: var(--green-shubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">🟢 शुभ योग</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); font-size: 11px !important; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px;">सर्वार्थसिद्धि योग <span style="font-size: 8.5px !important; background: var(--green-shubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">🟢 शुभ योग</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>वार:</strong> ${weekdayHindi}<br>
                     <strong>नक्षत्र:</strong> ${sarvarthaYogaEntry.sarvarthaDetails.nak}<br>
                     <strong>योग प्रारंभ:</strong> सूर्योदय से (लगभग ${typeof dateObj !== 'undefined' ? getSunriseTime(dateObj, lat, lng).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '6:00 AM'})<br>
@@ -7364,7 +7372,7 @@ window.openYatraModal = function(year, month, dateStr) {
             eclipseModalHtml = `
             <div style="background: ${eBg}; border: 1px solid ${eColor}; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                 <h4 style="margin: 0 0 10px 0; color: ${eColor}; font-size: 11px !important; border-bottom: 1px solid ${eColor}; padding-bottom: 5px;">${eIcon} ग्रहण विवरण (Eclipse Details)</h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>ग्रहण का प्रकार:</strong> ${eType}<br>
                     <strong>तारीख:</strong> ${dateObj.toDateString()}<br>
                     <strong>स्थानीय प्रारंभ समय:</strong> ${pStart}<br>
@@ -7393,13 +7401,13 @@ window.openYatraModal = function(year, month, dateStr) {
         return `
             <div style="background: ${bgClass}; border: 1px solid ${borderClass}; padding: 12px; border-radius: 8px;">
                 <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 11px !important; display: flex; justify-content: space-between; align-items: flex-start; color: var(--text-main);">
-                    ${y.name} <span class="badge ${badgeClass}" style="font-size: 11px !important;">${badgeLabel}</span>
+                    ${y.name} <span class="badge ${badgeClass}" style="font-size: 8.5px !important;">${badgeLabel}</span>
                 </h3>
-                <div style="font-size: 11px !important; margin-bottom: 6px;">
+                <div style="font-size: 8.5px !important; margin-bottom: 6px;">
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                     <strong>${y.why}</strong>
                 </div>
-                <div style="font-size: 11px !important;">
+                <div style="font-size: 8.5px !important;">
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                     <strong>${y.fruit}</strong>
                 </div>
@@ -7416,13 +7424,13 @@ window.openYatraModal = function(year, month, dateStr) {
             ${directionalResults.map(y => `
                 <div style="background: #fff5f5; border: 1px solid #ffe3e3; padding: 12px; border-radius: 8px;">
                     <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 11px !important; display: flex; justify-content: space-between; align-items: flex-start; color: var(--red-ashubh);">
-                        ${y.name} <span class="badge red" style="font-size: 11px !important;">अशुभ</span>
+                        ${y.name} <span class="badge red" style="font-size: 8.5px !important;">अशुभ</span>
                     </h3>
-                    <div style="font-size: 11px !important; margin-bottom: 6px;">
+                    <div style="font-size: 8.5px !important; margin-bottom: 6px;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 11px !important;">
+                    <div style="font-size: 8.5px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong>${y.fruit}</strong>
                     </div>
@@ -7441,13 +7449,13 @@ window.openYatraModal = function(year, month, dateStr) {
             ${travelYogas.map(y => `
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px;">
                     <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 11px !important; display: flex; justify-content: space-between; align-items: flex-start; color: var(--green-shubh);">
-                        ${y.name} <span class="badge green" style="font-size: 11px !important;">शुभ</span>
+                        ${y.name} <span class="badge green" style="font-size: 8.5px !important;">शुभ</span>
                     </h3>
-                    <div style="font-size: 11px !important; margin-bottom: 6px;">
+                    <div style="font-size: 8.5px !important; margin-bottom: 6px;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 11px !important;">
+                    <div style="font-size: 8.5px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong style="color: var(--green-shubh);">${y.fruit}</strong>
                     </div>
@@ -7483,7 +7491,7 @@ window.openYatraModal = function(year, month, dateStr) {
             <p><strong>Paksha:</strong> ${p.paksha}</p>
             <p><strong>Birth Nakshatra:</strong> ${NAKSHATRA_NAMES[globalYatraBirthNakshatraIndex]}</p>
             <p><strong>Day's Nakshatra:</strong> ${p.moonNakshatraName} - Pada ${Math.floor((p.moonLongitude % (360/27)) / (360/108)) + 1}
-            <span style="color:var(--text-muted); font-size: 11px !important;">(Exact Moon Longitude: ${Math.floor(p.moonLongitude)}° ${Math.floor((p.moonLongitude % 1) * 60)}' ${Math.floor((((p.moonLongitude % 1) * 60) % 1) * 60)}")</span></p>
+            <span style="color:var(--text-muted); font-size: 8.5px !important;">(Exact Moon Longitude: ${Math.floor(p.moonLongitude)}° ${Math.floor((p.moonLongitude % 1) * 60)}' ${Math.floor((((p.moonLongitude % 1) * 60) % 1) * 60)}")</span></p>
             <hr style="margin: 15px 0;">
             ${detailsHtml}
 
@@ -7498,8 +7506,8 @@ window.openYatraModal = function(year, month, dateStr) {
                 let shubhaColor = sl.isShubha ? 'var(--green-shubh)' : 'var(--red-ashubh)';
                 let shubhaText = sl.isShubha ? 'शुभ लग्न (Shubha Lagna)' : 'अशुभ लग्न (Afflicted Lagna)';
                 let details = '';
-                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size: 11px !important;">+ ' + sl.reasons.join(', ') + '</span>';
-                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size: 11px !important;">- ' + sl.warnings.join(', ') + '</span>';
+                if(sl.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size: 8.5px !important;">+ ' + sl.reasons.join(', ') + '</span>';
+                if(sl.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size: 8.5px !important;">- ' + sl.warnings.join(', ') + '</span>';
 
                 return `<div style="margin: 20px 0; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
                     <h4 style="margin:0 0 5px 0;">सूर्योदय लग्न शुद्धि (Sunrise Lagna Shuddhi)</h4>
@@ -9173,7 +9181,7 @@ function renderYatraEvaluatedMonthlyCalendar(year, month) {
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <div style="display:flex; align-items:center; gap: 10px;">
                 <h2 style="margin:0;">Yatra Evaluated Calendar</h2>
-                <div style="font-size: 11px !important; color:var(--text-muted);">Logo placeholder</div>
+                <div style="font-size: 8.5px !important; color:var(--text-muted);">Logo placeholder</div>
             </div>
             <div>
                 <select id="yatraEvalCalMonth" onchange="updateYatraEvaluatedCalendarNav()">${Array.from({length:12}, (_,i) => `<option value="${i}" ${i===month?'selected':''}>${new Date(2000, i, 1).toLocaleString('default', { month: 'long' })}</option>`).join('')}</select>
@@ -9208,7 +9216,7 @@ function renderYatraEvaluatedMonthlyCalendar(year, month) {
 
         let badges = yatraResults.filter(r => !r.hiddenBadge).map(y => {
             let cls = y.type === 'shubh' ? 'green' : 'red';
-            return `<span class="badge ${cls}" style="font-size: 11px !important; display:block; margin-bottom:2px;">${y.name}</span>`;
+            return `<span class="badge ${cls}" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${y.name}</span>`;
         }).join('');
 
         let eclipseHtml = '';
@@ -9249,9 +9257,9 @@ function renderYatraEvaluatedMonthlyCalendar(year, month) {
                 tithiCircleHTML += `<div style="background:#000; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
             }
         } else {
-            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 11px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 ? '' : tNum}</div>`;
+            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 8.5px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 ? '' : tNum}</div>`;
         }
-        tithiCircleHTML += `<span style="font-size: 11px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
+        tithiCircleHTML += `<span style="font-size: 8.5px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
 
         let isToday = (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear());
 
@@ -9259,7 +9267,7 @@ function renderYatraEvaluatedMonthlyCalendar(year, month) {
 
             <div style="position:absolute; top:5px; right:5px; display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
                 <div style="display:flex; align-items:flex-start; gap:4px;">
-                    <span style="font-size: 11px !important; color:var(--primary-color); font-weight:700; margin-top:2px;">${hindiMonth}</span>
+                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; margin-top:2px;">${hindiMonth}</span>
                     ${tithiCircleHTML}
                 </div>
             </div>
@@ -9594,19 +9602,19 @@ let natalDetailsHtml = '';
             <h3 style="color: var(--primary-color); margin-bottom: 15px;">यात्रा कालीन लग्न</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
                 <div style="background: #eef2ff; padding: 10px; border-radius: 8px; border: 1px solid #e0e7ff;">
-                    <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Date & Time</span>
+                    <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Date & Time</span>
                     <strong style="font-size: 11px !important; color: var(--primary-dark);">${travelDate.toLocaleString()} (Sunrise)</strong>
                 </div>
                 <div style="background: #eef2ff; padding: 10px; border-radius: 8px; border: 1px solid #e0e7ff;">
-                    <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Location</span>
+                    <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Location</span>
                     <strong style="font-size: 11px !important; color: var(--primary-dark);">${lat.toFixed(2)}° N, ${lng.toFixed(2)}° E</strong>
                 </div>
                 <div style="background: #eef2ff; padding: 10px; border-radius: 8px; border: 1px solid #e0e7ff;">
-                    <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Lagna</span>
-                    <strong style="font-size: 11px !important; color: var(--primary-dark);">${RASHI_NAMES[travelLagnaIdx]} <span style="font-size: 11px !important; color: var(--text-muted); font-weight: normal;">(${siderealAscendant.toFixed(2)}°)</span></strong>
+                    <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Lagna</span>
+                    <strong style="font-size: 11px !important; color: var(--primary-dark);">${RASHI_NAMES[travelLagnaIdx]} <span style="font-size: 8.5px !important; color: var(--text-muted); font-weight: normal;">(${siderealAscendant.toFixed(2)}°)</span></strong>
                 </div>
                 <div style="background: #eef2ff; padding: 10px; border-radius: 8px; border: 1px solid #e0e7ff;">
-                    <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Lagna Navamsha</span>
+                    <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Travel Lagna Navamsha</span>
                     <strong style="font-size: 11px !important; color: var(--primary-dark);">${RASHI_NAMES[navamshaRashiIdx]}</strong>
                 </div>
             </div>
@@ -9614,12 +9622,12 @@ let natalDetailsHtml = '';
             <h3 style="color: var(--primary-color); margin-bottom: 15px;">जन्म संदर्भ</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
                 <div style="background: #fdf4ff; padding: 10px; border-radius: 8px; border: 1px solid #fae8ff;">
-                    <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Janma Lagna & Lord</span>
-                    <strong style="font-size: 11px !important; color: var(--primary-dark);">${RASHI_NAMES[globalYatraNatalData.lagnaRashiIdx]} <span style="font-size: 11px !important; color: var(--text-muted); font-weight: normal;">(${RASHI_LORDS_IDX[globalYatraNatalData.lagnaRashiIdx]})</span></strong>
+                    <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Janma Lagna & Lord</span>
+                    <strong style="font-size: 11px !important; color: var(--primary-dark);">${RASHI_NAMES[globalYatraNatalData.lagnaRashiIdx]} <span style="font-size: 8.5px !important; color: var(--text-muted); font-weight: normal;">(${RASHI_LORDS_IDX[globalYatraNatalData.lagnaRashiIdx]})</span></strong>
                 </div>
                 <div style="background: #fdf4ff; padding: 10px; border-radius: 8px; border: 1px solid #fae8ff;">
-                    <span style="font-size: 11px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Janma Rashi & Lord</span>
-                    <strong style="font-size: 11px !important; color: var(--primary-dark);">${RASHI_NAMES[globalYatraNatalData.moonRashiIdx]} <span style="font-size: 11px !important; color: var(--text-muted); font-weight: normal;">(${RASHI_LORDS_IDX[globalYatraNatalData.moonRashiIdx]})</span></strong>
+                    <span style="font-size: 8.5px !important; color: var(--text-muted); display: block; margin-bottom: 2px;">Janma Rashi & Lord</span>
+                    <strong style="font-size: 11px !important; color: var(--primary-dark);">${RASHI_NAMES[globalYatraNatalData.moonRashiIdx]} <span style="font-size: 8.5px !important; color: var(--text-muted); font-weight: normal;">(${RASHI_LORDS_IDX[globalYatraNatalData.moonRashiIdx]})</span></strong>
                 </div>
             </div>
         `;
@@ -9736,8 +9744,8 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
 
             sarvarthaHtml = `
             <div style="background: #e8f5e9; border: 1px solid #c8e6c9; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); font-size: 11px !important; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px;">सर्वार्थसिद्धि योग <span style="font-size: 11px !important; background: var(--green-shubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">🟢 शुभ योग</span></h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <h4 style="margin: 0 0 10px 0; color: var(--green-shubh); font-size: 11px !important; border-bottom: 1px solid #c8e6c9; padding-bottom: 5px;">सर्वार्थसिद्धि योग <span style="font-size: 8.5px !important; background: var(--green-shubh); color: #fff; padding: 2px 6px; border-radius: 4px; float: right;">🟢 शुभ योग</span></h4>
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>वार:</strong> ${weekdayHindi}<br>
                     <strong>नक्षत्र:</strong> ${sarvarthaYogaEntry.sarvarthaDetails.nak}<br>
                     <strong>योग प्रारंभ:</strong> सूर्योदय से (लगभग ${typeof dateObj !== 'undefined' ? getSunriseTime(dateObj, lat, lng).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '6:00 AM'})<br>
@@ -9810,7 +9818,7 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
             eclipseModalHtml = `
             <div style="background: ${eBg}; border: 1px solid ${eColor}; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                 <h4 style="margin: 0 0 10px 0; color: ${eColor}; font-size: 11px !important; border-bottom: 1px solid ${eColor}; padding-bottom: 5px;">${eIcon} ग्रहण विवरण (Eclipse Details)</h4>
-                <div style="font-size: 11px !important; line-height: 1.5; color: var(--text-main);">
+                <div style="font-size: 8.5px !important; line-height: 1.5; color: var(--text-main);">
                     <strong>ग्रहण का प्रकार:</strong> ${eType}<br>
                     <strong>तारीख:</strong> ${dateObj.toDateString()}<br>
                     <strong>स्थानीय प्रारंभ समय:</strong> ${pStart}<br>
@@ -9839,13 +9847,13 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
         return `
             <div style="background: ${bgClass}; border: 1px solid ${borderClass}; padding: 12px; border-radius: 8px;">
                 <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 11px !important; display: flex; justify-content: space-between; align-items: flex-start; color: var(--text-main);">
-                    ${y.name} <span class="badge ${badgeClass}" style="font-size: 11px !important;">${badgeLabel}</span>
+                    ${y.name} <span class="badge ${badgeClass}" style="font-size: 8.5px !important;">${badgeLabel}</span>
                 </h3>
-                <div style="font-size: 11px !important; margin-bottom: 6px;">
+                <div style="font-size: 8.5px !important; margin-bottom: 6px;">
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                     <strong>${y.why}</strong>
                 </div>
-                <div style="font-size: 11px !important;">
+                <div style="font-size: 8.5px !important;">
                     <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                     <strong>${y.fruit}</strong>
                 </div>
@@ -9862,13 +9870,13 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
             ${directionalResults.map(y => `
                 <div style="background: #fff5f5; border: 1px solid #ffe3e3; padding: 12px; border-radius: 8px;">
                     <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 11px !important; display: flex; justify-content: space-between; align-items: flex-start; color: var(--red-ashubh);">
-                        ${y.name} <span class="badge red" style="font-size: 11px !important;">अशुभ</span>
+                        ${y.name} <span class="badge red" style="font-size: 8.5px !important;">अशुभ</span>
                     </h3>
-                    <div style="font-size: 11px !important; margin-bottom: 6px;">
+                    <div style="font-size: 8.5px !important; margin-bottom: 6px;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 11px !important;">
+                    <div style="font-size: 8.5px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong>${y.fruit}</strong>
                     </div>
@@ -9887,13 +9895,13 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
             ${travelYogas.map(y => `
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px;">
                     <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 11px !important; display: flex; justify-content: space-between; align-items: flex-start; color: var(--green-shubh);">
-                        ${y.name} <span class="badge green" style="font-size: 11px !important;">शुभ</span>
+                        ${y.name} <span class="badge green" style="font-size: 8.5px !important;">शुभ</span>
                     </h3>
-                    <div style="font-size: 11px !important; margin-bottom: 6px;">
+                    <div style="font-size: 8.5px !important; margin-bottom: 6px;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Condition:</span>
                         <strong>${y.why}</strong>
                     </div>
-                    <div style="font-size: 11px !important;">
+                    <div style="font-size: 8.5px !important;">
                         <span style="color: var(--text-muted); display: block; margin-bottom: 2px;">Result:</span>
                         <strong style="color: var(--green-shubh);">${y.fruit}</strong>
                     </div>
@@ -9980,7 +9988,7 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
             <p><strong>Dagdha Lagna / दग्ध लग्न:</strong> <span style="color: ${isDagdhaLagnaDay ? 'var(--red-ashubh); font-weight:bold;' : 'inherit'};">${isDagdhaLagnaDay ? `Yes / हाँ` : 'No / नहीं'}</span></p>
             <p><strong>Paksha:</strong> ${p.paksha}</p>
             <p><strong>Day's Nakshatra:</strong> ${p.moonNakshatraName} - Pada ${Math.floor((p.moonLongitude % (360/27)) / (360/108)) + 1}
-            <span style="color:var(--text-muted); font-size: 11px !important;">(Exact Moon Longitude: ${Math.floor(p.moonLongitude)}° ${Math.floor((p.moonLongitude % 1) * 60)}' ${Math.floor((((p.moonLongitude % 1) * 60) % 1) * 60)}")</span></p>
+            <span style="color:var(--text-muted); font-size: 8.5px !important;">(Exact Moon Longitude: ${Math.floor(p.moonLongitude)}° ${Math.floor((p.moonLongitude % 1) * 60)}' ${Math.floor((((p.moonLongitude % 1) * 60) % 1) * 60)}")</span></p>
 
             ${(() => {
                 let vastraRules = window.checkVastraAbhushanRules(p.moonNakshatraName, dateObj.getDay(), p.tithiNumber);
@@ -9991,28 +9999,28 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
 
                 if (vastraRules.shubhWear) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main);">
                         <strong style="color: var(--green-shubh);">✅ शुभ योग:</strong> मूंगा, दाँत, शंख, सुवर्ण (सोने) के आभूषण और नवीन वस्त्र धारण करना शुभ है।
                     </div>`;
                 }
 
                 if (vastraRules.tuesdayRed) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main);">
                         <strong style="color: #48bb78;">👕 मंगलवार विशेष:</strong> आज मंगलवार के दिन लाल वस्त्र धारण करना चाहिए।
                     </div>`;
                 }
 
                 if (vastraRules.sadhavaRestricted) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main);">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main);">
                         <strong style="color: var(--red-ashubh);">❌ सधवा स्त्री निषेध:</strong> आज (${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]} नक्षत्र) सधवा स्त्री नवीन वस्त्र-आभूषण आदि धारण न करे।
                     </div>`;
                 }
 
                 if (vastraRules.shatabhishaRestricted) {
                     vastraHtml += `
-                    <div style="margin-bottom: 8px; font-size: 11px !important; color: var(--text-main); background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #fed7e2;">
+                    <div style="margin-bottom: 8px; font-size: 8.5px !important; color: var(--text-main); background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #fed7e2;">
                         <strong style="color: var(--red-ashubh);">⚠️ कुछ आचार्यों के मतानुसार:</strong> शतभिषा नक्षत्र में सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण और स्नान न करे।<br>
                         <strong style="color: #b83280; margin-top:4px; display:inline-block;">शांति उपाय:</strong> यदि भूलवश या अज्ञानतावश ऐसा हो जाए, तो दोष की शांति के लिए अपने पति का पूजन करें।
                     </div>`;
@@ -10028,8 +10036,8 @@ let basicResults = yatraResults.filter(y => !['दिशा शूल', 'शू�
                 let shubhaColor = sc.isShubha ? 'var(--green-shubh)' : (sc.isAfflicted ? 'var(--red-ashubh)' : 'var(--amber-mixed)');
                 let shubhaText = sc.isShubha ? 'शुभ चंद्र (Shubha Chandra)' : (sc.isAfflicted ? 'अशुभ/पीड़ित चंद्र (Afflicted Moon)' : 'मिश्रित चंद्र (Mixed Moon)');
                 let details = '';
-                if(sc.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size: 11px !important;">+ ' + sc.reasons.join(', ') + '</span>';
-                if(sc.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size: 11px !important;">- ' + sc.warnings.join(', ') + '</span>';
+                if(sc.reasons.length > 0) details += '<br><span style="color:var(--green-shubh); font-size: 8.5px !important;">+ ' + sc.reasons.join(', ') + '</span>';
+                if(sc.warnings.length > 0) details += '<br><span style="color:var(--red-ashubh); font-size: 8.5px !important;">- ' + sc.warnings.join(', ') + '</span>';
 
                 return `<div style="margin-top:10px; padding:10px; background:#f9f9f9; border-radius:6px; border:1px solid #eee;">
                     <strong>चंद्र स्थिति (Moon Status):</strong> <span style="color:${shubhaColor}; font-weight:bold;">${shubhaText}</span>
@@ -10205,10 +10213,10 @@ window.renderYogaFinderResults = function() {
 
         let badges = otherYogas.map(y => {
             let color = y.type === 'shubh' ? 'var(--green-shubh)' : y.type === 'ashubh' ? 'var(--red-ashubh)' : 'var(--amber-mixed)';
-            return `<span style="color:${color}; font-size: 11px !important; font-weight:bold;" title="${y.fruit}">${y.name}</span>`;
+            return `<span style="color:${color}; font-size: 8.5px !important; font-weight:bold;" title="${y.fruit}">${y.name}</span>`;
         }).join('<span style="color:var(--text-main);">, </span>');
 
-        if (otherYogas.length === 0) badges = '<span style="color:var(--text-muted); font-size: 11px !important;">None</span>';
+        if (otherYogas.length === 0) badges = '<span style="color:var(--text-muted); font-size: 8.5px !important;">None</span>';
 
         tableHtml += `
             <tr style="border-bottom:1px solid #eee;">

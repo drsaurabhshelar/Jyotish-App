@@ -414,6 +414,52 @@ button:hover {
 }
 
 </style>
+<style>
+
+/* MAIN CALENDAR GRID & CELL STYLING - 10px FONT SIZE & NO CLIPPING */
+.calendar-grid {
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    gap: 2px !important;
+    margin-top: 15px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+}
+
+.calendar-cell, .calendar-cell * {
+    font-size: 10px !important;
+    box-sizing: border-box !important;
+}
+
+.calendar-cell {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    padding: 2px !important;
+    min-height: 90px !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    overflow: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.calendar-header {
+    font-size: 10px !important;
+    padding: 6px 2px !important;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* Ensure container does not cause right overflow clipping */
+.container, #mainCalendarContainer, .card {
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+</style>
 </head>
 <body>
     <div id="app"></div>
@@ -3144,9 +3190,9 @@ function initApp() {
             </div>
 
             <div class="tabs">
-                <div class="tab active" onclick="switchTab('tab1')">आज के योग / Yoga Calendar</div>
-                <div class="tab" onclick="switchTab('tab2')">Personal / जन्म नक्षत्र</div>
-                <div class="tab" onclick="switchTab('tab3')">यात्रा / Yatra</div>
+
+
+
             </div>
 
                         <div id="tab1" class="panel active">
@@ -3170,24 +3216,7 @@ function initApp() {
                     <div id="yfResults"></div>
                 </div>
             </div>
-<div id="tab2" class="panel">
-                ${renderPersonalTab()}
-            </div>
-            <div id="tab3" class="panel">
-                ${renderYatraTab()}
-
-
-            <div class="settings-panel">
-                <strong>Settings / गणना सेटिंग्स:</strong>
-                <div class="settings-group">
-                    <label>Ayanamsha</label>
-                    <select><option>Lahiri (Default)</option></select>
-                </div>
-            </div>
-
-            </div>
-        </div>
-    `;
+`;
 
     document.getElementById('app').innerHTML = appHtml;
     updateYogaFinderDropdowns();

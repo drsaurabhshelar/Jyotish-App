@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shivsiddha Calender</title>
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
     <style>
@@ -378,7 +378,14 @@ button:hover {
     </style>
 <style>
 
-/* ABSOLUTE REQUIREMENT: EVERY TEXT IN EVERY CALENDAR POPUP MUST BE EXACTLY 11px */
+/* MOBILE APP & WEBVIEW FONT SIZE SCALING FIXES */
+html, body {
+    -webkit-text-size-adjust: 100% !important;
+    -moz-text-size-adjust: 100% !important;
+    -ms-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+}
+
 #calModalBg, #calModalBg *,
 #yatraModalBg, #yatraModalBg *,
 #yatraModalBgEval, #yatraModalBgEval *,
@@ -388,9 +395,13 @@ button:hover {
 [id*="ModalBg"], [id*="ModalBg"] *,
 [id*="ModalScrollContainer"], [id*="ModalScrollContainer"] * {
     font-size: 11px !important;
+    -webkit-text-size-adjust: 100% !important;
+    -moz-text-size-adjust: 100% !important;
+    -ms-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
 }
 
-@media (orientation: landscape) {
+@media screen and (max-width: 768px) {
     #calModalBg, #calModalBg *,
     #yatraModalBg, #yatraModalBg *,
     #yatraModalBgEval, #yatraModalBgEval *,
@@ -403,7 +414,7 @@ button:hover {
     }
 }
 
-@media (orientation: portrait) {
+@media screen and (max-width: 480px) {
     #calModalBg, #calModalBg *,
     #yatraModalBg, #yatraModalBg *,
     #yatraModalBgEval, #yatraModalBgEval *,

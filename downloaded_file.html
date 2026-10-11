@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shivsiddha Calender</title>
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
     <style>
@@ -378,14 +378,7 @@ button:hover {
     </style>
 <style>
 
-/* MOBILE APP & WEBVIEW FONT SIZE SCALING FIXES */
-html, body {
-    -webkit-text-size-adjust: 100% !important;
-    -moz-text-size-adjust: 100% !important;
-    -ms-text-size-adjust: 100% !important;
-    text-size-adjust: 100% !important;
-}
-
+/* STRICT REQUIREMENT: ALL TEXT IN ALL CALENDAR POPUPS MUST BE UNIFORM EXACTLY 11px */
 #calModalBg, #calModalBg *,
 #yatraModalBg, #yatraModalBg *,
 #yatraModalBgEval, #yatraModalBgEval *,
@@ -395,13 +388,14 @@ html, body {
 [id*="ModalBg"], [id*="ModalBg"] *,
 [id*="ModalScrollContainer"], [id*="ModalScrollContainer"] * {
     font-size: 11px !important;
+    line-height: 1.4 !important;
     -webkit-text-size-adjust: 100% !important;
     -moz-text-size-adjust: 100% !important;
     -ms-text-size-adjust: 100% !important;
     text-size-adjust: 100% !important;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (orientation: landscape) {
     #calModalBg, #calModalBg *,
     #yatraModalBg, #yatraModalBg *,
     #yatraModalBgEval, #yatraModalBgEval *,
@@ -411,19 +405,11 @@ html, body {
     [id*="ModalBg"], [id*="ModalBg"] *,
     [id*="ModalScrollContainer"], [id*="ModalScrollContainer"] * {
         font-size: 11px !important;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    #calModalBg, #calModalBg *,
-    #yatraModalBg, #yatraModalBg *,
-    #yatraModalBgEval, #yatraModalBgEval *,
-    .modal-scroll-container, .modal-scroll-container *,
-    [id*="calModal"], [id*="calModal"] *,
-    [id*="yatraModal"], [id*="yatraModal"] *,
-    [id*="ModalBg"], [id*="ModalBg"] *,
-    [id*="ModalScrollContainer"], [id*="ModalScrollContainer"] * {
-        font-size: 11px !important;
+        line-height: 1.4 !important;
+        -webkit-text-size-adjust: 100% !important;
+        -moz-text-size-adjust: 100% !important;
+        -ms-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
     }
 }
 

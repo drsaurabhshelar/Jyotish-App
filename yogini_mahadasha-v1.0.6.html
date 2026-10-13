@@ -316,12 +316,12 @@ var parsedPeople = [];
 
   var now = new Date();
   var currentYear = now.getFullYear();
+  var currentMonth = (now.getMonth() + 1).toString();
 
-  // 1) Option: Active Today (Default when year is not selected)
+  // 1) Option: Active Today (Current Date)
   var optCurrent = document.createElement('option');
   optCurrent.value = 'CURRENT';
   optCurrent.textContent = 'Active Today (Current Date)';
-  optCurrent.selected = true;
   yearSelect.appendChild(optCurrent);
 
   // 2) Option: All Years
@@ -335,8 +335,12 @@ var parsedPeople = [];
     var opt = document.createElement('option');
     opt.value = y.toString();
     opt.textContent = y.toString();
+    if (y === currentYear) {
+      opt.selected = true;
+    }
     yearSelect.appendChild(opt);
   }
+  yearSelect.value = currentYear.toString();
 
   // Month select
   var optAllMo = document.createElement('option');
@@ -352,6 +356,24 @@ var parsedPeople = [];
     optM.textContent = MONTH_NAMES[m - 1];
     monthSelect.appendChild(optM);
   }
+
+  // Interaction handlers: click/mousedown/focus on Year field
+  function onYearInteract() {
+    if (yearSelect.value === 'ALL' || yearSelect.value === 'CURRENT') {
+      yearSelect.value = currentYear.toString();
+    }
+  }
+  yearSelect.addEventListener('mousedown', onYearInteract);
+  yearSelect.addEventListener('click', onYearInteract);
+
+  // Interaction handlers: click/mousedown/focus on Month field
+  function onMonthInteract() {
+    if (monthSelect.value === 'ALL') {
+      monthSelect.value = currentMonth;
+    }
+  }
+  monthSelect.addEventListener('mousedown', onMonthInteract);
+  monthSelect.addEventListener('click', onMonthInteract);
 })();
 
 // Astronomical Moon Sidereal Longitude calculation at UTC Julian Date

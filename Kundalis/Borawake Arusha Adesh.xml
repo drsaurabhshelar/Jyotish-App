@@ -1,0 +1,76 @@
+<!DOCTYPE BirthData>
+<BirthData>
+  <BirthInfo>
+    <FirstName>Arusha Adesh</FirstName>
+    <LastName>Borawake</LastName>
+    <Sounds></Sounds>
+    <Gender>1</Gender>
+    <BirthDate>2447234.1145833</BirthDate>
+    <Longitude>-75.0833333</Longitude>
+    <Latitude>17.0247222</Latitude>
+    <TimeZone>-5.5000000</TimeZone>
+    <DST>0.0000000</DST>
+    <City>Malinagar</City>
+    <State>Mahārāshtra</State>
+    <Country>India</Country>
+    <BDLookupMode>M</BDLookupMode>
+    <RoddenRating>0</RoddenRating>
+  </BirthInfo>
+  <Events>
+    <Event Id="1">
+      <Name>Today</Name>
+      <Description></Description>
+      <Date>2461315.1946875</Date>
+      <Longitude>-75.8166667</Longitude>
+      <Latitude>26.9166667</Latitude>
+      <TimeZone>-5.5000000</TimeZone>
+      <DST>0.0000000</DST>
+      <City>Jaipur</City>
+      <State>Rājasthān</State>
+      <Country>India</Country>
+      <EventLookupMode>D</EventLookupMode>
+      <EventClassification></EventClassification>
+      <EventNotes></EventNotes>
+      <EventRodden>0</EventRodden>
+      <IsUsed>0</IsUsed>
+    </Event>
+    <Event Id="2">
+      <Name>Muhurta</Name>
+      <Description></Description>
+      <Date>2461315.1946875</Date>
+      <Longitude>-75.8277778</Longitude>
+      <Latitude>26.9166667</Latitude>
+      <TimeZone>-5.5000000</TimeZone>
+      <DST>0.0000000</DST>
+      <City>Jaipur</City>
+      <State>Rājasthān</State>
+      <Country>India</Country>
+      <EventLookupMode>D</EventLookupMode>
+      <EventClassification></EventClassification>
+      <EventNotes></EventNotes>
+      <EventRodden>0</EventRodden>
+      <IsUsed>0</IsUsed>
+    </Event>
+  </Events>
+  <DetailedNotes>wife of Nikhil Mahajan</DetailedNotes>
+  <BirthdataPicklist/>
+  <AnimatedPicklist/>
+  <MuhurtaPicklist/>
+  <FamilyInfo>
+    <GrandFather></GrandFather>
+    <Father></Father>
+    <Mother></Mother>
+    <Caste></Caste>
+    <Gotra></Gotra>
+    <Address1></Address1>
+    <Address2></Address2>
+    <Address3></Address3>
+    <Email></Email>
+    <Phone></Phone>
+    <Tags></Tags>
+    <Unused1></Unused1>
+    <Unused2></Unused2>
+    <Unused3></Unused3>
+  </FamilyInfo>
+  <MuhurtaSessions/>
+</BirthData>

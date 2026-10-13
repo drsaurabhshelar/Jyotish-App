@@ -330,7 +330,7 @@ var parsedPeople = [];
   optAllYr.textContent = 'All Years';
   yearSelect.appendChild(optAllYr);
 
-  // 3) Years list in chronological order (scrolling UP shows older years, scrolling DOWN shows future years)
+  // 3) Years list in chronological order
   for (var y = currentYear - 50; y <= currentYear + 50; y++) {
     var opt = document.createElement('option');
     opt.value = y.toString();
@@ -354,9 +354,9 @@ var parsedPeople = [];
   }
 })();
 
-// Astronomical Moon Sidereal Longitude calculation
-function calculateMoonLon(jd) {
-  var T = (jd - 2451545.0) / 36525.0;
+// Astronomical Moon Sidereal Longitude calculation at UTC Julian Date
+function calculateMoonLon(utcJd) {
+  var T = (utcJd - 2451545.0) / 36525.0;
   var L0 = 218.3164477 + 481267.88123421 * T - 0.0015786 * T * T + (T * T * T) / 538841.0 - (T * T * T * T) / 65194000.0;
   var D = 297.8501921 + 445267.1114034 * T - 0.0018819 * T * T + (T * T * T) / 545868.0 - (T * T * T * T) / 113065000.0;
   var M = 357.5291092 + 35999.0502909 * T - 0.0001536 * T * T + (T * T * T) / 24490000.0;
@@ -382,8 +382,8 @@ function calculateMoonLon(jd) {
   var tropicalLon = (L0 + dL) % 360.0;
   if (tropicalLon < 0) tropicalLon += 360.0;
 
-  var year = 2000.0 + (jd - 2451545.0) / 365.25;
-  var ayanamsa = 23.85709167 + (year - 2000.0) * 0.0139694;
+  var year = 2000.0 + (utcJd - 2451545.0) / 365.25;
+  var ayanamsa = 23.85709167 + (year - 2000.0) * 0.01395523;
   var siderealLon = (tropicalLon - ayanamsa) % 360.0;
   if (siderealLon < 0) siderealLon += 360.0;
 
@@ -399,9 +399,13 @@ function jdToDateString(jd) {
   return year + '-' + pad(month) + '-' + pad(day);
 }
 
-function getYoginiPeriods(birthJd, maxYears) {
+function getYoginiPeriods(birthLocalJd, tzOffset, maxYears) {
   if (!maxYears) maxYears = 100;
-  var moonLon = calculateMoonLon(birthJd);
+
+  // Parashara's Light XML BirthDate is Local Time JD. Convert to UTC JD for Ephemeris Moon lookup:
+  var birthUtcJd = birthLocalJd + (tzOffset / 24.0);
+  var moonLon = calculateMoonLon(birthUtcJd);
+
   var nakSpan = 360.0 / 27.0;
   var nakIndex = Math.floor(moonLon / nakSpan);
   var nakNum = nakIndex + 1;
@@ -413,12 +417,12 @@ function getYoginiPeriods(birthJd, maxYears) {
   var firstMdYears = YOGINIS[startYIdx].years;
   var elapsedMdDays = elapsedFraction * firstMdYears * DAYS_PER_YEAR;
 
-  var mdStartJd = birthJd - elapsedMdDays;
+  var mdStartJd = birthLocalJd - elapsedMdDays;
   var periods = [];
   var currentMdStartJd = mdStartJd;
   var currYIdx = startYIdx;
 
-  var endJdLimit = birthJd + (maxYears * DAYS_PER_YEAR);
+  var endJdLimit = birthLocalJd + (maxYears * DAYS_PER_YEAR);
 
   while (currentMdStartJd < endJdLimit) {
     var mdInfo = YOGINIS[currYIdx];
@@ -485,14 +489,18 @@ function parseXmlContent(xmlText, fileName) {
   var birthDateStr = getTagValue("BirthDate");
   if (!birthDateStr) return null;
 
-  var birthJd = parseFloat(birthDateStr);
-  if (isNaN(birthJd)) return null;
+  var birthLocalJd = parseFloat(birthDateStr);
+  if (isNaN(birthLocalJd)) return null;
 
-  var periods = getYoginiPeriods(birthJd, 100);
+  var timeZoneStr = getTagValue("TimeZone");
+  var tzOffset = parseFloat(timeZoneStr);
+  if (isNaN(tzOffset)) tzOffset = 0.0;
+
+  var periods = getYoginiPeriods(birthLocalJd, tzOffset, 100);
 
   return {
     name: name,
-    birthJd: birthJd,
+    birthJd: birthLocalJd,
     periods: periods
   };
 }
@@ -629,8 +637,6 @@ function performSearch() {
   });
 }
 
-// Check match condition: If yearVal is 'CURRENT' (default before selection), match active dashas today.
-// Otherwise, match dashas starting in the selected Year and/or Month.
 function checkMatch(startJd, endJd, startDateStr, yearVal, monthVal, nowJd) {
   if (yearVal === 'CURRENT') {
     return (startJd <= nowJd && nowJd <= endJd);
@@ -658,6 +664,7 @@ window.addEventListener('DOMContentLoaded', function() {
     'Mahajan Nikhil Abhimanyu.xml',
     'Mithe Falguni.xml',
     'Patil Rushikesh Datttreya.xml',
+    'Ranade Ananya.xml',
     'Sonawane Prashant.xml',
     'Sonawane Tanya.xml',
     'Vispute Rajendra.xml'

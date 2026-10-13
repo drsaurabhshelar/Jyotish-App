@@ -328,6 +328,7 @@ var parsedPeople = [];
   var optAllYr = document.createElement('option');
   optAllYr.value = 'ALL';
   optAllYr.textContent = 'All Years';
+  optAllYr.selected = true;
   yearSelect.appendChild(optAllYr);
 
   // 3) Years list in chronological order
@@ -335,12 +336,9 @@ var parsedPeople = [];
     var opt = document.createElement('option');
     opt.value = y.toString();
     opt.textContent = y.toString();
-    if (y === currentYear) {
-      opt.selected = true;
-    }
     yearSelect.appendChild(opt);
   }
-  yearSelect.value = currentYear.toString();
+  yearSelect.value = 'ALL';
 
   // Month select
   var optAllMo = document.createElement('option');

@@ -2662,8 +2662,8 @@ function renderMonthlyCalendar(year, month) {
                 try {
                     if (window.calculateSunriseKundali && window.analyzeShubhaLagna) {
                         let sKundali = window.calculateSunriseKundali(date, p.lat, p.lng, p.ayanamsha);
-                        if (sKundali && sKundali.lagnaRashiIdx !== undefined && sKundali.planets) {
-                            let sLagna = window.analyzeShubhaLagna(sKundali.lagnaRashiIdx, sKundali.planets);
+                        if (sKundali && sKundali.ascendant.rashiIndex !== undefined && sKundali.planets) {
+                            let sLagna = window.analyzeShubhaLagna(sKundali.ascendant.rashiIndex, sKundali.planets);
                             if (sLagna && sLagna.isShubha === true) {
                                 rightBarContent += `
                                 <div title="सूर्योदय लग्न शुद्धि" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--green-shubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">
@@ -3984,8 +3984,8 @@ renderMonthlyCalendar = function(year, month) {
                 try {
                     if (window.calculateSunriseKundali && window.analyzeShubhaLagna) {
                         let sKundali = window.calculateSunriseKundali(date, p.lat, p.lng, p.ayanamsha);
-                        if (sKundali && sKundali.lagnaRashiIdx !== undefined && sKundali.planets) {
-                            let sLagna = window.analyzeShubhaLagna(sKundali.lagnaRashiIdx, sKundali.planets);
+                        if (sKundali && sKundali.ascendant.rashiIndex !== undefined && sKundali.planets) {
+                            let sLagna = window.analyzeShubhaLagna(sKundali.ascendant.rashiIndex, sKundali.planets);
                             if (sLagna && sLagna.isShubha === true) {
                                 rightBarContent += `
                                 <div title="सूर्योदय लग्न शुद्धि" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--green-shubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">

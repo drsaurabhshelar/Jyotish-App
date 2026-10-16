@@ -410,8 +410,8 @@ body {
 }
 
 /* Middle restriction/icon stack */
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] {
-    left: 2px !important;
+.calendar-cell > div[style*="left:2px"][style*="top:50%"],
+.calendar-cell > div[style*="right:2px"][style*="top:50%"] {
     top: 57% !important;
     transform: translateY(-50%) !important;
     max-width: 18px !important;
@@ -419,7 +419,14 @@ body {
     gap: 1px !important;
     overflow: visible !important;
 }
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] > div {
+.calendar-cell > div[style*="left:2px"][style*="top:50%"] {
+    left: 2px !important;
+}
+.calendar-cell > div[style*="right:2px"][style*="top:50%"] {
+    right: 2px !important;
+}
+.calendar-cell > div[style*="left:2px"][style*="top:50%"] > div,
+.calendar-cell > div[style*="right:2px"][style*="top:50%"] > div {
     width: 14px !important;
     height: 14px !important;
     min-width: 14px !important;
@@ -428,11 +435,14 @@ body {
     font-size: 10px !important;
     line-height: 1 !important;
 }
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] svg {
+.calendar-cell > div[style*="left:2px"][style*="top:50%"] svg,
+.calendar-cell > div[style*="right:2px"][style*="top:50%"] svg {
     width: 9px !important;
     height: 9px !important;
 }
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] span {
+.calendar-cell > div[style*="left:2px"][style*="top:50%"] span,
+.calendar-cell > div[style*="right:2px"][style*="top:50%"] span,
+.calendar-cell > div[style*="right:2px"][style*="top:50%"] div {
     font-size: 10px !important;
 }
 

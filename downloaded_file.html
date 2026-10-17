@@ -2906,13 +2906,29 @@ function getNextNewMoon(dateObj) {
     return null;
 }
 
+window._adhikKshayaCache = window._adhikKshayaCache || {};
+
+window.hasSankranti = function(dateObj, lat, lng) {
+    let startOfDay = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 0, 0, 0);
+    let endOfDay = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59, 999);
+    let pStart = new PanchangEngine(startOfDay, 'lahiri', lat, lng);
+    let pEnd = new PanchangEngine(endOfDay, 'lahiri', lat, lng);
+    let rashiStart = Math.floor(pStart.sunLongitude / 30);
+    let rashiEnd = Math.floor(pEnd.sunLongitude / 30);
+    if (rashiStart !== rashiEnd) return true;
+    if (pStart.sunLongitude > 330 && pEnd.sunLongitude < 30) return true;
+    return false;
+};
+
 window.getAdhikKshayaMasData = function(dateObj, lat = 28.6139, lng = 77.2090) {
+    let key = dateObj.getFullYear() + '-' + dateObj.getMonth() + '-' + dateObj.getDate() + '-' + lat + '-' + lng;
+    if (window._adhikKshayaCache[key] !== undefined) return window._adhikKshayaCache[key];
+
     let t = Astronomy.MakeTime(dateObj);
     let prevNewMoon, nextNewMoon;
     try {
         let phase = Astronomy.SearchMoonPhase(0, t, -35);
         if (phase) {
-            // Check if it's the new moon that started THIS lunar month
             if (phase.date <= dateObj) {
                 prevNewMoon = phase;
             } else {
@@ -2935,18 +2951,18 @@ window.getAdhikKshayaMasData = function(dateObj, lat = 28.6139, lng = 77.2090) {
 
     let sankrantiCount = 0;
     let d = new Date(lunarStart);
-    // Scan every day from lunarStart to lunarEnd
     while (d <= lunarEnd) {
-        let sData = window.calculateSankranti(d, lat, lng, 0); // Need rough Sankranti
-        if (sData) sankrantiCount++;
+        if (window.hasSankranti(d, lat, lng)) sankrantiCount++;
         d.setDate(d.getDate() + 1);
     }
 
-    return {
+    let result = {
         adhik: sankrantiCount === 0,
         kshay: sankrantiCount >= 2
     };
-}
+    window._adhikKshayaCache[key] = result;
+    return result;
+};
 
 function renderMonthlyCalendar(year, month) {
     let date = new Date(year, month, 1, 0, 0, 0);

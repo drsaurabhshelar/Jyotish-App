@@ -124,13 +124,12 @@ body {
 .status-amber { color: var(--amber-mixed); font-weight: bold; }
 
 .calendar-grid {
-    display: grid !important;
-    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-    gap: 2px !important;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
     margin-top: 20px;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: 100%;
 }
 
 .calendar-cell {
@@ -143,15 +142,12 @@ body {
     transition: all 0.2s;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     position: relative;
-    box-sizing: border-box !important;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
+    overflow: hidden;
 }
 @media (min-width: 768px) {
     .calendar-cell {
@@ -2906,29 +2902,13 @@ function getNextNewMoon(dateObj) {
     return null;
 }
 
-window._adhikKshayaCache = window._adhikKshayaCache || {};
-
-window.hasSankranti = function(dateObj, lat, lng) {
-    let startOfDay = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 0, 0, 0);
-    let endOfDay = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 23, 59, 59, 999);
-    let pStart = new PanchangEngine(startOfDay, 'lahiri', lat, lng);
-    let pEnd = new PanchangEngine(endOfDay, 'lahiri', lat, lng);
-    let rashiStart = Math.floor(pStart.sunLongitude / 30);
-    let rashiEnd = Math.floor(pEnd.sunLongitude / 30);
-    if (rashiStart !== rashiEnd) return true;
-    if (pStart.sunLongitude > 330 && pEnd.sunLongitude < 30) return true;
-    return false;
-};
-
 window.getAdhikKshayaMasData = function(dateObj, lat = 28.6139, lng = 77.2090) {
-    let key = dateObj.getFullYear() + '-' + dateObj.getMonth() + '-' + dateObj.getDate() + '-' + lat + '-' + lng;
-    if (window._adhikKshayaCache[key] !== undefined) return window._adhikKshayaCache[key];
-
     let t = Astronomy.MakeTime(dateObj);
     let prevNewMoon, nextNewMoon;
     try {
         let phase = Astronomy.SearchMoonPhase(0, t, -35);
         if (phase) {
+            // Check if it's the new moon that started THIS lunar month
             if (phase.date <= dateObj) {
                 prevNewMoon = phase;
             } else {
@@ -2951,18 +2931,18 @@ window.getAdhikKshayaMasData = function(dateObj, lat = 28.6139, lng = 77.2090) {
 
     let sankrantiCount = 0;
     let d = new Date(lunarStart);
+    // Scan every day from lunarStart to lunarEnd
     while (d <= lunarEnd) {
-        if (window.hasSankranti(d, lat, lng)) sankrantiCount++;
+        let sData = window.calculateSankranti(d, lat, lng, 0); // Need rough Sankranti
+        if (sData) sankrantiCount++;
         d.setDate(d.getDate() + 1);
     }
 
-    let result = {
+    return {
         adhik: sankrantiCount === 0,
         kshay: sankrantiCount >= 2
     };
-    window._adhikKshayaCache[key] = result;
-    return result;
-};
+}
 
 function renderMonthlyCalendar(year, month) {
     let date = new Date(year, month, 1, 0, 0, 0);
@@ -3206,23 +3186,21 @@ function renderMonthlyCalendar(year, month) {
         let nakshatraLord = NAKSHATRA_DEITIES[p.moonNakshatraName] || '';
         let panchakClass = panchakDetails ? 'panchak' : '';
 
-        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; width:100%; max-width:100%; box-sizing:border-box; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
+        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
 
-            <div class="cell-top-bar" style="position:absolute; top:1px; left:1px; width:calc(100% - 2px) !important; max-width:calc(100% - 2px) !important; display:flex; justify-content:space-between; align-items:flex-start; pointer-events:none; z-index:2; box-sizing:border-box;">
-                <div style="display:flex; flex-direction:column; gap:0; text-align:left; max-width:35%; overflow:hidden;">
-                    <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${deityName}</span>
-                    <span style="font-size: 8px !important; color:var(--text-muted); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${nakshatraLord}</span>
+            <span style="position:absolute; top:2px; font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
+
+            <div style="position:absolute; top:2px; left:2px; display:flex; flex-direction:column; gap:1px; text-align:left;">
+                <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
+                <span style="font-size: 8.5px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
+            </div>
+
+            <div style="position:absolute; top:2px; right:2px; display:flex; flex-direction:column; align-items:center; gap:2px;">
+                <div style="display:flex; align-items:center; gap:2px;">
+                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
+                    ${tithiCircleHTML}
                 </div>
-                <div style="text-align:center; max-width:30%; overflow:hidden;">
-                    <span style="font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
-                </div>
-                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:1px; max-width:35%; overflow:hidden;">
-                    <div style="display:flex; align-items:center; gap:2px;">
-                        <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
-                        ${tithiCircleHTML}
-                    </div>
-                    ${sunEmojiHtml}
-                </div>
+                ${sunEmojiHtml}
             </div>
             ${(() => {
                 let rightBarContent = '';
@@ -3246,12 +3224,12 @@ function renderMonthlyCalendar(year, month) {
                     }
                 }
 
-                // Homa & Agnivasa Icon (Shown ONLY when Homahuti is Shubh AND Agnivasa is Bhumi)
+                // Homa & Agnivasa Icon
                 try {
                     let hData = window.evaluateHomaAgnivasa(p);
-                    if (hData && !hData.homaIsKhal && hData.agniVasa === 'भूमि') {
-                        let hBorderColor = 'var(--green-shubh)';
-                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (शुभ)\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
+                    if (hData) {
+                        let hBorderColor = hData.homaIsKhal ? 'var(--red-ashubh)' : 'var(--green-shubh)';
+                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (${hData.homaIsKhal ? 'अशुभ/खल' : 'शुभ'})\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
                         rightBarContent += `
                         <div title="${hTitle}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.9); border:1px solid ${hBorderColor}; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                             <span style="font-size: 8.5px !important; line-height:1;">🔥</span>
@@ -3775,7 +3753,7 @@ initApp = function() {
         updateKundali();
     }
 };
-window.onload = function() { try { initApp(); } catch(e) { console.error("INIT APP ERROR", e); } };
+
 
 
 function renderKundali() {
@@ -4525,23 +4503,21 @@ renderMonthlyCalendar = function(year, month) {
         let nakshatraLord = NAKSHATRA_DEITIES[p.moonNakshatraName] || '';
         let panchakClass = panchakDetails ? 'panchak' : '';
 
-        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; width:100%; max-width:100%; box-sizing:border-box; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
+        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
 
-            <div class="cell-top-bar" style="position:absolute; top:1px; left:1px; width:calc(100% - 2px) !important; max-width:calc(100% - 2px) !important; display:flex; justify-content:space-between; align-items:flex-start; pointer-events:none; z-index:2; box-sizing:border-box;">
-                <div style="display:flex; flex-direction:column; gap:0; text-align:left; max-width:35%; overflow:hidden;">
-                    <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${deityName}</span>
-                    <span style="font-size: 8px !important; color:var(--text-muted); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${nakshatraLord}</span>
+            <span style="position:absolute; top:2px; font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
+
+            <div style="position:absolute; top:2px; left:2px; display:flex; flex-direction:column; gap:1px; text-align:left;">
+                <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
+                <span style="font-size: 8.5px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
+            </div>
+
+            <div style="position:absolute; top:2px; right:2px; display:flex; flex-direction:column; align-items:center; gap:2px;">
+                <div style="display:flex; align-items:center; gap:2px;">
+                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
+                    ${tithiCircleHTML}
                 </div>
-                <div style="text-align:center; max-width:30%; overflow:hidden;">
-                    <span style="font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
-                </div>
-                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:1px; max-width:35%; overflow:hidden;">
-                    <div style="display:flex; align-items:center; gap:2px;">
-                        <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
-                        ${tithiCircleHTML}
-                    </div>
-                    ${sunEmojiHtml}
-                </div>
+                ${sunEmojiHtml}
             </div>
             ${(() => {
                 let rightBarContent = '';
@@ -4565,12 +4541,12 @@ renderMonthlyCalendar = function(year, month) {
                     }
                 }
 
-                // Homa & Agnivasa Icon (Shown ONLY when Homahuti is Shubh AND Agnivasa is Bhumi)
+                // Homa & Agnivasa Icon
                 try {
                     let hData = window.evaluateHomaAgnivasa(p);
-                    if (hData && !hData.homaIsKhal && hData.agniVasa === 'भूमि') {
-                        let hBorderColor = 'var(--green-shubh)';
-                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (शुभ)\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
+                    if (hData) {
+                        let hBorderColor = hData.homaIsKhal ? 'var(--red-ashubh)' : 'var(--green-shubh)';
+                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (${hData.homaIsKhal ? 'अशुभ/खल' : 'शुभ'})\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
                         rightBarContent += `
                         <div title="${hTitle}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.9); border:1px solid ${hBorderColor}; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                             <span style="font-size: 8.5px !important; line-height:1;">🔥</span>
@@ -10346,6 +10322,180 @@ window.renderYogaFinderResults = function() {
 
 
 
+
+
+<!-- Terms & Conditions Modal/Screen -->
+<div id="tcScreen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:99999; flex-direction:column; padding:16px; box-sizing:border-box; font-family:sans-serif;">
+    <div style="text-align:center; padding-bottom:10px; border-bottom:2px solid #b7791f;">
+        <h2 style="margin:0; color:#b7791f; font-size:22px;">Shivsiddha Nakshatra Calendar</h2>
+        <p style="margin:4px 0 0 0; font-size:13px; color:#555;">Welcome! Please review and accept the Terms & Conditions to proceed.</p>
+    </div>
+
+    <div id="tcScrollArea" style="flex:1; overflow-y:auto; margin:12px 0; padding:10px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; font-size:13px; line-height:1.5; color:#334155;">
+        <h4 style="margin:0 0 4px 0; color:#0f172a;">A. About This Calendar</h4>
+        <p style="margin:0 0 10px 0;">Shivsiddha Nakshatra Calendar has been carefully developed using detailed astrological calculations. However, errors, omissions, inaccuracies, or technical issues may occur. No representation is made that every result will always be error-free or suitable for every purpose.</p>
+
+        <h4 style="margin:0 0 4px 0; color:#0f172a;">B. Informational Purpose</h4>
+        <p style="margin:0 0 10px 0;">Calendar entries, astrological calculations, predictions, and other outputs are provided for informational and astrological reference purposes. Users should independently verify important information before relying on it for consequential decisions.</p>
+
+        <h4 style="margin:0 0 4px 0; color:#0f172a;">C. User Responsibility</h4>
+        <p style="margin:0 0 10px 0;">You are responsible for how you interpret, use, share, act upon, or rely on any information or output provided by this application. You should independently assess whether any result is appropriate for your intended use.</p>
+
+        <h4 style="margin:0 0 4px 0; color:#0f172a;">D. Limitation of Responsibility</h4>
+        <p style="margin:0 0 10px 0;">To the maximum extent permitted by applicable law, the creator, Shivsiddha Charitable Trust, and their respective associates, representatives, and related persons disclaim responsibility for losses, damages, or consequences arising from errors in the application's data or from the use of, or reliance upon, its outputs.</p>
+
+        <h4 style="margin:0 0 4px 0; color:#0f172a;">E. No Legal or Financial Relationship</h4>
+        <p style="margin:0 0 10px 0;">Use of this application does not, by itself, establish a legal, financial, advisory, or contractual relationship between the user and the creator, Shivsiddha Charitable Trust, or their associates. The application does not guarantee any financial outcome or legal result.</p>
+
+        <h4 style="margin:0 0 4px 0; color:#0f172a;">F. Acceptance</h4>
+        <p style="margin:0;">By checking the acceptance checkbox and selecting Continue, you confirm that you have read and accepted these Terms & Conditions and understand that you are responsible for your use of the application's information and outputs, subject to applicable law.</p>
+    </div>
+
+    <div style="padding-top:8px; border-top:1px solid #e2e8f0;">
+        <div id="bgProgressContainer" style="display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:12px; color:#64748b;">
+            <div id="bgSpinner" style="width:14px; height:14px; border:2px solid #b7791f; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></div>
+            <span id="bgProgressText">Preparing calendar data in background...</span>
+        </div>
+        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:#1e293b; cursor:pointer; margin-bottom:12px;">
+            <input type="checkbox" id="tcCheckbox" onchange="document.getElementById('tcContinueBtn').disabled = !this.checked;" style="width:18px; height:18px; accent-color:#b7791f;">
+            I have read and accept the Terms & Conditions
+        </label>
+
+        <button id="tcContinueBtn" disabled onclick="handleTcContinue()" style="width:100%; padding:12px; background:#b7791f; color:#fff; border:none; border-radius:6px; font-size:15px; font-weight:bold; cursor:pointer; opacity:1;">
+            Continue
+        </button>
+    </div>
+</div>
+
+<script>
+const CACHE_KEY_PREFIX = 'snc_cal_cache_v1_';
+const TC_ACCEPTED_KEY = 'snc_tc_accepted_v1';
+window.isBackgroundInitDone = false;
+
+function checkAppStartFlow() {
+    let accepted = localStorage.getItem(TC_ACCEPTED_KEY);
+    if (!accepted) {
+        document.getElementById('tcScreen').style.display = 'flex';
+        startBackgroundInitialization();
+    } else {
+        document.getElementById('tcScreen').style.display = 'none';
+        initAppWithCache();
+    }
+}
+
+function startBackgroundInitialization() {
+    if (window.isBackgroundInitDone) return;
+    let now = new Date();
+    let y = now.getFullYear();
+    let m = now.getMonth();
+
+    // Asynchronously pre-compute current month
+    setTimeout(() => {
+        let key = CACHE_KEY_PREFIX + y + '_' + m;
+        let html = renderMonthlyCalendar(y, m);
+        try {
+            localStorage.setItem(key, JSON.stringify({
+                version: 1,
+                year: y,
+                month: m,
+                html: html,
+                timestamp: Date.now()
+            }));
+        } catch(e) {}
+
+        window.isBackgroundInitDone = true;
+        let txt = document.getElementById('bgProgressText');
+        let spinner = document.getElementById('bgSpinner');
+        if (txt) txt.innerText = 'Calendar initialization ready.';
+        if (spinner) spinner.style.display = 'none';
+    }, 100);
+}
+
+function handleTcContinue() {
+    localStorage.setItem(TC_ACCEPTED_KEY, 'true');
+    document.getElementById('tcScreen').style.display = 'none';
+    initAppWithCache();
+}
+
+function initAppWithCache() {
+    let now = new Date();
+    let y = now.getFullYear();
+    let m = now.getMonth();
+    let key = CACHE_KEY_PREFIX + y + '_' + m;
+    let cached = null;
+
+    try {
+        let raw = localStorage.getItem(key);
+        if (raw) cached = JSON.parse(raw);
+    } catch(e) {}
+
+    let mainCalHtml = '';
+    if (cached && cached.html) {
+        mainCalHtml = cached.html;
+    } else {
+        mainCalHtml = renderMonthlyCalendar(y, m);
+    }
+
+    let panchang = new PanchangEngine(now);
+    let yogas = calculateDailyYogas(panchang);
+
+    let appHtml = `
+        <div class="container">
+            <div class="header" style="text-align: center; margin-bottom: 10px;">
+                <h1 style="margin: 0; font-size: 32px !important; white-space: nowrap !important; font-family: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', Palatino, serif; font-weight: 800; color: #b7791f; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); letter-spacing: 2px; text-transform: uppercase; display: inline-block;">Shivsiddha Nakshatra Calender</h1>
+            </div>
+            <div id="tab1" class="panel active">
+                <div id="mainCalendarContainer">${mainCalHtml}</div>
+                <hr style="margin: 30px 0; border: 0; border-top: 2px solid var(--primary-light);">
+                ${renderPanchang(panchang)}
+                ${renderYogas(yogas)}
+                <hr style="margin: 30px 0; border: 0; border-top: 2px solid var(--primary-light);">
+                <div id="yogaFinderContainer">
+                    <h2>Yoga Finder</h2>
+                    <div style="display:flex; gap:10px; margin-bottom: 15px; flex-wrap:wrap;">
+                        <select id="yfYear" onchange="updateYogaFinderDropdowns()" style="padding:8px; border-radius:4px;">
+                            ${Array.from({length:201}, (_,i) => 1900+i).map(yr => `<option value="${yr}" ${yr===now.getFullYear()?'selected':''}>${yr}</option>`).join('')}
+                        </select>
+                        <select id="yfMonth" onchange="updateYogaFinderDropdowns()" style="padding:8px; border-radius:4px;">
+                            <option value="-1">All Months</option>
+                            ${Array.from({length:12}, (_,i) => `<option value="${i}" ${i===now.getMonth()?'selected':''}>${new Date(2000, i, 1).toLocaleString('default', { month: 'long' })}</option>`).join('')}
+                        </select>
+                        <select id="yfYoga" onchange="renderYogaFinderResults()" style="padding:8px; border-radius:4px; flex-grow:1;"></select>
+                    </div>
+                    <div id="yfResults"></div>
+                </div>
+            </div>
+            <div id="tab2" class="panel">
+                ${renderPersonalTab()}
+            </div>
+            <div id="tab3" class="panel">
+                ${renderYatraTab()}
+                <div class="settings-panel">
+                    <strong>Settings / गणना सेटिंग्स:</strong>
+                    <div class="settings-group">
+                        <label>Ayanamsha</label>
+                        <select><option>Lahiri (Default)</option></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('app').innerHTML = appHtml;
+
+    let tab2 = document.getElementById('tab2');
+    if(!document.getElementById('kundaliCard')) {
+        let div2 = document.createElement('div');
+        div2.innerHTML = renderKundali();
+        tab2.appendChild(div2);
+        updateKundali();
+    }
+}
+
+window.onload = function() { try { checkAppStartFlow(); } catch(e) { console.error("INIT APP ERROR", e); } };
+</script>
 
 </body>
 </html>

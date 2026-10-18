@@ -3025,12 +3025,12 @@ function renderMonthlyCalendar(year, month) {
                     }
                 }
 
-                // Homa & Agnivasa Icon
+                // Homa & Agnivasa Icon (Show strictly when Homahuti is favorable and Agnivasa is on land)
                 try {
                     let hData = window.evaluateHomaAgnivasa(p);
-                    if (hData) {
-                        let hBorderColor = hData.homaIsKhal ? 'var(--red-ashubh)' : 'var(--green-shubh)';
-                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (${hData.homaIsKhal ? 'अशुभ/खल' : 'शुभ'})\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
+                    if (hData && !hData.homaIsKhal && hData.agniVasa === 'भूमि') {
+                        let hBorderColor = 'var(--green-shubh)';
+                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (शुभ)\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
                         rightBarContent += `
                         <div title="${hTitle}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.9); border:1px solid ${hBorderColor}; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                             <span style="font-size: 8.5px !important; line-height:1;">🔥</span>
@@ -4332,12 +4332,12 @@ renderMonthlyCalendar = function(year, month) {
                     }
                 }
 
-                // Homa & Agnivasa Icon
+                // Homa & Agnivasa Icon (Show strictly when Homahuti is favorable and Agnivasa is on land)
                 try {
                     let hData = window.evaluateHomaAgnivasa(p);
-                    if (hData) {
-                        let hBorderColor = hData.homaIsKhal ? 'var(--red-ashubh)' : 'var(--green-shubh)';
-                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (${hData.homaIsKhal ? 'अशुभ/खल' : 'शुभ'})\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
+                    if (hData && !hData.homaIsKhal && hData.agniVasa === 'भूमि') {
+                        let hBorderColor = 'var(--green-shubh)';
+                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (शुभ)\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
                         rightBarContent += `
                         <div title="${hTitle}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.9); border:1px solid ${hBorderColor}; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                             <span style="font-size: 8.5px !important; line-height:1;">🔥</span>

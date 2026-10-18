@@ -242,101 +242,12 @@ body {
     overflow: hidden !important;
 }
 
-/* Top-center Nakshatra */
-.calendar-cell > span:first-child {
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: calc(100% - 40px) !important;
-    max-width: calc(100% - 40px) !important;
-    min-width: 0 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    font-size: 8.5px !important;
-    line-height: 1 !important;
-    text-align: center !important;
-}
-
-/* Top-left deity/lord */
-.calendar-cell > div[style*="left:2px"][style*="top:2px"] {
-    left: 2px !important;
-    top: 2px !important;
-    width: 28px !important;
-    max-width: 28px !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-    font-size: 8px !important;
-    line-height: .95 !important;
-}
-.calendar-cell > div[style*="left:2px"][style*="top:2px"] span {
-    display: block !important;
-    max-width: 28px !important;
-    overflow: hidden !important;
-    font-size: 8px !important;
-    line-height: .95 !important;
-    letter-spacing: -0.5px !important;
-    white-space: nowrap !important;
-    text-overflow: ellipsis !important;
-}
-
-/* Top-right month + tithi */
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] {
-    right: 2px !important;
-    top: 2px !important;
-    width: 42px !important;
-    max-width: 42px !important;
-    min-width: 0 !important;
-    overflow: visible !important;
-    font-size: 8px !important;
-    line-height: 1 !important;
-}
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] > div {
-    width: 42px !important;
-    max-width: 42px !important;
-    min-width: 0 !important;
-    gap: 1px !important;
-    font-size: 8px !important;
-    line-height: 1 !important;
-}
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] span {
-    font-size: 8px !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
-}
-
-/* Tithi circle */
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] [style*="width:20px"][style*="height:20px"] {
-    width: 14px !important;
-    height: 14px !important;
-    min-width: 14px !important;
-    min-height: 14px !important;
-    font-size: 8px !important;
-    border-width: 1px !important;
-    flex-shrink: 0 !important;
-}
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] [style*="width:16px"][style*="height:16px"] {
-    width: 12px !important;
-    height: 12px !important;
-    min-width: 12px !important;
-    min-height: 12px !important;
-    border-width: 1px !important;
-}
-
-/* Sun marker */
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] > div[style*="font-size: 11px !important"] {
-    font-size: 8px !important;
-    line-height: 1 !important;
-    margin-top: 1px !important;
-}
-
 /* Middle restriction/icon stack */
 .calendar-cell > div[style*="left:2px"][style*="top:50%"],
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] {
     top: 50% !important;
     transform: translateY(-50%) !important;
     max-width: 14px !important;
-    max-height: 85% !important;
     gap: 1px !important;
     overflow: visible !important;
     z-index: 5 !important;
@@ -349,23 +260,21 @@ body {
 }
 .calendar-cell > div[style*="left:2px"][style*="top:50%"] > div,
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] > div {
-    width: 12px !important;
-    height: 12px !important;
-    min-width: 12px !important;
-    min-height: 12px !important;
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
+    max-width: 14px !important;
+    max-height: 14px !important;
     margin-bottom: 1px !important;
-    font-size: 8px !important;
+    font-size: 8.5px !important;
     line-height: 1 !important;
+    box-sizing: border-box !important;
 }
 .calendar-cell > div[style*="left:2px"][style*="top:50%"] svg,
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] svg {
-    width: 8px !important;
-    height: 8px !important;
-}
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] span,
-.calendar-cell > div[style*="right:2px"][style*="top:50%"] span,
-.calendar-cell > div[style*="right:2px"][style*="top:50%"] div {
-    font-size: 8px !important;
+    width: 10px !important;
+    height: 10px !important;
 }
 
 /* Preserve date numbers strictly at 12px */
@@ -374,6 +283,12 @@ body {
     line-height: 1 !important;
     flex-shrink: 0 !important;
     white-space: nowrap !important;
+}
+
+/* Side padding for central date so icons don't cover numbers */
+.calendar-cell .cell-center-date {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
 }
 
 /* Asta/Udaya symbols below the date */
@@ -3053,26 +2968,14 @@ function renderMonthlyCalendar(year, month) {
         let tithiCircleHTML = '<div style="display:flex; flex-direction:column; align-items:center;">';
         if (p.tithiNumber === 15 || p.tithiNumber === 30) {
             if (p.paksha === 'Shukla' || p.tithiName.includes('Purnima')) {
-                tithiCircleHTML += `<div style="background:#fff; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
+                tithiCircleHTML += `<div style="background:#fff; border: 1px solid var(--primary-color); width:12px; height:12px; border-radius:50%; flex-shrink:0;"></div>`;
             } else {
-                tithiCircleHTML += `<div style="background:#000; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
+                tithiCircleHTML += `<div style="background:#000; border: 1px solid var(--primary-color); width:12px; height:12px; border-radius:50%; flex-shrink:0;"></div>`;
             }
         } else {
-            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 8.5px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
+            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:13px; height:13px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 7.5px !important; font-weight:bold; flex-shrink:0;">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-        tithiCircleHTML += `<span style="font-size: 8.5px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
+        tithiCircleHTML += `<span style="font-size: 7.5px !important; color:gray; font-weight:bold; line-height:1;">${pakshaLabel}</span></div>`;
 
         let isToday = (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear());
         let panchakDetails = getPanchakDetails(date, p.lat, p.lng);
@@ -3082,21 +2985,23 @@ function renderMonthlyCalendar(year, month) {
         let nakshatraLord = NAKSHATRA_DEITIES[p.moonNakshatraName] || '';
         let panchakClass = panchakDetails ? 'panchak' : '';
 
-        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
+        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:16px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
 
-            <span style="position:absolute; top:2px; font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
-
-            <div style="position:absolute; top:2px; left:2px; display:flex; flex-direction:column; gap:1px; text-align:left;">
-                <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
-                <span style="font-size: 8.5px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
-            </div>
-
-            <div style="position:absolute; top:2px; right:2px; display:flex; flex-direction:column; align-items:center; gap:2px;">
-                <div style="display:flex; align-items:center; gap:2px;">
-                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
-                    ${tithiCircleHTML}
+            <div class="cell-top-bar" style="position:absolute; top:1px; left:1px; width:calc(100% - 2px) !important; display:flex; justify-content:space-between; align-items:flex-start; pointer-events:none; z-index:2; box-sizing:border-box; padding:0 1px;">
+                <div style="display:flex; flex-direction:column; gap:0; text-align:left; max-width:32%; overflow:hidden;">
+                    <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${deityName}</span>
+                    <span style="font-size: 8px !important; color:var(--text-muted); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${nakshatraLord}</span>
                 </div>
-                ${sunEmojiHtml}
+                <div style="text-align:center; max-width:36%; overflow:hidden;">
+                    <span style="font-size: 8px !important; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:1px; max-width:32%; overflow:hidden;">
+                    <div style="display:flex; align-items:center; gap:1px;">
+                        <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${hindiMonth}</span>
+                        ${tithiCircleHTML}
+                    </div>
+                    ${sunEmojiHtml}
+                </div>
             </div>
             ${(() => {
                 let rightBarContent = '';
@@ -3257,7 +3162,7 @@ function renderMonthlyCalendar(year, month) {
                 return rightBarContent ? `<div style="position:absolute; right:2px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2px; z-index:10;">${rightBarContent}</div>` : '';
             })()}
 
-            <div style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top: 15px; margin-bottom: auto;">
+            <div class="cell-center-date" style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top: 15px; margin-bottom: auto; padding-left:18px; padding-right:18px;">
                 <strong style="font-size: 12px !important;">${date.getDate()}</strong>
 
             </div>
@@ -4370,26 +4275,14 @@ renderMonthlyCalendar = function(year, month) {
         let tithiCircleHTML = '<div style="display:flex; flex-direction:column; align-items:center;">';
         if (p.tithiNumber === 15 || p.tithiNumber === 30) {
             if (p.paksha === 'Shukla' || p.tithiName.includes('Purnima')) {
-                tithiCircleHTML += `<div style="background:#fff; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
+                tithiCircleHTML += `<div style="background:#fff; border: 1px solid var(--primary-color); width:12px; height:12px; border-radius:50%; flex-shrink:0;"></div>`;
             } else {
-                tithiCircleHTML += `<div style="background:#000; border: 2px solid var(--primary-color); width:16px; height:16px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>`;
+                tithiCircleHTML += `<div style="background:#000; border: 1px solid var(--primary-color); width:12px; height:12px; border-radius:50%; flex-shrink:0;"></div>`;
             }
         } else {
-            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 8.5px !important; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.2);">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
+            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:13px; height:13px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 7.5px !important; font-weight:bold; flex-shrink:0;">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-        tithiCircleHTML += `<span style="font-size: 8.5px !important; color:gray; font-weight:bold; margin-top:2px;">${pakshaLabel}</span></div>`;
+        tithiCircleHTML += `<span style="font-size: 7.5px !important; color:gray; font-weight:bold; line-height:1;">${pakshaLabel}</span></div>`;
 
         let isToday = (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear());
         let panchakDetails = getPanchakDetails(date, p.lat, p.lng);
@@ -4399,21 +4292,23 @@ renderMonthlyCalendar = function(year, month) {
         let nakshatraLord = NAKSHATRA_DEITIES[p.moonNakshatraName] || '';
         let panchakClass = panchakDetails ? 'panchak' : '';
 
-        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:25px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
+        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:16px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
 
-            <span style="position:absolute; top:2px; font-size: 8.5px !important; font-weight:700; color:var(--text-main); white-space:nowrap; text-align:center;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
-
-            <div style="position:absolute; top:2px; left:2px; display:flex; flex-direction:column; gap:1px; text-align:left;">
-                <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700; line-height:1; letter-spacing:-0.5px;">${deityName}</span>
-                <span style="font-size: 8.5px !important; color:var(--text-muted); font-weight:700; line-height:1; letter-spacing:-0.5px;">${nakshatraLord}</span>
-            </div>
-
-            <div style="position:absolute; top:2px; right:2px; display:flex; flex-direction:column; align-items:center; gap:2px;">
-                <div style="display:flex; align-items:center; gap:2px;">
-                    <span style="font-size: 8.5px !important; color:var(--primary-color); font-weight:700;">${hindiMonth}</span>
-                    ${tithiCircleHTML}
+            <div class="cell-top-bar" style="position:absolute; top:1px; left:1px; width:calc(100% - 2px) !important; display:flex; justify-content:space-between; align-items:flex-start; pointer-events:none; z-index:2; box-sizing:border-box; padding:0 1px;">
+                <div style="display:flex; flex-direction:column; gap:0; text-align:left; max-width:32%; overflow:hidden;">
+                    <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${deityName}</span>
+                    <span style="font-size: 8px !important; color:var(--text-muted); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${nakshatraLord}</span>
                 </div>
-                ${sunEmojiHtml}
+                <div style="text-align:center; max-width:36%; overflow:hidden;">
+                    <span style="font-size: 8px !important; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:1px; max-width:32%; overflow:hidden;">
+                    <div style="display:flex; align-items:center; gap:1px;">
+                        <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${hindiMonth}</span>
+                        ${tithiCircleHTML}
+                    </div>
+                    ${sunEmojiHtml}
+                </div>
             </div>
             ${(() => {
                 let rightBarContent = '';

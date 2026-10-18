@@ -235,84 +235,7 @@ body {
 }
 
 
-/* Compact calendar typography/icons: preserve date-number size while fitting all metadata */
-.calendar-cell > span:first-child {
-    font-size: 10px !important;
-    max-width: calc(100% - 64px) !important;
-    line-height: 1 !important;
-}
-
-.calendar-cell > div[style*="left:2px"][style*="top:2px"] {
-    width: 27px !important;
-    max-width: 27px !important;
-    font-size: 10px !important;
-    line-height: 1 !important;
-}
-.calendar-cell > div[style*="left:2px"][style*="top:2px"] span {
-    font-size: 10px !important;
-    line-height: 1 !important;
-    letter-spacing: -0.7px !important;
-}
-
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] {
-    max-width: 35px !important;
-    font-size: 10px !important;
-    line-height: 1 !important;
-}
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] > div {
-    font-size: 10px !important;
-    line-height: 1 !important;
-}
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] span {
-    font-size: 10px !important;
-}
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] [style*="width:20px"][style*="height:20px"] {
-    width: 16px !important;
-    height: 16px !important;
-    font-size: 10px !important;
-}
-.calendar-cell > div[style*="right:2px"][style*="top:2px"] [style*="width:16px"][style*="height:16px"] {
-    width: 14px !important;
-    height: 14px !important;
-}
-
-/* Shrink the vertical icon/restriction stack; do not change the day number. */
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] {
-    max-width: 18px !important;
-    gap: 1px !important;
-}
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] > div {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    min-height: 16px !important;
-    font-size: 10px !important;
-    margin-bottom: 1px !important;
-}
-.calendar-cell > div[style*="left:2px"][style*="top:50%"] svg {
-    width: 10px !important;
-    height: 10px !important;
-}
-
-/* Keep the central date number exactly readable and prevent flex shrinking. */
-.calendar-cell strong {
-    font-size: 12px !important;
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
-}
-
-/* Compact yoga/badge text so the bottom of narrow cells is not clipped. */
-.calendar-cell > div[style*="margin-top:5px"] {
-    font-size: 10px !important;
-    line-height: 1.05 !important;
-}
-.calendar-cell .badge {
-    font-size: 10px !important;
-    line-height: 1.05 !important;
-    padding: 2px 4px !important;
-}
-
-/* FINAL CALENDAR FIT PASS - compact metadata, preserve day numbers */
+/* Compact calendar typography/icons for Landscape App View */
 .calendar-cell {
     box-sizing: border-box !important;
     min-width: 0 !important;
@@ -324,15 +247,13 @@ body {
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
-    width: calc(100% - 50px) !important;
-    max-width: calc(100% - 50px) !important;
+    width: calc(100% - 40px) !important;
+    max-width: calc(100% - 40px) !important;
     min-width: 0 !important;
-    white-space: normal !important;
+    white-space: nowrap !important;
     overflow: hidden !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
-    text-overflow: clip !important;
-    font-size: 10px !important;
+    text-overflow: ellipsis !important;
+    font-size: 8.5px !important;
     line-height: 1 !important;
     text-align: center !important;
 }
@@ -341,70 +262,70 @@ body {
 .calendar-cell > div[style*="left:2px"][style*="top:2px"] {
     left: 2px !important;
     top: 2px !important;
-    width: 27px !important;
-    max-width: 27px !important;
+    width: 28px !important;
+    max-width: 28px !important;
     min-width: 0 !important;
     overflow: hidden !important;
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: .95 !important;
 }
 .calendar-cell > div[style*="left:2px"][style*="top:2px"] span {
     display: block !important;
-    max-width: 27px !important;
+    max-width: 28px !important;
     overflow: hidden !important;
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: .95 !important;
-    letter-spacing: -0.55px !important;
+    letter-spacing: -0.5px !important;
     white-space: nowrap !important;
-    text-overflow: clip !important;
+    text-overflow: ellipsis !important;
 }
 
 /* Top-right month + tithi */
 .calendar-cell > div[style*="right:2px"][style*="top:2px"] {
     right: 2px !important;
     top: 2px !important;
-    width: 48px !important;
-    max-width: 48px !important;
+    width: 42px !important;
+    max-width: 42px !important;
     min-width: 0 !important;
     overflow: visible !important;
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: 1 !important;
 }
 .calendar-cell > div[style*="right:2px"][style*="top:2px"] > div {
-    width: 48px !important;
-    max-width: 48px !important;
+    width: 42px !important;
+    max-width: 42px !important;
     min-width: 0 !important;
     gap: 1px !important;
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: 1 !important;
 }
 .calendar-cell > div[style*="right:2px"][style*="top:2px"] span {
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: 1 !important;
     white-space: nowrap !important;
 }
 
 /* Tithi circle */
 .calendar-cell > div[style*="right:2px"][style*="top:2px"] [style*="width:20px"][style*="height:20px"] {
-    width: 15px !important;
-    height: 15px !important;
-    min-width: 15px !important;
-    min-height: 15px !important;
-    font-size: 10px !important;
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
+    font-size: 8px !important;
     border-width: 1px !important;
     flex-shrink: 0 !important;
 }
 .calendar-cell > div[style*="right:2px"][style*="top:2px"] [style*="width:16px"][style*="height:16px"] {
-    width: 13px !important;
-    height: 13px !important;
-    min-width: 13px !important;
-    min-height: 13px !important;
+    width: 12px !important;
+    height: 12px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
     border-width: 1px !important;
 }
 
 /* Sun marker */
 .calendar-cell > div[style*="right:2px"][style*="top:2px"] > div[style*="font-size: 11px !important"] {
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: 1 !important;
     margin-top: 1px !important;
 }
@@ -412,12 +333,13 @@ body {
 /* Middle restriction/icon stack */
 .calendar-cell > div[style*="left:2px"][style*="top:50%"],
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] {
-    top: 57% !important;
+    top: 50% !important;
     transform: translateY(-50%) !important;
-    max-width: 18px !important;
-    max-height: 80% !important;
+    max-width: 14px !important;
+    max-height: 85% !important;
     gap: 1px !important;
     overflow: visible !important;
+    z-index: 5 !important;
 }
 .calendar-cell > div[style*="left:2px"][style*="top:50%"] {
     left: 2px !important;
@@ -427,26 +349,26 @@ body {
 }
 .calendar-cell > div[style*="left:2px"][style*="top:50%"] > div,
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] > div {
-    width: 14px !important;
-    height: 14px !important;
-    min-width: 14px !important;
-    min-height: 14px !important;
+    width: 12px !important;
+    height: 12px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
     margin-bottom: 1px !important;
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: 1 !important;
 }
 .calendar-cell > div[style*="left:2px"][style*="top:50%"] svg,
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] svg {
-    width: 9px !important;
-    height: 9px !important;
+    width: 8px !important;
+    height: 8px !important;
 }
 .calendar-cell > div[style*="left:2px"][style*="top:50%"] span,
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] span,
 .calendar-cell > div[style*="right:2px"][style*="top:50%"] div {
-    font-size: 10px !important;
+    font-size: 8px !important;
 }
 
-/* Preserve date numbers exactly at 18px and prevent shrinking */
+/* Preserve date numbers strictly at 12px */
 .calendar-cell strong {
     font-size: 12px !important;
     line-height: 1 !important;
@@ -462,12 +384,12 @@ body {
     gap: 0 !important;
 }
 .calendar-cell > div[style*="margin-top:auto"] > div {
-    width: 18px !important;
-    height: 18px !important;
-    min-width: 18px !important;
-    min-height: 18px !important;
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
     margin: 0 1px !important;
-    font-size: 10px !important;
+    font-size: 8px !important;
 }
 
 /* Yoga badges */
@@ -476,7 +398,7 @@ body {
     max-width: 100% !important;
     min-width: 0 !important;
     overflow: hidden !important;
-    font-size: 10px !important;
+    font-size: 8px !important;
     line-height: 1 !important;
 }
 .calendar-cell .badge {
@@ -484,37 +406,11 @@ body {
     max-width: 100% !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
-    white-space: normal !important;
-    overflow-wrap: anywhere !important;
-    font-size: 10px !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    font-size: 8px !important;
     line-height: 1 !important;
-    padding: 2px 3px !important;
-}
-
-@media (max-width: 900px) {
-    .calendar-grid { gap: 2px !important; }
-    .calendar-cell > span:first-child {
-        width: calc(100% - 44px) !important;
-        max-width: calc(100% - 44px) !important;
-        font-size: 10px !important;
-    }
-    .calendar-cell > div[style*="left:2px"][style*="top:2px"] {
-        width: 24px !important;
-        max-width: 24px !important;
-    }
-    .calendar-cell > div[style*="left:2px"][style*="top:2px"] span {
-        max-width: 24px !important;
-        font-size: 10px !important;
-    }
-    .calendar-cell > div[style*="right:2px"][style*="top:2px"] {
-        width: 43px !important;
-        max-width: 43px !important;
-    }
-    .calendar-cell > div[style*="right:2px"][style*="top:2px"] > div {
-        width: 43px !important;
-        max-width: 43px !important;
-    }
-    .calendar-cell strong { font-size: 12px !important; }
+    padding: 1px 2px !important;
 }
 
 @media (max-width: 768px) and (orientation: landscape) {

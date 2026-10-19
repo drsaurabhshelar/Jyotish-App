@@ -113,7 +113,6 @@ body {
 }
 
 .card h2 {
-    font-size: 11px !important;
     border-bottom: 2px solid var(--primary-light);
     padding-bottom: 10px;
     margin-bottom: 20px;
@@ -162,20 +161,6 @@ body {
     overflow: hidden !important;
 }
 
-/* Nakshatra: centered, bounded, and allowed to wrap instead of colliding with side metadata */
-.calendar-cell > span:first-child {
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: auto !important;
-    max-width: calc(100% - 78px) !important;
-    white-space: normal !important;
-    overflow-wrap: anywhere !important;
-    word-break: normal !important;
-    line-height: 1.05 !important;
-    text-align: center !important;
-    font-size: clamp(8px, 1.35vw, 12px) !important;
-}
 
 /* Left top metadata */
 .calendar-cell > div[style*="left:2px"][style*="top:2px"] {
@@ -209,10 +194,6 @@ body {
     .calendar-cell {
         padding: 2px !important;
     }
-    .calendar-cell > span:first-child {
-        max-width: calc(100% - 68px) !important;
-        font-size: 10px !important;
-    }
     .calendar-cell > div[style*="left:2px"][style*="top:2px"] {
         width: 29px !important;
         max-width: 29px !important;
@@ -227,10 +208,6 @@ body {
         min-height: 96px !important;
         aspect-ratio: auto !important;
         height: 112px !important;
-    }
-    .calendar-cell > span:first-child {
-        font-size: 10px !important;
-        max-width: calc(100% - 62px) !important;
     }
 }
 
@@ -3061,14 +3038,6 @@ function renderMonthlyCalendar(year, month) {
                     }
                 } catch(e) {}
 
-
-
-
-
-
-
-
-
                 if (typeof eclipseHtml !== 'undefined' && eclipseHtml !== '') {
                     rightBarContent += eclipseHtml;
                 }
@@ -3153,16 +3122,10 @@ function renderMonthlyCalendar(year, month) {
                     </div>`;
                 }
 
-                if (typeof hasBhadraInCell !== 'undefined' && hasBhadraInCell) {
-                    rightBarContent += `
-                    <div title="भद्रा" onclick="event.stopPropagation(); openCalendarModal(${year}, ${month}, '${date.toDateString()}'); setTimeout(() => { let el = document.getElementById('bhadraSection'); if(el) { let c = document.getElementById('calModalScrollContainer'); if(c) c.scrollTo({top: el.offsetTop, behavior: 'smooth'}); else el.scrollIntoView({behavior: 'smooth', block: 'center'}); } }, 300);" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#fff; border:1px solid var(--red-ashubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.3); font-size: 11px !important;">
-                        🔴
-                    </div>`;
-                }
                 return rightBarContent ? `<div style="position:absolute; right:2px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2px; z-index:10;">${rightBarContent}</div>` : '';
             })()}
 
-            <div class="cell-center-date" style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top: 15px; margin-bottom: auto; padding-left:18px; padding-right:18px;">
+            <div style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top: 15px; margin-bottom: auto;">
                 <strong style="font-size: 12px !important;">${date.getDate()}</strong>
 
             </div>
@@ -4061,435 +4024,6 @@ const NAKSHATRA_LORDS = {
 };
 
 
-let originalRenderMonthlyCalendar = renderMonthlyCalendar;
-renderMonthlyCalendar = function(year, month) {
-    let date = new Date(year, month, 1, 0, 0, 0);
-    let html = `<div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap: 10px;">
-                <button onclick="changeMonth(-1)" style="cursor:pointer; background:var(--primary-light); border:none; padding:5px 10px; border-radius:4px; font-weight:bold;">◀</button>
-                <h2 style="margin:0;">${date.toLocaleString('default', { month: 'long' })} ${year}</h2>
-                <button onclick="changeMonth(1)" style="cursor:pointer; background:var(--primary-light); border:none; padding:5px 10px; border-radius:4px; font-weight:bold;">▶</button>
-            </div>
-            <div>
-                <select id="calMonth" onchange="updateCalendar()">${Array.from({length:12}, (_,i) => `<option value="${i}" ${i===month?'selected':''}>${new Date(2000, i, 1).toLocaleString('default', { month: 'long' })}</option>`).join('')}</select>
-                <select id="calYear" onchange="updateCalendar()">${Array.from({length:201}, (_,i) => 1900+i).map(y => `<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('')}</select>
-                <button onclick="goToToday()" style="cursor:pointer; background:var(--primary-color); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; margin-left:10px;">Today</button>
-            </div>
-        </div>`;
-    html += `<div class="calendar-grid">`;
-    WEEKDAYS.forEach(wd => { html += `<div class="calendar-header">${wd.substring(0,3)}</div>`; });
-
-    let firstDay = date.getDay();
-    for (let i=0; i<firstDay; i++) {
-        html += `<div class="calendar-cell" style="background:#f9f9f9;border:none;"></div>`;
-    }
-
-    while (date.getMonth() === month) {
-        let lat = 28.6139; let lng = 77.2090; // Default to New Delhi if not specified
-        if (window.globalYatraNatalData && document.getElementById('yatraLat')) {
-            lat = parseFloat(document.getElementById('yatraLat').value) || lat;
-            lng = parseFloat(document.getElementById('yatraLng').value) || lng;
-        }
-        let sunriseDate = getSunriseTime(date, lat, lng);
-        let p = new PanchangEngine(sunriseDate);
-        let ygs = calculateDailyYogas(p);
-
-
-
-        let tSanjna = getTithiSanjna(p.tithiNumber, p.paksha);
-        let isSiddha = getIsSiddhaTithi(tSanjna, date.getDay());
-        let isMrta = getIsMrtaTithi(tSanjna, date.getDay());
-        let isDagdha = getIsDagdhaNakshatra(p.moonNakshatraName, date.getDay());
-        let isDagdhaYoga = getDagdhaYoga(p.tithiNumber, date.getDay());
-        let isVishaktaYoga = getVishaktaYoga(p.tithiNumber, date.getDay());
-        let isHutashanaYoga = getHutashanaYoga(p.tithiNumber, date.getDay());
-        let isShunyaTithi = getIsShunyaTithi(p.amantaMonthName, p.paksha, p.tithiNumber);
-    let isTithiNakshatraProhibited = getTithiNakshatraProhibition(p.tithiNumber, p.moonNakshatraName);
-
-    let isTyaga = getIsShubhaKarmaTyaga(p.tithiNumber, p.moonNakshatraName, date.getDay());
-    let isDhananash = getIsDhananash(p.amantaMonthName, p.moonNakshatraName);
-    let targetShunyaLagnaIdx = getShunyaLagnaForMonth(p.amantaMonthName);
-    let shunyaLagnaTiming = targetShunyaLagnaIdx !== null ? getLagnaTiming(date, p.lat, p.lng, targetShunyaLagnaIdx) : null;
-    let isShunyaLagnaDay = shunyaLagnaTiming && shunyaLagnaTiming.start !== null;
-    let dagdhaLagnaTargetIdxs = getDagdhaLagnasForTithi(p.tithiNumber);
-    let dagdhaLagnaTimings = [];
-    dagdhaLagnaTargetIdxs.forEach(idx => {
-        let timing = getLagnaTiming(date, p.lat, p.lng, idx);
-        if (timing && timing.start !== null) {
-            dagdhaLagnaTimings.push({ idx, start: timing.start, end: timing.end });
-        }
-    });
-    let isDagdhaLagnaDay = dagdhaLagnaTimings.length > 0;
-
-        let hasRaviYoga = ygs.some(y => y.name && y.name.includes('रवि योग'));
-        let cellStyle = hasRaviYoga ? `background-color: #e8f5e9 !important; border: 1px solid var(--border-color); box-sizing: border-box;` : ``;
-        let sunEmojiHtml = hasRaviYoga ? `<div style="font-size: 8.5px !important; margin-top:2px; text-align:center;">☀️</div>` : '';
-
-        let restrictions = evaluateDayRestrictions(date, p);
-        let activitySpecificRestrictions = getActivitySpecificProhibitions(date.getDay(), p.moonNakshatraName);
-        restrictions = restrictions.concat(activitySpecificRestrictions);
-
-
-        // Yamghanta travel restriction emoji removed from calendar cells
-        if (isDhananash) {
-            restrictions.push({
-                activity: 'धननाश',
-                emoji: '🪙',
-                description: 'आज शुभ कार्य करने से धननाश होता है।',
-                short: 'धननाश'
-            });
-        }
-        let vastraRules = window.checkVastraAbhushanRules(p.moonNakshatraName, date.getDay(), p.tithiNumber);
-        let restrictionsHtml = '';
-        if ((restrictions && restrictions.length > 0) || vastraRules.hasRule) {
-            restrictionsHtml = `<div style="position:absolute; left:2px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2px; z-index:10;">`;
-
-            if (vastraRules.hasRule) {
-                if (vastraRules.tuesdayRed) {
-                    restrictionsHtml += `
-                    <div title="आज मंगलवार है, लाल वस्त्र धारण करें।" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
-                        🥻
-                        <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid #48bb78; border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
-                    </div>`;
-                }
-                if (vastraRules.shatabhishaRestricted) {
-                    restrictionsHtml += `
-                    <div title="शतभिषा नक्षत्र: कुछ आचार्यों के मतानुसार सधवा स्त्री नवीन वस्त्र-आभूषण आदि का धारण न करे।" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
-                        👗
-                        <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
-                        <div style="position:absolute; top:50%; left:0; width:100%; height:1px; background:var(--red-ashubh); transform:translateY(-50%) rotate(45deg); pointer-events:none;"></div>
-                    </div>`;
-                }
-            }
-
-            if (restrictions && restrictions.length > 0) {
-                let uniqueRestrictions = Array.from(new Set(restrictions.map(r => r.activity)))
-                    .map(act => restrictions.find(r => r.activity === act));
-
-                uniqueRestrictions.forEach(r => {
-                    restrictionsHtml += `
-                        <div title="आज ${r.activity} नहीं करना चाहिए" style="position:relative; font-size: 8.5px !important; line-height:1; display:flex; align-items:center; justify-content:center; width:20px; height:20px; background:rgba(255,255,255,0.8); border-radius:50%; cursor:help;">
-                            ${r.emoji}
-                            <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid red; border-radius:50%; box-sizing:border-box; pointer-events:none;"></div>
-                            <div style="position:absolute; top:50%; left:0; width:100%; height:1px; background:red; transform:translateY(-50%) rotate(45deg); pointer-events:none;"></div>
-                        </div>`;
-                });
-            }
-            restrictionsHtml += `</div>`;
-        }
-
-
-
-        let badges = '';
-        let shubhYogas = [];
-        let ashubhYogas = [];
-        let amberYogas = [];
-
-        ygs.forEach(y => {
-            let n = y.name ? y.name.replace('🔱 ', '').split(' ')[0] : 'Yoga';
-            if (y.name && y.name.includes('द्विपुष्कर')) n = 'द्विपुष्कर योग';
-            if (y.name && y.name.includes('त्रिपुष्कर')) n = 'त्रिपुष्कर योग';
-            if (y.name && y.name.includes('आनन्दादि')) n = 'आनन्दादि';
-
-            if (n === 'द्विपुष्कर योग' || n === 'त्रिपुष्कर योग') {
-                if (y.type === 'shubh') shubhYogas.push(n);
-                return;
-            }
-
-            if (!hasRaviYoga) {
-                if (n === 'यमघण्ट' || n.includes('कुलिक') || n.includes('कालवेला') || n.includes('कंटक') || n.includes('मुहूर्त')) {
-                }
-                else if (y.type === 'shubh') shubhYogas.push(n);
-                else if (y.type === 'ashubh') ashubhYogas.push(n);
-                else amberYogas.push(n);
-            }
-        });
-
-        if (!hasRaviYoga) {
-            if (isSiddha) shubhYogas.push('सिद्ध तिथि');
-            if (isMrta) ashubhYogas.push('मृत संज्ञक');
-            if (isDagdha) ashubhYogas.push('दग्ध नक्षत्र');
-            if (isDagdhaYoga) ashubhYogas.push('दग्ध योग');
-            if (isVishaktaYoga) ashubhYogas.push('विषाक्त योग');
-            if (isHutashanaYoga) ashubhYogas.push('हुताशन योग');
-            if (isShunyaTithi) ashubhYogas.push('शून्य तिथि');
-            if (isTithiNakshatraProhibited) ashubhYogas.push('तिथि-नक्षत्र वर्जित');
-            if (isTyaga) ashubhYogas.push('शुभ कर्म त्याग');
-            if (isDhananash) ashubhYogas.push('धननाश');
-        }
-
-        shubhYogas = [...new Set(shubhYogas)];
-        ashubhYogas = [...new Set(ashubhYogas)];
-
-        if (shubhYogas.length > 0) {
-            badges += `<span class="badge green" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${shubhYogas.join(', ')}</span>`;
-        }
-        let bhadraDataCalendar = window.calculateBhadra(p);
-        let hasBhadraInCell = false;
-        if (bhadraDataCalendar && bhadraDataCalendar.isActive) {
-            let startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-            let endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-            if ((bhadraDataCalendar.bhadraStart <= endOfDay) && (bhadraDataCalendar.bhadraEnd >= startOfDay)) {
-                ashubhYogas.push('भद्रा');
-                hasBhadraInCell = true;
-            }
-        }
-
-        if (ashubhYogas.length > 0) {
-            badges += `<span class="badge red" style="font-size: 8.5px !important; display:block; margin-bottom:2px;">${ashubhYogas.join(', ')}</span>`;
-        }
-
-
-
-        let eclipseHtml = '';
-        let ed = getEclipseData(date, p.lat, p.lng);
-        if (ed && (ed.isSolar || ed.isLunar)) {
-            let eclipseTitle = ed.isSolar ? 'सूर्य ग्रहण' : 'चंद्र ग्रहण';
-            let eclipseHoverText = eclipseTitle;
-
-            let peakDate = null;
-            if(ed.isSolar && ed.solarData && ed.solarData.peak) peakDate = ed.solarData.peak.date;
-            if(ed.isLunar && ed.lunarData && ed.lunarData.peak) peakDate = ed.lunarData.peak.date;
-
-            if (peakDate) {
-                eclipseHoverText += ` — ${peakDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-            }
-
-            let svgSolar = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" fill="#000"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" stroke="#f59e0b"/></svg>`;
-            let svgLunar = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#1a202c" stroke="#cbd5e0"/><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="rgba(226, 232, 240, 0.4)"/></svg>`;
-
-            let iconCode = ed.isSolar ? svgSolar : svgLunar;
-
-            if(!window.eclipseCache) window.eclipseCache = {};
-            window.eclipseCache[date.toDateString()] = ed;
-
-            eclipseHtml = `<div title="${eclipseHoverText}" style="margin-bottom: 2px; display:flex; justify-content:center; align-items:center; background:#fff; border-radius:50%; width:20px; height:20px; box-shadow:0 1px 3px rgba(0,0,0,0.3); border:1px solid ${ed.isSolar ? '#f59e0b' : '#a0aec0'};">${iconCode}</div>`;
-        }
-
-
-        let tNum = p.tithiNumber;
-        let hindiMonth = p.amantaMonthName ? p.amantaMonthName.split(' ')[0] : 'Unknown';
-
-        let pakshaLabel = p.paksha === 'Shukla' ? 'शु' : 'कृ';
-        let tithiCircleHTML = '<div style="display:flex; flex-direction:column; align-items:center;">';
-        if (p.tithiNumber === 15 || p.tithiNumber === 30) {
-            if (p.paksha === 'Shukla' || p.tithiName.includes('Purnima')) {
-                tithiCircleHTML += `<div style="background:#fff; border: 1px solid var(--primary-color); width:12px; height:12px; border-radius:50%; flex-shrink:0;"></div>`;
-            } else {
-                tithiCircleHTML += `<div style="background:#000; border: 1px solid var(--primary-color); width:12px; height:12px; border-radius:50%; flex-shrink:0;"></div>`;
-            }
-        } else {
-            tithiCircleHTML += `<div style="background:var(--primary-color); color:#fff; width:13px; height:13px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size: 7.5px !important; font-weight:bold; flex-shrink:0;">${tNum === 15 || tNum === 30 ? '' : tNum}</div>`;
-        }
-        tithiCircleHTML += `<span style="font-size: 7.5px !important; color:gray; font-weight:bold; line-height:1;">${pakshaLabel}</span></div>`;
-
-        let isToday = (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear());
-        let panchakDetails = getPanchakDetails(date, p.lat, p.lng);
-
-        let swamiKey = (p.tithiNumber === 15 && p.paksha === 'Krishna') ? 30 : p.tithiNumber;
-        let deityName = TITHI_SWAMI[swamiKey] || '';
-        let nakshatraLord = NAKSHATRA_DEITIES[p.moonNakshatraName] || '';
-        let panchakClass = panchakDetails ? 'panchak' : '';
-
-        html += `<div class="calendar-cell ${isToday ? 'today' : ''} ${panchakClass}" style="position:relative; padding-top:16px; aspect-ratio: 1/1.3; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; ${cellStyle}" onclick="openCalendarModal(${year}, ${month}, '${date.toDateString()}')">
-
-            <div class="cell-top-bar" style="position:absolute; top:1px; left:1px; width:calc(100% - 2px) !important; display:flex; justify-content:space-between; align-items:flex-start; pointer-events:none; z-index:2; box-sizing:border-box; padding:0 1px;">
-                <div style="display:flex; flex-direction:column; gap:0; text-align:left; max-width:32%; overflow:hidden;">
-                    <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${deityName}</span>
-                    <span style="font-size: 8px !important; color:var(--text-muted); font-weight:700; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${nakshatraLord}</span>
-                </div>
-                <div style="text-align:center; max-width:36%; overflow:hidden;">
-                    <span style="font-size: 8px !important; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${NAKSHATRA_NAMES_HINDI[p.moonNakshatraIndex]}</span>
-                </div>
-                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:1px; max-width:32%; overflow:hidden;">
-                    <div style="display:flex; align-items:center; gap:1px;">
-                        <span style="font-size: 8px !important; color:var(--primary-color); font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${hindiMonth}</span>
-                        ${tithiCircleHTML}
-                    </div>
-                    ${sunEmojiHtml}
-                </div>
-            </div>
-            ${(() => {
-                let rightBarContent = '';
-
-                let sData = window.calculateSankranti(date, p.lat, p.lng, p.ayanamsha);
-                if (sData) {
-                    let rName = window.RASHI_NAMES[sData.enteredRashi];
-                    rightBarContent += `
-                    <div title="आज ${rName} संक्रांति है।" onclick="event.stopPropagation(); openCalendarModal(${year}, ${month}, '${date.toDateString()}'); setTimeout(() => { let el = document.getElementById('sankrantiSection'); if(el) el.scrollIntoView({behavior: 'smooth', block: 'center'}); }, 300);" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#fff; border:1px solid #d97706; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.3);">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#d97706;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><path d="M17 12a5 5 0 0 1-5 5" stroke="#ea580c"/></svg>
-                    </div>`;
-                }
-
-                // Adhik / Kshaya Mas Icons inside cell
-                let akDataCell = window.getAdhikKshayaMasData(date, lat, lng);
-                if (akDataCell) {
-                    if (akDataCell.adhik) {
-                        rightBarContent += `<div title="अधिक मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#f0fff4; border:1px solid #48bb78; color:#48bb78; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 8.5px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">+</div>`;
-                    } else if (akDataCell.kshay) {
-                        rightBarContent += `<div title="क्षय मास" class="tooltips" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:#fff5f5; border:1px solid #e53e3e; color:#e53e3e; font-weight:bold; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; font-size: 8.5px !important; box-shadow:0 1px 3px rgba(0,0,0,0.1);">-</div>`;
-                    }
-                }
-
-                // Homa & Agnivasa Icon (Show strictly when Homahuti is favorable and Agnivasa is on land)
-                try {
-                    let hData = window.evaluateHomaAgnivasa(p);
-                    if (hData && !hData.homaIsKhal && hData.agniVasa === 'भूमि') {
-                        let hBorderColor = 'var(--green-shubh)';
-                        let hTitle = `होम: ${hData.homaPlanet} के मुख में (शुभ)\nअग्निवास: ${hData.agniVasa} (${hData.agniPhal})`;
-                        rightBarContent += `
-                        <div title="${hTitle}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.9); border:1px solid ${hBorderColor}; border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                            <span style="font-size: 8.5px !important; line-height:1;">🔥</span>
-                        </div>`;
-                    }
-                } catch(e) {}
-
-                // Moon Status Icon (Shown ONLY when isShubha is true)
-                try {
-                    let scData = window.analyzeShubhaChandra ? window.analyzeShubhaChandra(p) : null;
-                    if (scData && scData.isShubha) {
-                        rightBarContent += `
-                        <div title="शुभ चंद्र" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.9); border:1px solid var(--green-shubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                            <span style="font-size: 8.5px !important; line-height:1;">🌙</span>
-                        </div>`;
-                    }
-                } catch(e) {}
-
-                // Sunrise Lagna Shuddhi Icon (Shown ONLY when isShubha is true)
-                try {
-                    let sKundali = window.calculateSunriseKundali(date, p.lat, p.lng, p.ayanamsha);
-                    let slData = window.analyzeShubhaLagna(sKundali.ascendant.rashiIndex, sKundali.planets);
-                    if (slData && slData.isShubha) {
-                        rightBarContent += `
-                        <div title="सूर्योदय लग्न शुद्धि" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.9); border:1px solid var(--green-shubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                            <span style="font-size: 8.5px !important; line-height:1; font-weight:bold; color:var(--text-main);">लग्न</span>
-                        </div>`;
-                    }
-                } catch(e) {}
-
-                if (typeof eclipseHtml !== 'undefined' && eclipseHtml !== '') {
-                    rightBarContent += eclipseHtml;
-                }
-
-                let bs = window.evaluateBuySell(date, p);
-                if (bs.canBuy) {
-                    rightBarContent += `
-                    <div title="मोल लेना / खरीदना शुभ" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--green-shubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">
-                        <span style="font-size: 8.5px !important;">🛒</span>
-                    </div>`;
-                }
-                if (bs.canSell) {
-                    rightBarContent += `
-                    <div title="बेचना शुभ" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border:1px solid var(--red-ashubh); border-radius:50%; margin-bottom:2px; box-sizing:border-box; cursor:help;">
-                        <span style="font-size: 8.5px !important;">🏷️</span>
-                    </div>`;
-                }
-
-                let showMarriageRestriction = false;
-                let showJewelryRestriction = false;
-                let marriageTooltips = [];
-                let jewelryTooltips = [];
-
-                // 1. Check Jupiter in Leo Navamsha
-                try {
-                    let jupSimhaNavamsha = window.checkJupiterSimhaNavamsha(date, p.lat, p.lng, p.ayanamsha);
-                    if (jupSimhaNavamsha && jupSimhaNavamsha.isProhibited) {
-                        showMarriageRestriction = true;
-                        marriageTooltips.push("सिंह राशि के सिंह नवांश में बृहस्पति");
-                    }
-                } catch(e) {}
-
-                // 2. Check Manvadi and Yugadi Tithis
-                try {
-                    let manvadiYugadi = window.checkManvadiYugadi(p.amantaMonthName, p.paksha, p.tithiNumber);
-                    if (manvadiYugadi && manvadiYugadi.isActive) {
-                        showMarriageRestriction = true;
-                        marriageTooltips.push(manvadiYugadi.ruleName);
-                    }
-                } catch(e) {}
-
-                // 3. Add Asta Restrictions
-                try {
-                    let localAstaEvents = window.calculateDailyAstaUdaya(date, p.lat, p.lng, p.ayanamsha);
-                    let astaPlanetNames = [];
-                    localAstaEvents.forEach(ev => {
-                        if (ev.isAstaDisplay) {
-                            if (ev.planetId === Astronomy.Body.Venus || ev.planetId === Astronomy.Body.Jupiter) {
-                                if (!ev.isJupiterSimhaNavamsha9) {
-                                    showMarriageRestriction = true;
-                                    showJewelryRestriction = true;
-                                    astaPlanetNames.push(ev.hindi);
-                                }
-                            }
-                        }
-                    });
-                    if (astaPlanetNames.length > 0) {
-                        let astaStr = astaPlanetNames.join('/') + " अस्त";
-                        marriageTooltips.push(astaStr);
-                        jewelryTooltips.push(astaStr);
-                    }
-                } catch(e) {}
-
-                // Render exactly once
-                if (showJewelryRestriction) {
-                    let jTip = jewelryTooltips.join(' + ') + " के कारण आभूषण/रत्न धारण वर्जित।";
-                    rightBarContent += `
-                    <div title="${jTip}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
-                        <div style="font-size: 8.5px !important;">💍</div>
-                        <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%;"></div>
-                        <div style="position:absolute; top:50%; left:50%; width:100%; height:1px; background:var(--red-ashubh); transform:translate(-50%, -50%) rotate(45deg);"></div>
-                    </div>`;
-                }
-
-                if (showMarriageRestriction) {
-                    let mTip = marriageTooltips.join(' + ') + " के कारण विवाहादि शुभ कर्म वर्ज।";
-                    rightBarContent += `
-                    <div title="${mTip}" style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.8); border-radius:50%; margin-bottom:2px; cursor:help;">
-                        <div style="font-size: 8.5px !important;">💒</div>
-                        <div style="position:absolute; top:0; left:0; width:100%; height:100%; border:1px solid var(--red-ashubh); border-radius:50%;"></div>
-                        <div style="position:absolute; top:50%; left:50%; width:100%; height:1px; background:var(--red-ashubh); transform:translate(-50%, -50%) rotate(45deg);"></div>
-                    </div>`;
-                }
-
-                return rightBarContent ? `<div style="position:absolute; right:2px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:2px; z-index:10;">${rightBarContent}</div>` : '';
-            })()}
-
-            <div style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-top: 15px; margin-bottom: auto;">
-                <strong style="font-size: 12px !important;">${date.getDate()}</strong>
-
-            </div>
-
-            ${(() => {
-                let astaHtml = '';
-                try {
-                    let events = window.calculateDailyAstaUdaya(date, p.lat, p.lng, p.ayanamsha);
-                    events.forEach(ev => {
-                        let sym = ev.symbol + '\uFE0E';
-                        if (ev.isAstaDisplay) {
-                            let tTip = `${ev.hindi} अस्त\n🔴 अस्त प्रारंभ: ${ev.lastTransition ? ev.lastTransition.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}\n🟢 संभावित उदय: ${ev.nextTransition ? ev.nextTransition.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}`;
-                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; opacity: 0.65; color: var(--text-main); border: 1px solid var(--text-main); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 8.5px !important; line-height: 1;">${sym}</div>`;
-                        } else if (ev.isUdayaEventDate) {
-                            let tTip = `${ev.hindi} उदय\n🟢 उदय: ${ev.udayaTimestamp ? ev.udayaTimestamp.toLocaleString([], {dateStyle:'short', timeStyle:'short'}) : 'N/A'}`;
-                            astaHtml += `<div title="${tTip}" style="display:inline-flex; align-items:center; justify-content:center; margin: 0 2px; cursor:help; color: var(--green-shubh); border: 1px solid var(--green-shubh); border-radius: 50%; width: 22px; height: 22px; font-weight: bold; font-size: 8.5px !important; line-height: 1;">${sym}</div>`;
-                        }
-                    });
-                } catch(e) {
-                    console.error("Error calculating Asta in cell:", e);
-                }
-                return astaHtml ? `<div style="margin-top:auto; margin-bottom:2px; display:flex; justify-content:center; flex-wrap:wrap; font-family:sans-serif;">${astaHtml}</div>` : '';
-            })()}
-
-            <div style="margin-top:5px; width:100%; text-align:center;">${badges}</div>
-
-            ${restrictionsHtml}
-        </div>`;
-        date.setDate(date.getDate() + 1);
-    }
-
-    html += `</div></div>`;
-    return html;
-};
 
 // 2. Calendar Modal UI
 

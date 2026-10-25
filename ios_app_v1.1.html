@@ -2981,8 +2981,7 @@ window.acceptTermsAndContinue = function() {
         return;
     }
     let modal = document.getElementById('termsModalBg');
-    if (modal) modal.remove();
-    initAppCore();
+    if (modal) modal.style.display = 'none';
 };
 
 window.showTermsModal = function() {
@@ -3890,11 +3889,13 @@ function initAppCore() {
 }
 
 function initApp() {
+    // 1. Render main app layout and calendar FIRST so it is immediately ready underneath
+    initAppCore();
+
+    // 2. If terms have not been accepted yet, display Terms modal overlay on top
     if (!checkTermsAccepted()) {
         showTermsModal();
-        return;
     }
-    initAppCore();
 }
 
 window.onload = function() { try { initApp(); } catch(e) { console.error("INIT APP ERROR", e); } };

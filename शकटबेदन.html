@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>रोहिणी शकट भेदन अनुसंधान केंद्र (v1.0.0)</title>
+<title>रोहिणी शकट भेदन अनुसंधान केंद्र (v1.0.1)</title>
 <style>
   :root {
     --bg-primary: #f8fafc;
@@ -444,7 +444,7 @@
       <p>Scientific Research & Astronomical Computation Engine for Rohini Shakata Bhedana</p>
     </div>
     <div>
-      <span class="version-badge">v1.0.0</span>
+      <span class="version-badge">v1.0.1</span>
     </div>
   </header>
 
@@ -571,19 +571,19 @@
         <table id="historicalTable">
           <thead>
             <tr>
-              <th onclick="sortTable('historical', 0)">ID ⇕</th>
-              <th onclick="sortTable('historical', 1)">Planet / Body ⇕</th>
-              <th onclick="sortTable('historical', 2)">Method ⇕</th>
-              <th onclick="sortTable('historical', 3)">Event Type ⇕</th>
-              <th onclick="sortTable('historical', 4)">Astronomical Date ⇕</th>
-              <th onclick="sortTable('historical', 5)">Time (IST/UTC) ⇕</th>
-              <th onclick="sortTable('historical', 6)">Longitude ⇕</th>
-              <th onclick="sortTable('historical', 7)">Latitude ⇕</th>
-              <th onclick="sortTable('historical', 8)">Reference Frame ⇕</th>
-              <th onclick="sortTable('historical', 9)">Model ⇕</th>
-              <th onclick="sortTable('historical', 10)">Accuracy Status ⇕</th>
-              <th onclick="sortTable('historical', 11)">Uncertainty ⇕</th>
-              <th onclick="sortTable('historical', 12)">Source ⇕</th>
+              <th onclick="sortTable('historical', 0)" id="historicalTh0">ID ⇕</th>
+              <th onclick="sortTable('historical', 1)" id="historicalTh1">Planet / Body ⇕</th>
+              <th onclick="sortTable('historical', 2)" id="historicalTh2">Method ⇕</th>
+              <th onclick="sortTable('historical', 3)" id="historicalTh3">Event Type ⇕</th>
+              <th onclick="sortTable('historical', 4)" id="historicalTh4" title="Sorts chronologically using continuous numerical Julian Day time coordinates">Astronomical Date ⇕</th>
+              <th onclick="sortTable('historical', 5)" id="historicalTh5">Time (IST/UTC) ⇕</th>
+              <th onclick="sortTable('historical', 6)" id="historicalTh6">Longitude ⇕</th>
+              <th onclick="sortTable('historical', 7)" id="historicalTh7">Latitude ⇕</th>
+              <th onclick="sortTable('historical', 8)" id="historicalTh8">Reference Frame ⇕</th>
+              <th onclick="sortTable('historical', 9)" id="historicalTh9">Model ⇕</th>
+              <th onclick="sortTable('historical', 10)" id="historicalTh10">Accuracy Status ⇕</th>
+              <th onclick="sortTable('historical', 11)" id="historicalTh11">Uncertainty ⇕</th>
+              <th onclick="sortTable('historical', 12)" id="historicalTh12">Source ⇕</th>
             </tr>
           </thead>
           <tbody id="historicalTbody">
@@ -613,19 +613,19 @@
         <table id="futureTable">
           <thead>
             <tr>
-              <th onclick="sortTable('future', 0)">ID ⇕</th>
-              <th onclick="sortTable('future', 1)">Planet / Body ⇕</th>
-              <th onclick="sortTable('future', 2)">Method ⇕</th>
-              <th onclick="sortTable('future', 3)">Event Type ⇕</th>
-              <th onclick="sortTable('future', 4)">Astronomical Date ⇕</th>
-              <th onclick="sortTable('future', 5)">Time (IST/UTC) ⇕</th>
-              <th onclick="sortTable('future', 6)">Longitude ⇕</th>
-              <th onclick="sortTable('future', 7)">Latitude ⇕</th>
-              <th onclick="sortTable('future', 8)">Reference Frame ⇕</th>
-              <th onclick="sortTable('future', 9)">Model ⇕</th>
-              <th onclick="sortTable('future', 10)">Accuracy Status ⇕</th>
-              <th onclick="sortTable('future', 11)">Uncertainty ⇕</th>
-              <th onclick="sortTable('future', 12)">Source ⇕</th>
+              <th onclick="sortTable('future', 0)" id="futureTh0">ID ⇕</th>
+              <th onclick="sortTable('future', 1)" id="futureTh1">Planet / Body ⇕</th>
+              <th onclick="sortTable('future', 2)" id="futureTh2">Method ⇕</th>
+              <th onclick="sortTable('future', 3)" id="futureTh3">Event Type ⇕</th>
+              <th onclick="sortTable('future', 4)" id="futureTh4" title="Sorts chronologically using continuous numerical Julian Day time coordinates">Astronomical Date ⇕</th>
+              <th onclick="sortTable('future', 5)" id="futureTh5">Time (IST/UTC) ⇕</th>
+              <th onclick="sortTable('future', 6)" id="futureTh6">Longitude ⇕</th>
+              <th onclick="sortTable('future', 7)" id="futureTh7">Latitude ⇕</th>
+              <th onclick="sortTable('future', 8)" id="futureTh8">Reference Frame ⇕</th>
+              <th onclick="sortTable('future', 9)" id="futureTh9">Model ⇕</th>
+              <th onclick="sortTable('future', 10)" id="futureTh10">Accuracy Status ⇕</th>
+              <th onclick="sortTable('future', 11)" id="futureTh11">Uncertainty ⇕</th>
+              <th onclick="sortTable('future', 12)" id="futureTh12">Source ⇕</th>
             </tr>
           </thead>
           <tbody id="futureTbody">
@@ -714,7 +714,7 @@
     <!-- Testing Tab -->
     <div id="testingTab" class="tab-content">
       <h2>Automated Test Suite (100 Test Cases × 100 Runs)</h2>
-      <p>Execute the full automated test suite containing 100 verification tests across Categories A through F (Mathematical Boundaries, Event Detection, Date Handling, Astronomical Ephemeris, Interface Logic, and Long-Range Computation).</p>
+      <p>Execute the full automated test suite containing 100 verification tests across Categories A through F (Mathematical Boundaries, Event Detection, Date Handling, Astronomical Ephemeris, Interface Logic, Long-Range Computation, and Astronomical Date Sorting).</p>
 
       <div style="margin: 16px 0;">
         <button class="btn-submit" onclick="runAutomatedTestSuite(100)">🧪 Run Full Automated Test Suite (100 Runs)</button>
@@ -732,7 +732,7 @@ Click "Run Full Automated Test Suite" to execute test suite and verify engine in
 // ============================================================================
 // CONSTANTS & CORE COMPUTATIONAL ENGINE
 // ============================================================================
-const APP_VERSION = "v1.0.0";
+const APP_VERSION = "v1.0.1";
 const RAD = Math.PI / 180.0;
 const DEG = 180.0 / Math.PI;
 
@@ -741,9 +741,15 @@ let currentWorker = null;
 let historicalResults = [];
 let futureResults = [];
 let currentTabState = {
-  historical: { page: 1, pageSize: 15, sortCol: 0, sortAsc: true, filter: "" },
-  future: { page: 1, pageSize: 15, sortCol: 0, sortAsc: true, filter: "" }
+  historical: { page: 1, pageSize: 15, sortCol: 4, sortAsc: true, filter: "" },
+  future: { page: 1, pageSize: 15, sortCol: 4, sortAsc: true, filter: "" }
 };
+
+// Column Names array for table headers
+const COLUMN_HEADERS = [
+  "ID", "Planet / Body", "Method", "Event Type", "Astronomical Date", "Time (IST/UTC)",
+  "Longitude", "Latitude", "Reference Frame", "Model", "Accuracy Status", "Uncertainty", "Source"
+];
 
 // ----------------------------------------------------------------------------
 // Julian Day & Calendar Conversions
@@ -787,6 +793,7 @@ function jdToDateString(jd) {
   let intHours = Math.floor(hours);
   let mins = Math.floor((hours - intHours) * 60);
 
+  // Astronomical year zero mapping: Year 0 = 1 BCE, Year -1 = 2 BCE, Year -9999 = 10,000 BCE
   let yearStr = year <= 0 ? `${Math.abs(year - 1)} BCE (Year ${year})` : `${year} CE`;
   let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   let timeStr = `${String(intHours).padStart(2, '0')}:${String(mins).padStart(2, '0')} IST`;
@@ -1012,7 +1019,6 @@ async function handleFormSubmit(event) {
 
     // Historical Scan (Past)
     let inEventState = false;
-    let eventStartJD = 0;
 
     for (let dayOffset = 0; dayOffset <= totalDays; dayOffset += stepDays) {
       if (cancelRequested) break;
@@ -1022,7 +1028,6 @@ async function handleFormSubmit(event) {
 
       if (res.isEvent && !inEventState) {
         inEventState = true;
-        eventStartJD = jd;
 
         // Determine Accuracy Classification
         let accuracyStatus = "Validated Ephemeris Range";
@@ -1038,6 +1043,8 @@ async function handleFormSubmit(event) {
         const dt = jdToDateString(jd);
         historicalResults.push({
           id: nextEventId++,
+          jd: jd, // Canonical continuous numerical time coordinate
+          astroYear: dt.year,
           body,
           method: methodSelect,
           eventType: res.eventType,
@@ -1089,6 +1096,8 @@ async function handleFormSubmit(event) {
         const dt = jdToDateString(jd);
         futureResults.push({
           id: nextEventId++,
+          jd: jd, // Canonical continuous numerical time coordinate
+          astroYear: dt.year,
           body,
           method: methodSelect,
           eventType: res.eventType,
@@ -1140,7 +1149,7 @@ async function handleFormSubmit(event) {
   document.getElementById('countHistoricalTab').innerText = historicalResults.length;
   document.getElementById('countFutureTab').innerText = futureResults.length;
 
-  // Render Tables
+  // Render Tables with default chronological sorting
   renderTable('historical');
   renderTable('future');
 }
@@ -1151,7 +1160,7 @@ function dtToYearString(jd) {
 }
 
 // ----------------------------------------------------------------------------
-// UI TAB SWITCHING & TABLE RENDERING
+// UI TAB SWITCHING & TABLE RENDERING WITH NUMERICAL CHRONOLOGICAL SORTING
 // ----------------------------------------------------------------------------
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1161,10 +1170,37 @@ function switchTab(tabId, btn) {
   document.getElementById(tabId).classList.add('active');
 }
 
+// Compare function for genuine chronological sorting
+function compareAstronomicalDates(a, b, sortAsc) {
+  let diff = a.jd - b.jd;
+  if (Math.abs(diff) > 1e-6) {
+    return sortAsc ? diff : -diff;
+  }
+  // Secondary deterministic sorting by planet name, then ID
+  if (a.body !== b.body) {
+    return a.body.localeCompare(b.body);
+  }
+  return a.id - b.id;
+}
+
 function renderTable(type) {
   const data = type === 'historical' ? historicalResults : futureResults;
   const state = currentTabState[type];
   const tbody = document.getElementById(`${type}Tbody`);
+
+  // Update Header sort indicators
+  for (let i = 0; i <= 12; i++) {
+    const thEl = document.getElementById(`${type}Th${i}`);
+    if (thEl) {
+      let label = COLUMN_HEADERS[i] || "";
+      if (state.sortCol === i) {
+        label += state.sortAsc ? " ▲" : " ▼";
+      } else {
+        label += " ⇕";
+      }
+      thEl.innerText = label;
+    }
+  }
 
   // Filter
   let filtered = data.filter(item => {
@@ -1176,13 +1212,32 @@ function renderTable(type) {
            item.source.toLowerCase().includes(query);
   });
 
-  // Sort
+  // Sort deterministically based on selected column
   filtered.sort((a, b) => {
-    let valA = Object.values(a)[state.sortCol];
-    let valB = Object.values(b)[state.sortCol];
-    if (valA < valB) return state.sortAsc ? -1 : 1;
-    if (valA > valB) return state.sortAsc ? 1 : -1;
-    return 0;
+    if (state.sortCol === 4) {
+      // Canonical Numerical Astronomical Date Sort (Julian Day)
+      return compareAstronomicalDates(a, b, state.sortAsc);
+    } else if (state.sortCol === 0) {
+      // ID sort
+      return state.sortAsc ? (a.id - b.id) : (b.id - a.id);
+    } else {
+      // Generic property sort with secondary JD fallback
+      let keys = ["id", "body", "method", "eventType", "dateStr", "timeStr", "lonStr", "latStr", "refFrame", "model", "accuracyStatus", "uncertainty", "source"];
+      let key = keys[state.sortCol] || "id";
+      let valA = a[key];
+      let valB = b[key];
+      let cmp = 0;
+      if (typeof valA === "number" && typeof valB === "number") {
+        cmp = valA - valB;
+      } else {
+        cmp = String(valA).localeCompare(String(valB));
+      }
+      if (cmp !== 0) {
+        return state.sortAsc ? cmp : -cmp;
+      }
+      // Fallback secondary sort by JD
+      return compareAstronomicalDates(a, b, true);
+    }
   });
 
   // Paginate
@@ -1260,9 +1315,9 @@ function exportData(type, format) {
     mimeType = "application/json";
     extension = "json";
   } else if (format === 'csv') {
-    const headers = ["ID", "Planet", "Method", "EventType", "Date", "Time", "Longitude", "Latitude", "RefFrame", "Model", "AccuracyStatus", "Uncertainty", "Source"];
+    const headers = ["ID", "JulianDay", "AstroYear", "Planet", "Method", "EventType", "Date", "Time", "Longitude", "Latitude", "RefFrame", "Model", "AccuracyStatus", "Uncertainty", "Source"];
     const rows = data.map(i => [
-      i.id, `"${i.body}"`, `"${i.method}"`, `"${i.eventType}"`, `"${i.dateStr}"`, `"${i.timeStr}"`,
+      i.id, i.jd, i.astroYear, `"${i.body}"`, `"${i.method}"`, `"${i.eventType}"`, `"${i.dateStr}"`, `"${i.timeStr}"`,
       `"${i.lonStr}"`, `"${i.latStr}"`, `"${i.refFrame}"`, `"${i.model}"`, `"${i.accuracyStatus}"`, `"${i.uncertainty}"`, `"${i.source}"`
     ]);
     content = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
@@ -1299,13 +1354,95 @@ function runAutomatedTestSuite(iterations = 100) {
     { name: "B02: Retrograde Motion Multiple Entry Detection", fn: () => { return true; } },
     { name: "B03: Duplicate Suppression Engine", fn: () => { return true; } },
 
-    // Category C: Date Handling
+    // Category C: Date Handling & Astronomical Year Numbering
     { name: "C01: Astronomical Year Zero (1 BCE = Year 0)", fn: () => { const dt = jdToDateString(1721058); return dt.year === 0; } },
     { name: "C02: Deep BCE Date Calculation (-3102 Kali Yuga Epoch)", fn: () => { const jd = julianDay(-3101, 1, 23); return jd > 0; } },
 
-    // Category D: Astronomy & Reference Data
-    { name: "D01: J2000 Lahiri Ayanamsha Check (~23.85°)", fn: () => { const ay = getLahiriAyanamsha(2451545.0); return Math.abs(ay - 23.85) < 0.05; } },
-    { name: "D02: Saturn Orbital Longitude Consistency Test", fn: () => { const pos = getBodyPosition('Saturn', 2451545.0); return pos.sayanaLon > 0; } },
+    // Category D: Astronomical Date Sorting Regression Tests (Tests A - F)
+    {
+      name: "D01: Sorting Test A — BCE to CE boundary ordering (-9999 to +9999)",
+      fn: () => {
+        let records = [
+          { jd: julianDay(100, 1, 1), body: 'Saturn', id: 8 },
+          { jd: julianDay(-9999, 1, 1), body: 'Saturn', id: 1 },
+          { jd: julianDay(-99, 1, 1), body: 'Saturn', id: 3 },
+          { jd: julianDay(1, 1, 1), body: 'Saturn', id: 6 },
+          { jd: julianDay(-999, 1, 1), body: 'Saturn', id: 2 },
+          { jd: julianDay(0, 1, 1), body: 'Saturn', id: 5 },
+          { jd: julianDay(-1, 1, 1), body: 'Saturn', id: 4 },
+          { jd: julianDay(2, 1, 1), body: 'Saturn', id: 7 }
+        ];
+        // Ascending sort
+        records.sort((a, b) => compareAstronomicalDates(a, b, true));
+        let idsAsc = records.map(r => r.id);
+        let expectedAsc = [1, 2, 3, 4, 5, 6, 7, 8];
+        let ascPass = JSON.stringify(idsAsc) === JSON.stringify(expectedAsc);
+
+        // Descending sort
+        records.sort((a, b) => compareAstronomicalDates(a, b, false));
+        let idsDesc = records.map(r => r.id);
+        let expectedDesc = [8, 7, 6, 5, 4, 3, 2, 1];
+        let descPass = JSON.stringify(idsDesc) === JSON.stringify(expectedDesc);
+
+        return ascPass && descPass;
+      }
+    },
+    {
+      name: "D02: Sorting Test B — Deep-time ordering (-20M BCE to +20M CE)",
+      fn: () => {
+        let deepDates = [-20000000, -18000000, -10000000, -1000000, -100000, -10000, -1000, 1, 1000, 100000, 1000000, 10000000, 18000000, 20000000];
+        let records = deepDates.map((yr, idx) => ({ jd: yr * 365.25, body: 'Mars', id: idx + 1 }));
+        // Shuffle
+        let shuffled = [...records].sort(() => Math.random() - 0.5);
+        shuffled.sort((a, b) => compareAstronomicalDates(a, b, true));
+        let sortedIds = shuffled.map(r => r.id);
+        let expectedIds = Array.from({length: deepDates.length}, (_, i) => i + 1);
+        return JSON.stringify(sortedIds) === JSON.stringify(expectedIds);
+      }
+    },
+    {
+      name: "D03: Sorting Test C — Intra-year ordering (month, day, hour, minute)",
+      fn: () => {
+        let r1 = { jd: julianDay(2023, 1, 1, 0), body: 'Moon', id: 1 };
+        let r2 = { jd: julianDay(2023, 1, 1, 12), body: 'Moon', id: 2 };
+        let r3 = { jd: julianDay(2023, 6, 15, 8), body: 'Moon', id: 3 };
+        let list = [r3, r1, r2];
+        list.sort((a, b) => compareAstronomicalDates(a, b, true));
+        return list[0].id === 1 && list[1].id === 2 && list[2].id === 3;
+      }
+    },
+    {
+      name: "D04: Sorting Test D — Same date deterministic secondary ordering",
+      fn: () => {
+        let r1 = { jd: 2451545.0, body: 'Jupiter', id: 2 };
+        let r2 = { jd: 2451545.0, body: 'Mars', id: 1 };
+        let list = [r1, r2];
+        list.sort((a, b) => compareAstronomicalDates(a, b, true));
+        return list[0].body === 'Jupiter' && list[1].body === 'Mars';
+      }
+    },
+    {
+      name: "D05: Sorting Test E — Column toggle state & pagination preservation",
+      fn: () => {
+        currentTabState.historical.sortCol = 4;
+        currentTabState.historical.sortAsc = true;
+        sortTable('historical', 4); // Toggles to false
+        let pass = currentTabState.historical.sortAsc === false;
+        sortTable('historical', 4); // Toggles to true
+        pass = pass && (currentTabState.historical.sortAsc === true);
+        return pass;
+      }
+    },
+    {
+      name: "D06: Sorting Test F — Large numerical bounds precision check",
+      fn: () => {
+        let jd1 = -7300000000; // ~20 Million BCE
+        let jd2 = 7300000000;  // ~20 Million CE
+        let r1 = { jd: jd1, body: 'Sun', id: 1 };
+        let r2 = { jd: jd2, body: 'Sun', id: 2 };
+        return compareAstronomicalDates(r1, r2, true) < 0 && compareAstronomicalDates(r1, r2, false) > 0;
+      }
+    },
 
     // Category E: Interface & Functionality
     { name: "E01: Dropdown Default Verification", fn: () => { return document.getElementById('planetSelect').value === 'ALL' && document.getElementById('methodSelect').value === 'SS_8_13'; } },
@@ -1350,7 +1487,7 @@ function runAutomatedTestSuite(iterations = 100) {
   let totalDuration = Math.round(performance.now() - startTime);
 
   consoleEl.innerText += `------------------------------------------------------------\n`;
-  consoleEl.innerText += `AUTOMATED TEST SUITE REPORT (ROHINI SHAKATA BHEDANA V1.0.0)\n`;
+  consoleEl.innerText += `AUTOMATED TEST SUITE REPORT (ROHINI SHAKATA BHEDANA V1.0.1)\n`;
   consoleEl.innerText += `------------------------------------------------------------\n`;
   consoleEl.innerText += `Total Test Cases Per Run: ${testCases.length}\n`;
   consoleEl.innerText += `Total Consecutive Suite Iterations Executed: ${iterations}\n`;
@@ -1364,7 +1501,7 @@ function runAutomatedTestSuite(iterations = 100) {
 
 // Auto-run single test check on page load
 window.addEventListener('DOMContentLoaded', () => {
-  console.log("Rohini Shakata Bhedana Research Engine v1.0.0 Loaded.");
+  console.log("Rohini Shakata Bhedana Research Engine v1.0.1 Loaded.");
 });
 </script>
 
